@@ -248,6 +248,19 @@ GOOGLE_TOKEN_JSON
 
 `OPENAI_API_KEY` is optional. Without it, the workflow still creates a basic non-AI report.
 
+When `OPENAI_API_KEY` is present, the workflow sends a small capped set of RSS items per stock to OpenAI and creates structured dashboard fields:
+
+- Key takeaway
+- Possible impact
+- Bullish points
+- Bearish points
+- Valuation context
+- What to monitor next
+- Risk level
+- Confidence
+
+The analysis is decision support only. It does not recommend buying, selling, holding, or trading.
+
 `GOOGLE_CREDENTIALS_JSON` and `GOOGLE_TOKEN_JSON` are optional. Without them, Google Docs publishing is skipped, but the website still updates.
 
 To add Google secrets:

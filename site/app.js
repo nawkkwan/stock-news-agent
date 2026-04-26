@@ -25,8 +25,9 @@ function renderImpactTable(stocks) {
     row.append(
       ticker,
       createCell(stock.company),
-      createCell(stock.key_news),
-      createCell(stock.impact),
+      createCell(stock.key_takeaway || stock.key_news),
+      createCell(stock.possible_impact || stock.impact),
+      createCell(stock.valuation_context),
       createCell(stock.confidence)
     );
     body.appendChild(row);
@@ -45,7 +46,31 @@ function renderStockCards(stocks) {
     title.textContent = `${stock.ticker} - ${stock.company}`;
 
     const impact = document.createElement("p");
-    impact.textContent = stock.impact;
+    impact.textContent = stock.key_takeaway || stock.key_news;
+
+    const meta = document.createElement("div");
+    meta.className = "card-meta";
+    meta.innerHTML = `
+      <span>Risk: ${text(stock.risk_level)}</span>
+      <span>Horizon: ${text(stock.time_horizon)}</span>
+      <span>Confidence: ${text(stock.confidence)}</span>
+    `;
+
+    const possibleImpact = document.createElement("p");
+    possibleImpact.innerHTML = `<strong>Possible impact:</strong> ${text(stock.possible_impact || stock.impact)}`;
+
+    const valuation = document.createElement("p");
+    valuation.innerHTML = `<strong>Valuation context:</strong> ${text(stock.valuation_context)}`;
+
+    const monitor = document.createElement("p");
+    monitor.innerHTML = `<strong>Monitor next:</strong> ${text(stock.what_to_monitor)}`;
+
+    const points = document.createElement("div");
+    points.className = "points-grid";
+    points.append(
+      createPointList("Good points", stock.bullish_points || []),
+      createPointList("Bad points", stock.bearish_points || [])
+    );
 
     const sources = document.createElement("ul");
     sources.className = "source-list";
@@ -68,9 +93,32 @@ function renderStockCards(stocks) {
       });
     }
 
-    card.append(title, impact, sources);
+    card.append(title, meta, impact, possibleImpact, valuation, points, monitor, sources);
     grid.appendChild(card);
   });
+}
+
+function createPointList(title, points) {
+  const wrapper = document.createElement("div");
+  const heading = document.createElement("h4");
+  heading.textContent = title;
+  const list = document.createElement("ul");
+  list.className = "point-list";
+
+  if (points.length === 0) {
+    const item = document.createElement("li");
+    item.textContent = "No clear signal from today's sources.";
+    list.appendChild(item);
+  } else {
+    points.forEach((point) => {
+      const item = document.createElement("li");
+      item.textContent = point;
+      list.appendChild(item);
+    });
+  }
+
+  wrapper.append(heading, list);
+  return wrapper;
 }
 
 function renderNotes(report) {
@@ -78,9 +126,12 @@ function renderNotes(report) {
   notes.innerHTML = "";
   const items = [
     "This is a news summary, not financial advice.",
-    "The report does not recommend buying, selling, or trading.",
+    "The report gives decision support, but it does not recommend buying, selling, or trading.",
     "Use NotebookLM only when you want to explore a report more deeply.",
   ];
+
+  const riskAlerts = report.summary?.risk_alerts || [];
+  riskAlerts.forEach((alert) => items.push(alert));
 
   const errors = report.summary?.errors || [];
   if (errors.length > 0) {
@@ -106,6 +157,8 @@ async function main() {
   setText("articleCount", report.summary?.total_articles);
   setText("status", report.status);
   setText("generatedAt", `Generated ${report.generated_at}`);
+  setText("portfolioSummary", report.summary?.portfolio_summary || report.summary?.mode);
+  setText("macroOverview", report.summary?.macro_overview || "No macro overview generated.");
 
   const googleDocLink = document.getElementById("googleDocLink");
   if (report.google_doc_url) {

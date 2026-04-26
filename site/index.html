@@ -49,8 +49,9 @@
               <tr>
                 <th>Ticker</th>
                 <th>Company</th>
-                <th>Key News</th>
-                <th>Impact</th>
+                <th>Key Takeaway</th>
+                <th>Possible Impact</th>
+                <th>Valuation Context</th>
                 <th>Confidence</th>
               </tr>
             </thead>
@@ -61,13 +62,24 @@
 
       <section class="section">
         <div class="section-head">
-          <h2>Stock News</h2>
+          <h2>Stock Analysis</h2>
           <p id="generatedAt"></p>
         </div>
         <div id="stockCards" class="stock-grid"></div>
       </section>
 
       <section class="section">
+        <h2>Macro & Risk</h2>
+        <div class="macro-grid">
+          <div>
+            <h3>Portfolio Summary</h3>
+            <p id="portfolioSummary">-</p>
+          </div>
+          <div>
+            <h3>Macro Overview</h3>
+            <p id="macroOverview">-</p>
+          </div>
+        </div>
         <h2>Notes</h2>
         <ul id="notes"></ul>
       </section>

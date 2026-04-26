@@ -15,6 +15,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 REPORTS_DIR = ROOT_DIR / "reports"
 PROMPT_PATH = ROOT_DIR / "prompts" / "portfolio_news_prompt.md"
 MAX_ARTICLES_PER_STOCK = 8
+MAX_AI_ARTICLES_PER_STOCK = 6
 
 
 def load_news(path: Path) -> dict[str, Any]:
@@ -39,6 +40,30 @@ def compact_news_for_prompt(payload: dict[str, Any]) -> str:
         article_lines = "\n".join(article_to_markdown(article) for article in articles)
         sections.append(f"## {ticker} - {company}\n{article_lines or 'No articles found.'}")
     return "\n\n".join(sections)
+
+
+def compact_news_for_analysis(payload: dict[str, Any]) -> dict[str, Any]:
+    stocks: list[dict[str, Any]] = []
+    for ticker, stock_data in payload.get("stocks", {}).items():
+        articles = stock_data.get("articles", [])[:MAX_AI_ARTICLES_PER_STOCK]
+        stocks.append(
+            {
+                "ticker": ticker,
+                "company": stock_data.get("company", ""),
+                "exchange": stock_data.get("exchange", ""),
+                "articles": [
+                    {
+                        "title": article.get("title", "Untitled"),
+                        "source": article.get("source", ""),
+                        "published": article.get("published", ""),
+                        "summary": article.get("summary", ""),
+                        "url": article.get("url", ""),
+                    }
+                    for article in articles
+                ],
+            }
+        )
+    return {"stocks": stocks, "errors": payload.get("errors", [])}
 
 
 def load_prompt_template() -> str:
@@ -94,6 +119,106 @@ def create_ai_report(payload: dict[str, Any], report_date: str) -> str:
         temperature=0.2,
     )
     return response.choices[0].message.content or get_report_shell(report_date)
+
+
+def create_basic_analysis(payload: dict[str, Any], report_date: str) -> dict[str, Any]:
+    stocks: list[dict[str, Any]] = []
+    for ticker, stock_data in payload.get("stocks", {}).items():
+        articles = stock_data.get("articles", [])[:MAX_AI_ARTICLES_PER_STOCK]
+        stocks.append(
+            {
+                "ticker": ticker,
+                "company": stock_data.get("company", ""),
+                "key_takeaway": describe_articles_basic(articles),
+                "possible_impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
+                "bullish_points": [],
+                "bearish_points": [],
+                "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
+                "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
+                "risk_level": "Unknown",
+                "time_horizon": "Short to medium term",
+                "confidence": "Low",
+            }
+        )
+    return {
+        "date": report_date,
+        "mode": "basic",
+        "portfolio_summary": "OpenAI API key was not found, so only basic headline-based analysis was generated.",
+        "macro_overview": "No AI macro synthesis was generated.",
+        "risk_alerts": [
+            "This is a news summary, not financial advice.",
+            "The report does not recommend buying, selling, or trading.",
+        ],
+        "stocks": stocks,
+    }
+
+
+def create_ai_analysis(payload: dict[str, Any], report_date: str) -> dict[str, Any]:
+    client = OpenAI()
+    analysis_input = compact_news_for_analysis(payload)
+    prompt = f"""
+Create structured decision-support analysis for a portfolio news dashboard.
+
+Date: {report_date}
+
+Rules:
+- Do not give financial advice.
+- Do not say buy, sell, hold, accumulate, trim, avoid, or similar instructions.
+- Do not provide price targets.
+- Do not place trades.
+- Explain pros, cons, possible impact, valuation context from the available news only, and what to monitor next.
+- If the news is too weak or noisy, say so.
+- Keep each field concise and useful for a dashboard.
+- Return valid JSON only.
+
+Required JSON shape:
+{{
+  "date": "{report_date}",
+  "mode": "ai",
+  "portfolio_summary": "2-4 sentences",
+  "macro_overview": "1-3 sentences",
+  "risk_alerts": ["short bullet", "short bullet"],
+  "stocks": [
+    {{
+      "ticker": "TICKER",
+      "company": "Company name",
+      "key_takeaway": "Plain-English summary of what matters today",
+      "possible_impact": "Potential market relevance without advice",
+      "bullish_points": ["possible positive point"],
+      "bearish_points": ["possible negative point"],
+      "valuation_context": "Discuss valuation/price context from news only, without saying whether to buy",
+      "what_to_monitor": "Concrete next things to watch",
+      "risk_level": "Low | Medium | High | Unknown",
+      "time_horizon": "Short term | Medium term | Long term | Mixed",
+      "confidence": "Low | Medium | High"
+    }}
+  ]
+}}
+
+News input:
+{json.dumps(analysis_input, ensure_ascii=False)}
+""".strip()
+
+    response = client.chat.completions.create(
+        model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You produce neutral investment research support. You never provide "
+                    "buy/sell/hold advice, price targets, or trading instructions."
+                ),
+            },
+            {"role": "user", "content": prompt},
+        ],
+        response_format={"type": "json_object"},
+        temperature=0.2,
+    )
+    content = response.choices[0].message.content or "{}"
+    analysis = json.loads(content)
+    analysis.setdefault("date", report_date)
+    analysis.setdefault("mode", "ai")
+    return analysis
 
 
 def describe_articles_basic(articles: list[dict[str, Any]]) -> str:
@@ -203,15 +328,32 @@ def save_report(markdown: str, report_date: str) -> Path:
     return output_path
 
 
+def save_analysis(analysis: dict[str, Any], report_date: str) -> Path:
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = REPORTS_DIR / f"{report_date}-analysis.json"
+    with output_path.open("w", encoding="utf-8") as file:
+        json.dump(analysis, file, ensure_ascii=False, indent=2)
+        file.write("\n")
+    return output_path
+
+
 def generate_report(input_path: Path, report_date: str) -> Path:
     load_dotenv(ROOT_DIR / ".env")
     payload = load_news(input_path)
 
     if os.getenv("OPENAI_API_KEY"):
         markdown = create_ai_report(payload, report_date)
+        try:
+            analysis = create_ai_analysis(payload, report_date)
+        except Exception as exc:
+            print(f"AI structured analysis failed; using basic analysis instead: {exc}")
+            analysis = create_basic_analysis(payload, report_date)
     else:
         markdown = create_basic_report(payload, report_date)
+        analysis = create_basic_analysis(payload, report_date)
 
+    analysis_path = save_analysis(analysis, report_date)
+    print(f"Saved analysis to {display_path(analysis_path, ROOT_DIR)}")
     return save_report(markdown, report_date)
 
 

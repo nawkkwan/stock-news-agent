@@ -38,28 +38,53 @@ def get_stock_impact(articles: list[dict[str, Any]]) -> str:
     return "News-only signal. Review sources for possible effects on revenue, sentiment, regulation, demand, or sector positioning."
 
 
+def load_analysis(report_date: str) -> dict[str, Any]:
+    analysis_path = REPORTS_DIR / f"{report_date}-analysis.json"
+    if not analysis_path.exists():
+        return {}
+    return load_json(analysis_path)
+
+
+def analysis_by_ticker(analysis: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return {
+        str(stock.get("ticker", "")).upper(): stock
+        for stock in analysis.get("stocks", [])
+        if stock.get("ticker")
+    }
+
+
 def build_site_payload(report_date: str) -> dict[str, Any]:
     deduped_path = REPORTS_DIR / f"{report_date}-deduped-news.json"
     markdown_path = REPORTS_DIR / f"{report_date}-portfolio-news-report.md"
     google_doc_url_path = REPORTS_DIR / f"{report_date}-google-doc-url.txt"
 
     deduped_payload = load_json(deduped_path)
+    analysis = load_analysis(report_date)
+    stock_analysis = analysis_by_ticker(analysis)
     markdown = load_text_if_exists(markdown_path)
     google_doc_url = load_text_if_exists(google_doc_url_path)
 
     stocks: list[dict[str, Any]] = []
     for ticker, stock_data in deduped_payload.get("stocks", {}).items():
         articles = stock_data.get("articles", [])[:MAX_ARTICLES_PER_STOCK]
+        analyzed = stock_analysis.get(str(ticker).upper(), {})
         stocks.append(
             {
                 "ticker": ticker,
                 "company": stock_data.get("company", ""),
                 "exchange": stock_data.get("exchange", ""),
                 "article_count": stock_data.get("article_count_after_dedupe", len(stock_data.get("articles", []))),
-                "key_news": get_stock_key_news(articles),
-                "impact": get_stock_impact(articles),
-                "time_horizon": "Short to medium term",
-                "confidence": "Low" if not articles else "Medium",
+                "key_news": analyzed.get("key_takeaway") or get_stock_key_news(articles),
+                "key_takeaway": analyzed.get("key_takeaway") or get_stock_key_news(articles),
+                "impact": analyzed.get("possible_impact") or get_stock_impact(articles),
+                "possible_impact": analyzed.get("possible_impact") or get_stock_impact(articles),
+                "bullish_points": analyzed.get("bullish_points", []),
+                "bearish_points": analyzed.get("bearish_points", []),
+                "valuation_context": analyzed.get("valuation_context", "No AI valuation context was generated."),
+                "what_to_monitor": analyzed.get("what_to_monitor", "Earnings, guidance, macro data, valuation changes, and source updates."),
+                "risk_level": analyzed.get("risk_level", "Unknown"),
+                "time_horizon": analyzed.get("time_horizon", "Short to medium term"),
+                "confidence": analyzed.get("confidence", "Low" if not articles else "Medium"),
                 "articles": [
                     {
                         "title": article.get("title", "Untitled"),
@@ -81,7 +106,10 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
         "notebooklm_url": "https://notebooklm.google.com/",
         "markdown_report": markdown,
         "summary": {
-            "mode": "AI summary if OPENAI_API_KEY is configured; basic RSS summary otherwise.",
+            "mode": analysis.get("mode", "basic"),
+            "portfolio_summary": analysis.get("portfolio_summary", ""),
+            "macro_overview": analysis.get("macro_overview", ""),
+            "risk_alerts": analysis.get("risk_alerts", []),
             "stock_count": len(stocks),
             "total_articles": sum(stock["article_count"] for stock in stocks),
             "errors": errors,
