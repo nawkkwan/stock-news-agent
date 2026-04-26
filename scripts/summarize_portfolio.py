@@ -221,6 +221,191 @@ News input:
     return analysis
 
 
+def create_analysis_prompt(payload: dict[str, Any], report_date: str) -> str:
+    analysis_input = compact_news_for_analysis(payload)
+    return f"""
+Create structured decision-support analysis for a portfolio news dashboard.
+
+Date: {report_date}
+
+Rules:
+- Do not give financial advice.
+- Do not say buy, sell, hold, accumulate, trim, avoid, or similar instructions.
+- Do not provide price targets.
+- Do not place trades.
+- Explain pros, cons, possible impact, valuation context from the available news only, and what to monitor next.
+- If the news is too weak or noisy, say so.
+- Keep each field concise and useful for a dashboard.
+- Return valid JSON only.
+
+Required JSON shape:
+{{
+  "date": "{report_date}",
+  "mode": "gemini",
+  "portfolio_summary": "2-4 sentences",
+  "macro_overview": "1-3 sentences",
+  "risk_alerts": ["short bullet", "short bullet"],
+  "stocks": [
+    {{
+      "ticker": "TICKER",
+      "company": "Company name",
+      "key_takeaway": "Plain-English summary of what matters today",
+      "possible_impact": "Potential market relevance without advice",
+      "bullish_points": ["possible positive point"],
+      "bearish_points": ["possible negative point"],
+      "valuation_context": "Discuss valuation/price context from news only, without saying whether to buy",
+      "what_to_monitor": "Concrete next things to watch",
+      "risk_level": "Low | Medium | High | Unknown",
+      "time_horizon": "Short term | Medium term | Long term | Mixed",
+      "confidence": "Low | Medium | High"
+    }}
+  ]
+}}
+
+News input:
+{json.dumps(analysis_input, ensure_ascii=False)}
+""".strip()
+
+
+def parse_json_object(text: str) -> dict[str, Any]:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.removeprefix("```json").removeprefix("```").strip()
+        cleaned = cleaned.removesuffix("```").strip()
+    return json.loads(cleaned)
+
+
+def create_gemini_analysis(payload: dict[str, Any], report_date: str) -> dict[str, Any]:
+    from google import genai
+
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    response = client.models.generate_content(
+        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        contents=create_analysis_prompt(payload, report_date),
+        config={
+            "response_mime_type": "application/json",
+            "temperature": 0.2,
+        },
+    )
+    analysis = parse_json_object(response.text or "{}")
+    analysis.setdefault("date", report_date)
+    analysis["mode"] = "gemini"
+    return analysis
+
+
+def markdown_list(items: list[str]) -> str:
+    if not items:
+        return "- No clear signal from today's sources."
+    return "\n".join(f"- {item}" for item in items)
+
+
+def create_report_from_analysis(
+    analysis: dict[str, Any],
+    payload: dict[str, Any],
+    report_date: str,
+) -> str:
+    stock_lookup = {
+        str(stock.get("ticker", "")).upper(): stock
+        for stock in analysis.get("stocks", [])
+        if stock.get("ticker")
+    }
+    rows: list[str] = []
+    sections: list[str] = []
+    no_news: list[str] = []
+
+    for ticker, stock_data in payload.get("stocks", {}).items():
+        company = stock_data.get("company", "")
+        articles = stock_data.get("articles", [])[:MAX_ARTICLES_PER_STOCK]
+        analyzed = stock_lookup.get(str(ticker).upper(), {})
+        key_takeaway = analyzed.get("key_takeaway") or describe_articles_basic(articles)
+        possible_impact = analyzed.get("possible_impact") or "Review the linked sources for possible market relevance."
+        confidence = analyzed.get("confidence", "Low")
+        time_horizon = analyzed.get("time_horizon", "Short to medium term")
+
+        if not articles:
+            no_news.append(f"- {ticker} - {company}")
+
+        rows.append(
+            "| {ticker} | {company} | {key_takeaway} | {possible_impact} | {time_horizon} | {confidence} |".format(
+                ticker=ticker,
+                company=company,
+                key_takeaway=str(key_takeaway).replace("|", "/"),
+                possible_impact=str(possible_impact).replace("|", "/"),
+                time_horizon=str(time_horizon).replace("|", "/"),
+                confidence=str(confidence).replace("|", "/"),
+            )
+        )
+
+        sections.append(
+            f"""### {ticker} - {company}
+
+**News Summary:**
+{key_takeaway}
+
+**Possible Impact:**
+{possible_impact}
+
+**Good Points:**
+{markdown_list(analyzed.get("bullish_points", []))}
+
+**Bad Points:**
+{markdown_list(analyzed.get("bearish_points", []))}
+
+**Valuation Context:**
+{analyzed.get("valuation_context", "No valuation context was generated.")}
+
+**Why It Matters:**
+Portfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.
+
+**What To Monitor Next:**
+{analyzed.get("what_to_monitor", "Earnings, guidance, macro data, valuation changes, and source updates.")}
+
+**Sources:**
+{format_sources(articles)}
+"""
+        )
+
+    errors = payload.get("errors", [])
+    error_text = "\n".join(f"- {error}" for error in errors) if errors else "- None."
+    no_news_text = "\n".join(no_news) if no_news else "- Every configured stock had at least one matching RSS headline."
+    risk_alerts = markdown_list(analysis.get("risk_alerts", []))
+
+    return f"""# Portfolio News Report - {report_date}
+
+## 1. Executive Summary
+
+{analysis.get("portfolio_summary", "No portfolio summary was generated.")}
+
+## 2. Portfolio Impact Table
+
+| Ticker | Company | Key News | Impact | Time Horizon | Confidence |
+|---|---|---|---|---|---|
+{chr(10).join(rows)}
+
+## 3. Stock-by-Stock News
+
+{chr(10).join(sections)}
+
+## 4. Macro & Market Overview
+
+{analysis.get("macro_overview", "No macro overview was generated.")}
+
+## 5. Risk Alerts
+
+{risk_alerts}
+- This is decision support, not financial advice.
+- The report does not recommend buying, selling, holding, or trading.
+
+## 6. Stocks With No Important News Today
+
+{no_news_text}
+
+## 7. Notes / Errors
+
+{error_text}
+"""
+
+
 def describe_articles_basic(articles: list[dict[str, Any]]) -> str:
     if not articles:
         return "No important recent news found from the configured RSS searches."
@@ -347,6 +532,14 @@ def generate_report(input_path: Path, report_date: str) -> Path:
             analysis = create_ai_analysis(payload, report_date)
         except Exception as exc:
             print(f"AI structured analysis failed; using basic analysis instead: {exc}")
+            analysis = create_basic_analysis(payload, report_date)
+    elif os.getenv("GEMINI_API_KEY"):
+        try:
+            analysis = create_gemini_analysis(payload, report_date)
+            markdown = create_report_from_analysis(analysis, payload, report_date)
+        except Exception as exc:
+            print(f"Gemini analysis failed; using basic analysis instead: {exc}")
+            markdown = create_basic_report(payload, report_date)
             analysis = create_basic_analysis(payload, report_date)
     else:
         markdown = create_basic_report(payload, report_date)

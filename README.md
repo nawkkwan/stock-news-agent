@@ -242,11 +242,14 @@ GitHub secrets you can add:
 
 ```text
 OPENAI_API_KEY
+GEMINI_API_KEY
 GOOGLE_CREDENTIALS_JSON
 GOOGLE_TOKEN_JSON
 ```
 
 `OPENAI_API_KEY` is optional. Without it, the workflow still creates a basic non-AI report.
+
+`GEMINI_API_KEY` is optional. If `OPENAI_API_KEY` is not set and `GEMINI_API_KEY` is set, the workflow uses Gemini for structured dashboard analysis.
 
 When `OPENAI_API_KEY` is present, the workflow sends a small capped set of RSS items per stock to OpenAI and creates structured dashboard fields:
 
