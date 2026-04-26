@@ -136,6 +136,9 @@ def create_basic_analysis(payload: dict[str, Any], report_date: str) -> dict[str
                 "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
                 "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
                 "risk_level": "Unknown",
+                "relevance_score": "Low" if not articles else "Medium",
+                "relevance_reason": "Basic mode cannot judge detailed relevance.",
+                "alert_tags": [],
                 "time_horizon": "Short to medium term",
                 "confidence": "Low",
             }
@@ -189,6 +192,9 @@ Required JSON shape:
       "valuation_context": "Discuss valuation/price context from news only, without saying whether to buy",
       "what_to_monitor": "Concrete next things to watch",
       "risk_level": "Low | Medium | High | Unknown",
+      "relevance_score": "Low | Medium | High",
+      "relevance_reason": "Why today's selected news is or is not relevant",
+      "alert_tags": ["Earnings", "Guidance", "Regulation", "AI", "Macro", "Legal", "M&A", "Fund flows"],
       "time_horizon": "Short term | Medium term | Long term | Mixed",
       "confidence": "Low | Medium | High"
     }}
@@ -256,6 +262,9 @@ Required JSON shape:
       "valuation_context": "Discuss valuation/price context from news only, without saying whether to buy",
       "what_to_monitor": "Concrete next things to watch",
       "risk_level": "Low | Medium | High | Unknown",
+      "relevance_score": "Low | Medium | High",
+      "relevance_reason": "Why today's selected news is or is not relevant",
+      "alert_tags": ["Earnings", "Guidance", "Regulation", "AI", "Macro", "Legal", "M&A", "Fund flows"],
       "time_horizon": "Short term | Medium term | Long term | Mixed",
       "confidence": "Low | Medium | High"
     }}
@@ -321,6 +330,7 @@ def create_report_from_analysis(
         possible_impact = analyzed.get("possible_impact") or "Review the linked sources for possible market relevance."
         confidence = analyzed.get("confidence", "Low")
         time_horizon = analyzed.get("time_horizon", "Short to medium term")
+        relevance_score = analyzed.get("relevance_score", "Unknown")
 
         if not articles:
             no_news.append(f"- {ticker} - {company}")
@@ -353,6 +363,12 @@ def create_report_from_analysis(
 
 **Valuation Context:**
 {analyzed.get("valuation_context", "No valuation context was generated.")}
+
+**Relevance:**
+{relevance_score} - {analyzed.get("relevance_reason", "No relevance reason was generated.")}
+
+**Alert Tags:**
+{markdown_list(analyzed.get("alert_tags", []))}
 
 **Why It Matters:**
 Portfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.

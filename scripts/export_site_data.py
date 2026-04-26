@@ -83,6 +83,9 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
                 "valuation_context": analyzed.get("valuation_context", "No AI valuation context was generated."),
                 "what_to_monitor": analyzed.get("what_to_monitor", "Earnings, guidance, macro data, valuation changes, and source updates."),
                 "risk_level": analyzed.get("risk_level", "Unknown"),
+                "relevance_score": analyzed.get("relevance_score", "Unknown"),
+                "relevance_reason": analyzed.get("relevance_reason", ""),
+                "alert_tags": analyzed.get("alert_tags", []),
                 "time_horizon": analyzed.get("time_horizon", "Short to medium term"),
                 "confidence": analyzed.get("confidence", "Low" if not articles else "Medium"),
                 "articles": [

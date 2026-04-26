@@ -52,15 +52,27 @@ function renderStockCards(stocks) {
     meta.className = "card-meta";
     meta.innerHTML = `
       <span>Risk: ${text(stock.risk_level)}</span>
+      <span>Relevance: ${text(stock.relevance_score)}</span>
       <span>Horizon: ${text(stock.time_horizon)}</span>
       <span>Confidence: ${text(stock.confidence)}</span>
     `;
+
+    const tags = document.createElement("div");
+    tags.className = "tag-row";
+    (stock.alert_tags || []).forEach((tag) => {
+      const badge = document.createElement("span");
+      badge.textContent = tag;
+      tags.appendChild(badge);
+    });
 
     const possibleImpact = document.createElement("p");
     possibleImpact.innerHTML = `<strong>Possible impact:</strong> ${text(stock.possible_impact || stock.impact)}`;
 
     const valuation = document.createElement("p");
     valuation.innerHTML = `<strong>Valuation context:</strong> ${text(stock.valuation_context)}`;
+
+    const relevance = document.createElement("p");
+    relevance.innerHTML = `<strong>Relevance:</strong> ${text(stock.relevance_reason, "No relevance reason generated.")}`;
 
     const monitor = document.createElement("p");
     monitor.innerHTML = `<strong>Monitor next:</strong> ${text(stock.what_to_monitor)}`;
@@ -93,7 +105,7 @@ function renderStockCards(stocks) {
       });
     }
 
-    card.append(title, meta, impact, possibleImpact, valuation, points, monitor, sources);
+    card.append(title, meta, tags, impact, possibleImpact, valuation, relevance, points, monitor, sources);
     grid.appendChild(card);
   });
 }

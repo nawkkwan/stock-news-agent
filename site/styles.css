@@ -205,6 +205,23 @@ td {
   font-size: 12px;
 }
 
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 0;
+  margin-bottom: 12px;
+}
+
+.tag-row span {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #e8f2ef;
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .points-grid,
 .macro-grid {
   display: grid;

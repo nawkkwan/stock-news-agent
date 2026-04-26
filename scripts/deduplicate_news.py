@@ -12,6 +12,22 @@ from path_utils import display_path
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 REPORTS_DIR = ROOT_DIR / "reports"
+NOISE_TITLE_PATTERNS = [
+    r"\b(buy|sell|hold)\b",
+    r"\bprice target\b",
+    r"\bforecast\b",
+    r"\bprediction\b",
+    r"\bshould you\b",
+    r"\bworth buying\b",
+    r"\btime to buy\b",
+    r"\btop stocks?\b",
+]
+LOW_QUALITY_SOURCES = {
+    "marketbeat",
+    "defense world",
+    "ticker report",
+    "etf daily news",
+}
 
 
 def normalize_title(title: str) -> str:
@@ -34,12 +50,22 @@ def normalize_url(url: str) -> str:
     return f"{parsed.netloc.lower()}{clean_path}".strip()
 
 
+def is_noise_article(article: dict[str, Any]) -> bool:
+    title = str(article.get("title", "")).lower()
+    source = str(article.get("source", "")).lower()
+    if any(re.search(pattern, title) for pattern in NOISE_TITLE_PATTERNS):
+        return True
+    return any(low_quality_source in source for low_quality_source in LOW_QUALITY_SOURCES)
+
+
 def deduplicate_articles(articles: list[dict[str, Any]]) -> list[dict[str, Any]]:
     seen_titles: set[str] = set()
     seen_urls: set[str] = set()
     deduped: list[dict[str, Any]] = []
 
     for article in articles:
+        if is_noise_article(article):
+            continue
         title_key = normalize_title(str(article.get("title", "")))
         url_key = normalize_url(str(article.get("url", "")))
         if (title_key and title_key in seen_titles) or (url_key and url_key in seen_urls):
@@ -66,6 +92,7 @@ def deduplicate_payload(payload: dict[str, Any]) -> dict[str, Any]:
             "articles": deduped_articles,
             "article_count_before_dedupe": len(articles),
             "article_count_after_dedupe": len(deduped_articles),
+            "article_count_filtered_noise": len(articles) - len(deduped_articles),
         }
 
     return result
