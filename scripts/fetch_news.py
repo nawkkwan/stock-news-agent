@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote_plus
@@ -16,6 +17,7 @@ PORTFOLIO_PATH = ROOT_DIR / "data" / "portfolio.json"
 REPORTS_DIR = ROOT_DIR / "reports"
 GOOGLE_NEWS_RSS_URL = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
 REQUEST_TIMEOUT_SECONDS = 20
+RECENCY_DAYS = 1
 MOJIBAKE_MARKERS = ("Ã", "Â", "â€", "â€™", "à¸", "à¹")
 
 
@@ -43,15 +45,15 @@ def build_queries(stock: dict[str, str]) -> list[str]:
     base_ticker = ticker.removesuffix(".BK")
 
     queries = [
-        f'"{ticker}" stock news',
-        f'"{company}" stock news',
+        f'"{ticker}" stock news when:{RECENCY_DAYS}d',
+        f'"{company}" stock news when:{RECENCY_DAYS}d',
     ]
 
     if ticker.endswith(".BK"):
         queries.extend(
             [
-                f'"{base_ticker}" SET Thailand news',
-                f'"{company}" Thailand stock news',
+                f'"{base_ticker}" SET Thailand news when:{RECENCY_DAYS}d',
+                f'"{company}" Thailand stock news when:{RECENCY_DAYS}d',
             ]
         )
 
@@ -69,6 +71,25 @@ def clean_feed_text(value: Any) -> str:
     return text
 
 
+def parse_feed_datetime(value: str) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = parsedate_to_datetime(value)
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def is_recent_article(published: str, fetched_at: datetime) -> bool:
+    parsed = parse_feed_datetime(published)
+    if parsed is None:
+        return True
+    return parsed >= fetched_at - timedelta(days=RECENCY_DAYS)
+
+
 def fetch_google_news_rss(query: str) -> tuple[list[dict[str, Any]], str | None]:
     rss_url = GOOGLE_NEWS_RSS_URL.format(query=quote_plus(query))
     try:
@@ -83,10 +104,13 @@ def fetch_google_news_rss(query: str) -> tuple[list[dict[str, Any]], str | None]
 
     parsed_feed = feedparser.parse(response.content)
     articles: list[dict[str, Any]] = []
-    fetched_at = datetime.now(UTC).isoformat()
+    fetched_dt = datetime.now(UTC)
+    fetched_at = fetched_dt.isoformat()
 
     for entry in parsed_feed.entries:
         published = entry.get("published") or entry.get("updated") or ""
+        if not is_recent_article(str(published), fetched_dt):
+            continue
         articles.append(
             {
                 "title": clean_feed_text(entry.get("title", "")),
@@ -96,6 +120,7 @@ def fetch_google_news_rss(query: str) -> tuple[list[dict[str, Any]], str | None]
                 "summary": clean_feed_text(entry.get("summary", "")),
                 "query": query,
                 "fetched_at": fetched_at,
+                "recency_days": RECENCY_DAYS,
             }
         )
 
@@ -134,6 +159,7 @@ def save_raw_news(raw_news: dict[str, Any], errors: list[str], report_date: str)
         "date": report_date,
         "generated_at": datetime.now(UTC).isoformat(),
         "source": "Google News RSS",
+        "recency_days": RECENCY_DAYS,
         "errors": errors,
         "stocks": raw_news,
     }
