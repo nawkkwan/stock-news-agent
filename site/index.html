@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portfolio News</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Portfolio News</p>
+        <h1>Daily market notes</h1>
+      </div>
+      <div class="actions">
+        <a id="googleDocLink" class="button secondary" href="#" target="_blank" rel="noreferrer">Google Doc</a>
+        <a id="notebookLink" class="button" href="https://notebooklm.google.com/" target="_blank" rel="noreferrer">NotebookLM</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="summary-band">
+        <div>
+          <span class="label">Report date</span>
+          <strong id="reportDate">Loading...</strong>
+        </div>
+        <div>
+          <span class="label">Stocks</span>
+          <strong id="stockCount">-</strong>
+        </div>
+        <div>
+          <span class="label">Articles</span>
+          <strong id="articleCount">-</strong>
+        </div>
+        <div>
+          <span class="label">Status</span>
+          <strong id="status">-</strong>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Portfolio Impact</h2>
+          <button id="copyReport" class="button secondary" type="button">Copy report</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Ticker</th>
+                <th>Company</th>
+                <th>Key News</th>
+                <th>Impact</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody id="impactRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Stock News</h2>
+          <p id="generatedAt"></p>
+        </div>
+        <div id="stockCards" class="stock-grid"></div>
+      </section>
+
+      <section class="section">
+        <h2>Notes</h2>
+        <ul id="notes"></ul>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

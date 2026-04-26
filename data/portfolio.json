@@ -1,0 +1,27 @@
+[
+  {
+    "ticker": "VOO",
+    "company": "Vanguard S&P 500 ETF",
+    "exchange": "NYSE Arca"
+  },
+  {
+    "ticker": "GOOGL",
+    "company": "Alphabet Inc.",
+    "exchange": "NASDAQ"
+  },
+  {
+    "ticker": "XLV",
+    "company": "Health Care Select Sector SPDR Fund",
+    "exchange": "NYSE Arca"
+  },
+  {
+    "ticker": "VXUS",
+    "company": "Vanguard Total International Stock ETF",
+    "exchange": "NASDAQ"
+  },
+  {
+    "ticker": "PLTR",
+    "company": "Palantir Technologies Inc.",
+    "exchange": "NASDAQ"
+  }
+]

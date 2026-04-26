@@ -1,0 +1,14 @@
+.env
+.venv/
+.tmp/
+credentials/
+token.json
+__pycache__/
+*.pyc
+.pytest_cache/
+
+reports/*-raw-news.json
+reports/*-deduped-news.json
+reports/*-portfolio-news-report.md
+reports/*-google-doc-url.txt
+!reports/.gitkeep
