@@ -110,6 +110,53 @@ function renderStockCards(stocks) {
   });
 }
 
+function renderTextList(id, items) {
+  const list = document.getElementById(id);
+  list.innerHTML = "";
+  const values = items && items.length ? items : ["No clear signal from today's sources."];
+  values.forEach((value) => {
+    const item = document.createElement("li");
+    item.textContent = value;
+    list.appendChild(item);
+  });
+}
+
+function renderReadMore(items) {
+  const grid = document.getElementById("readMoreList");
+  grid.innerHTML = "";
+  const values = items && items.length ? items : [];
+
+  if (values.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = "No priority sources selected.";
+    grid.appendChild(empty);
+    return;
+  }
+
+  values.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "read-more-card";
+    const ticker = document.createElement("span");
+    ticker.className = "read-more-ticker";
+    ticker.textContent = item.ticker || "Source";
+
+    const link = document.createElement("a");
+    link.href = item.url || "#";
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    link.textContent = item.title || "Untitled source";
+
+    const source = document.createElement("p");
+    source.textContent = item.source || "";
+
+    const why = document.createElement("p");
+    why.textContent = item.why_read || "Worth opening for more context.";
+
+    card.append(ticker, link, source, why);
+    grid.appendChild(card);
+  });
+}
+
 function createPointList(title, points) {
   const wrapper = document.createElement("div");
   const heading = document.createElement("h4");
@@ -169,8 +216,12 @@ async function main() {
   setText("articleCount", report.summary?.total_articles);
   setText("status", report.status);
   setText("generatedAt", `Generated ${report.generated_at}`);
+  setText("dailyBriefing", report.summary?.daily_briefing || report.summary?.portfolio_summary || "No briefing generated.");
   setText("portfolioSummary", report.summary?.portfolio_summary || report.summary?.mode);
   setText("macroOverview", report.summary?.macro_overview || "No macro overview generated.");
+  renderTextList("crossThemes", report.summary?.cross_portfolio_themes || []);
+  renderTextList("marketContext", report.summary?.market_context || []);
+  renderReadMore(report.summary?.read_more || []);
 
   const googleDocLink = document.getElementById("googleDocLink");
   if (report.google_doc_url) {

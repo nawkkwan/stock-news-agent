@@ -38,6 +38,32 @@
         </div>
       </section>
 
+      <section class="section briefing-section">
+        <div class="section-head">
+          <h2>Daily Briefing</h2>
+          <p id="generatedAt"></p>
+        </div>
+        <p id="dailyBriefing" class="briefing-text">Loading...</p>
+        <div class="macro-grid">
+          <div>
+            <h3>Portfolio Summary</h3>
+            <p id="portfolioSummary">-</p>
+          </div>
+          <div>
+            <h3>Cross-Portfolio Themes</h3>
+            <ul id="crossThemes" class="plain-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Read More</h2>
+          <span class="small-note">Priority sources selected from today&apos;s news</span>
+        </div>
+        <div id="readMoreList" class="read-more-grid"></div>
+      </section>
+
       <section class="section">
         <div class="section-head">
           <h2>Portfolio Impact</h2>
@@ -63,7 +89,6 @@
       <section class="section">
         <div class="section-head">
           <h2>Stock Analysis</h2>
-          <p id="generatedAt"></p>
         </div>
         <div id="stockCards" class="stock-grid"></div>
       </section>
@@ -72,12 +97,12 @@
         <h2>Macro & Risk</h2>
         <div class="macro-grid">
           <div>
-            <h3>Portfolio Summary</h3>
-            <p id="portfolioSummary">-</p>
-          </div>
-          <div>
             <h3>Macro Overview</h3>
             <p id="macroOverview">-</p>
+          </div>
+          <div>
+            <h3>Market Context</h3>
+            <ul id="marketContext" class="plain-list"></ul>
           </div>
         </div>
         <h2>Notes</h2>

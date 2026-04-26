@@ -152,6 +152,10 @@ def create_basic_analysis(payload: dict[str, Any], report_date: str) -> dict[str
             "This is a news summary, not financial advice.",
             "The report does not recommend buying, selling, or trading.",
         ],
+        "daily_briefing": "Basic mode cannot generate a full portfolio briefing. Add GEMINI_API_KEY or OPENAI_API_KEY for contextual analysis.",
+        "market_context": [],
+        "cross_portfolio_themes": [],
+        "read_more": [],
         "stocks": stocks,
     }
 
@@ -179,8 +183,20 @@ Required JSON shape:
   "date": "{report_date}",
   "mode": "ai",
   "portfolio_summary": "2-4 sentences",
+  "daily_briefing": "A 5-8 sentence briefing that connects the most important news across the whole portfolio into one coherent story",
   "macro_overview": "1-3 sentences",
+  "market_context": ["market or sector context point"],
+  "cross_portfolio_themes": ["theme connecting multiple holdings"],
   "risk_alerts": ["short bullet", "short bullet"],
+  "read_more": [
+    {{
+      "ticker": "TICKER",
+      "title": "article title",
+      "url": "source URL copied from input",
+      "source": "publisher",
+      "why_read": "why this source is worth opening"
+    }}
+  ],
   "stocks": [
     {{
       "ticker": "TICKER",
@@ -249,8 +265,20 @@ Required JSON shape:
   "date": "{report_date}",
   "mode": "gemini",
   "portfolio_summary": "2-4 sentences",
+  "daily_briefing": "A 5-8 sentence briefing that connects the most important news across the whole portfolio into one coherent story",
   "macro_overview": "1-3 sentences",
+  "market_context": ["market or sector context point"],
+  "cross_portfolio_themes": ["theme connecting multiple holdings"],
   "risk_alerts": ["short bullet", "short bullet"],
+  "read_more": [
+    {{
+      "ticker": "TICKER",
+      "title": "article title",
+      "url": "source URL copied from input",
+      "source": "publisher",
+      "why_read": "why this source is worth opening"
+    }}
+  ],
   "stocks": [
     {{
       "ticker": "TICKER",
@@ -306,6 +334,24 @@ def markdown_list(items: list[str]) -> str:
     if not items:
         return "- No clear signal from today's sources."
     return "\n".join(f"- {item}" for item in items)
+
+
+def format_read_more(items: list[dict[str, Any]]) -> str:
+    if not items:
+        return "- No priority sources selected."
+    lines: list[str] = []
+    for item in items:
+        title = item.get("title", "Untitled")
+        url = item.get("url", "")
+        source = item.get("source", "")
+        why_read = item.get("why_read", "")
+        ticker = item.get("ticker", "")
+        label = f"{ticker} - {title}" if ticker else title
+        if url:
+            lines.append(f"- [{label}]({url}) | {source} | {why_read}")
+        else:
+            lines.append(f"- {label} | {source} | {why_read}")
+    return "\n".join(lines)
 
 
 def create_report_from_analysis(
@@ -392,6 +438,14 @@ Portfolio holdings can move when company-specific or fund-specific headlines aff
 
 {analysis.get("portfolio_summary", "No portfolio summary was generated.")}
 
+### Daily Briefing
+
+{analysis.get("daily_briefing", "No daily briefing was generated.")}
+
+### Cross-Portfolio Themes
+
+{markdown_list(analysis.get("cross_portfolio_themes", []))}
+
 ## 2. Portfolio Impact Table
 
 | Ticker | Company | Key News | Impact | Time Horizon | Confidence |
@@ -406,17 +460,25 @@ Portfolio holdings can move when company-specific or fund-specific headlines aff
 
 {analysis.get("macro_overview", "No macro overview was generated.")}
 
+### Market Context
+
+{markdown_list(analysis.get("market_context", []))}
+
 ## 5. Risk Alerts
 
 {risk_alerts}
 - This is decision support, not financial advice.
 - The report does not recommend buying, selling, holding, or trading.
 
-## 6. Stocks With No Important News Today
+## 6. Read More
+
+{format_read_more(analysis.get("read_more", []))}
+
+## 7. Stocks With No Important News Today
 
 {no_news_text}
 
-## 7. Notes / Errors
+## 8. Notes / Errors
 
 {error_text}
 """

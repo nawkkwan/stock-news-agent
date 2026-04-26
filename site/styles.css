@@ -138,6 +138,66 @@ main {
   margin-top: 28px;
 }
 
+.briefing-section {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.briefing-text {
+  max-width: 980px;
+  color: #293642;
+  font-size: 18px;
+}
+
+.small-note {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.plain-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.read-more-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.read-more-card {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.read-more-card a {
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.read-more-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.read-more-ticker {
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eef2f6;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);

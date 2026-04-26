@@ -111,8 +111,12 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
         "summary": {
             "mode": analysis.get("mode", "basic"),
             "portfolio_summary": analysis.get("portfolio_summary", ""),
+            "daily_briefing": analysis.get("daily_briefing", ""),
             "macro_overview": analysis.get("macro_overview", ""),
+            "market_context": analysis.get("market_context", []),
+            "cross_portfolio_themes": analysis.get("cross_portfolio_themes", []),
             "risk_alerts": analysis.get("risk_alerts", []),
+            "read_more": analysis.get("read_more", []),
             "stock_count": len(stocks),
             "total_articles": sum(stock["article_count"] for stock in stocks),
             "errors": errors,
