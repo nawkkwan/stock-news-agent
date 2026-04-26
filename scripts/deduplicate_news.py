@@ -83,6 +83,14 @@ def deduplicate_articles(articles: list[dict[str, Any]]) -> list[dict[str, Any]]
 def deduplicate_payload(payload: dict[str, Any]) -> dict[str, Any]:
     result = dict(payload)
     result["stocks"] = {}
+    macro = payload.get("macro", {})
+    macro_articles = macro.get("articles", [])
+    result["macro"] = {
+        **macro,
+        "articles": deduplicate_articles(macro_articles),
+        "article_count_before_dedupe": len(macro_articles),
+        "article_count_after_dedupe": len(deduplicate_articles(macro_articles)),
+    }
 
     for ticker, stock_data in payload.get("stocks", {}).items():
         articles = stock_data.get("articles", [])

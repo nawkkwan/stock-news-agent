@@ -11,5 +11,6 @@ reports/*-raw-news.json
 reports/*-deduped-news.json
 reports/*-portfolio-news-report.md
 reports/*-analysis.json
+reports/*-technicals.json
 reports/*-google-doc-url.txt
 !reports/.gitkeep

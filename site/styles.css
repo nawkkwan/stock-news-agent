@@ -282,6 +282,28 @@ td {
   font-weight: 700;
 }
 
+.technical-box {
+  display: grid;
+  gap: 5px;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafb;
+}
+
+.technical-box span,
+.technical-box p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.technical-box strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
 .points-grid,
 .macro-grid {
   display: grid;

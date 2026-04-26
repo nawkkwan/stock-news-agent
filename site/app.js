@@ -74,6 +74,19 @@ function renderStockCards(stocks) {
     const relevance = document.createElement("p");
     relevance.innerHTML = `<strong>Relevance:</strong> ${text(stock.relevance_reason, "No relevance reason generated.")}`;
 
+    const technical = document.createElement("div");
+    technical.className = "technical-box";
+    technical.innerHTML = `
+      <strong>Technical snapshot</strong>
+      <span>Trend: ${text(stock.technical?.trend)}</span>
+      <span>Close: ${text(stock.technical?.last_close)}</span>
+      <span>RSI14: ${text(stock.technical?.rsi14)}</span>
+      <span>EMA50 / EMA200: ${text(stock.technical?.ema50)} / ${text(stock.technical?.ema200)}</span>
+      <span>Support: ${text((stock.technical?.support_zones || []).join(", "))}</span>
+      <span>Resistance: ${text((stock.technical?.resistance_zones || []).join(", "))}</span>
+      <p>${text(stock.technical_summary || stock.technical?.technical_note, "No technical context generated.")}</p>
+    `;
+
     const monitor = document.createElement("p");
     monitor.innerHTML = `<strong>Monitor next:</strong> ${text(stock.what_to_monitor)}`;
 
@@ -105,7 +118,7 @@ function renderStockCards(stocks) {
       });
     }
 
-    card.append(title, meta, tags, impact, possibleImpact, valuation, relevance, points, monitor, sources);
+    card.append(title, meta, tags, impact, possibleImpact, valuation, technical, relevance, points, monitor, sources);
     grid.appendChild(card);
   });
 }

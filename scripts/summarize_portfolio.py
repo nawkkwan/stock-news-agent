@@ -23,6 +23,13 @@ def load_news(path: Path) -> dict[str, Any]:
         return json.load(file)
 
 
+def load_json_if_exists(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    with path.open("r", encoding="utf-8") as file:
+        return json.load(file)
+
+
 def article_to_markdown(article: dict[str, Any]) -> str:
     title = article.get("title", "Untitled")
     url = article.get("url", "")
@@ -63,7 +70,23 @@ def compact_news_for_analysis(payload: dict[str, Any]) -> dict[str, Any]:
                 ],
             }
         )
-    return {"stocks": stocks, "errors": payload.get("errors", [])}
+    macro_articles = payload.get("macro", {}).get("articles", [])[:10]
+    technicals = load_json_if_exists(REPORTS_DIR / f"{payload.get('date')}-technicals.json")
+    return {
+        "stocks": stocks,
+        "macro_articles": [
+            {
+                "title": article.get("title", "Untitled"),
+                "source": article.get("source", ""),
+                "published": article.get("published", ""),
+                "summary": article.get("summary", ""),
+                "url": article.get("url", ""),
+            }
+            for article in macro_articles
+        ],
+        "technicals": technicals.get("stocks", {}),
+        "errors": payload.get("errors", []) + technicals.get("errors", []),
+    }
 
 
 def load_prompt_template() -> str:
@@ -135,6 +158,7 @@ def create_basic_analysis(payload: dict[str, Any], report_date: str) -> dict[str
                 "bearish_points": [],
                 "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
                 "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
+                "technical_summary": "No technical analysis was generated.",
                 "risk_level": "Unknown",
                 "relevance_score": "Low" if not articles else "Medium",
                 "relevance_reason": "Basic mode cannot judge detailed relevance.",
@@ -206,6 +230,7 @@ Required JSON shape:
       "bullish_points": ["possible positive point"],
       "bearish_points": ["possible negative point"],
       "valuation_context": "Discuss valuation/price context from news only, without saying whether to buy",
+      "technical_summary": "Use EMA, RSI, MACD, support, and resistance from input to describe chart context without buy/sell advice",
       "what_to_monitor": "Concrete next things to watch",
       "risk_level": "Low | Medium | High | Unknown",
       "relevance_score": "Low | Medium | High",
@@ -288,6 +313,7 @@ Required JSON shape:
       "bullish_points": ["possible positive point"],
       "bearish_points": ["possible negative point"],
       "valuation_context": "Discuss valuation/price context from news only, without saying whether to buy",
+      "technical_summary": "Use EMA, RSI, MACD, support, and resistance from input to describe chart context without buy/sell advice",
       "what_to_monitor": "Concrete next things to watch",
       "risk_level": "Low | Medium | High | Unknown",
       "relevance_score": "Low | Medium | High",
@@ -409,6 +435,9 @@ def create_report_from_analysis(
 
 **Valuation Context:**
 {analyzed.get("valuation_context", "No valuation context was generated.")}
+
+**Technical Context:**
+{analyzed.get("technical_summary", "No technical context was generated.")}
 
 **Relevance:**
 {relevance_score} - {analyzed.get("relevance_reason", "No relevance reason was generated.")}

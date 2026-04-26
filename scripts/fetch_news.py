@@ -18,6 +18,14 @@ REPORTS_DIR = ROOT_DIR / "reports"
 GOOGLE_NEWS_RSS_URL = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
 REQUEST_TIMEOUT_SECONDS = 20
 RECENCY_DAYS = 1
+MACRO_QUERIES = [
+    f"Federal Reserve interest rates when:{RECENCY_DAYS}d",
+    f"US inflation CPI PCE when:{RECENCY_DAYS}d",
+    f"US Treasury yields stock market when:{RECENCY_DAYS}d",
+    f"US jobs report unemployment market when:{RECENCY_DAYS}d",
+    f"S&P 500 Nasdaq market today when:{RECENCY_DAYS}d",
+    f"US dollar global markets when:{RECENCY_DAYS}d",
+]
 MOJIBAKE_MARKERS = ("Ã", "Â", "â€", "â€™", "à¸", "à¹")
 
 
@@ -152,7 +160,23 @@ def fetch_news_for_portfolio(
     return output, errors
 
 
-def save_raw_news(raw_news: dict[str, Any], errors: list[str], report_date: str) -> Path:
+def fetch_macro_news() -> tuple[list[dict[str, Any]], list[str]]:
+    macro_articles: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for query in MACRO_QUERIES:
+        articles, error = fetch_google_news_rss(query)
+        macro_articles.extend(articles)
+        if error:
+            errors.append(error)
+    return macro_articles, errors
+
+
+def save_raw_news(
+    raw_news: dict[str, Any],
+    errors: list[str],
+    report_date: str,
+    macro_articles: list[dict[str, Any]] | None = None,
+) -> Path:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     output_path = REPORTS_DIR / f"{report_date}-raw-news.json"
     payload = {
@@ -161,6 +185,10 @@ def save_raw_news(raw_news: dict[str, Any], errors: list[str], report_date: str)
         "source": "Google News RSS",
         "recency_days": RECENCY_DAYS,
         "errors": errors,
+        "macro": {
+            "queries": MACRO_QUERIES,
+            "articles": macro_articles or [],
+        },
         "stocks": raw_news,
     }
     with output_path.open("w", encoding="utf-8") as file:
@@ -175,7 +203,8 @@ def main() -> None:
 
     portfolio = load_portfolio()
     raw_news, errors = fetch_news_for_portfolio(portfolio)
-    output_path = save_raw_news(raw_news, errors, args.date)
+    macro_articles, macro_errors = fetch_macro_news()
+    output_path = save_raw_news(raw_news, errors + macro_errors, args.date, macro_articles)
     print(f"Saved raw news to {display_path(output_path, ROOT_DIR)}")
     if errors:
         print(f"Completed with {len(errors)} fetch error(s).")

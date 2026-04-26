@@ -13,6 +13,8 @@ The first version:
 - Uses the OpenAI API when `OPENAI_API_KEY` exists
 - Falls back to a basic non-AI Markdown report when no API key is configured
 - Optionally publishes the Markdown report content to a Google Doc
+- Adds macro news context for Fed, inflation, yields, labor data, market sentiment, and the US dollar
+- Adds daily technical snapshots with EMA, RSI, MACD, support, and resistance context
 
 This project does not place trades, give financial advice, or tell you to buy or sell anything.
 
@@ -280,6 +282,7 @@ To add Google secrets:
 - `scripts/deduplicate_news.py`: Removes repeated articles using normalized titles and URLs.
 - `scripts/summarize_portfolio.py`: Creates the final Markdown report with OpenAI, or a basic fallback when no API key exists.
 - `scripts/publish_google_doc.py`: Publishes a Markdown report to Google Docs as plain text and saves the Doc URL.
+- `scripts/analyze_technicals.py`: Fetches daily price data and calculates technical context. This is not trading advice.
 - `scripts/export_site_data.py`: Exports report data for the static website.
 - `scripts/run_daily_report.py`: Runs fetch, deduplicate, summarize, and optional Google Docs publishing in one command.
 - `site/`: Static Vercel website.

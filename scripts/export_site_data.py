@@ -45,6 +45,13 @@ def load_analysis(report_date: str) -> dict[str, Any]:
     return load_json(analysis_path)
 
 
+def load_technicals(report_date: str) -> dict[str, Any]:
+    technicals_path = REPORTS_DIR / f"{report_date}-technicals.json"
+    if not technicals_path.exists():
+        return {}
+    return load_json(technicals_path)
+
+
 def analysis_by_ticker(analysis: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {
         str(stock.get("ticker", "")).upper(): stock
@@ -60,7 +67,9 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
 
     deduped_payload = load_json(deduped_path)
     analysis = load_analysis(report_date)
+    technicals = load_technicals(report_date)
     stock_analysis = analysis_by_ticker(analysis)
+    stock_technicals = technicals.get("stocks", {})
     markdown = load_text_if_exists(markdown_path)
     google_doc_url = load_text_if_exists(google_doc_url_path)
 
@@ -68,6 +77,7 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
     for ticker, stock_data in deduped_payload.get("stocks", {}).items():
         articles = stock_data.get("articles", [])[:MAX_ARTICLES_PER_STOCK]
         analyzed = stock_analysis.get(str(ticker).upper(), {})
+        technical = stock_technicals.get(ticker, {})
         stocks.append(
             {
                 "ticker": ticker,
@@ -81,6 +91,8 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
                 "bullish_points": analyzed.get("bullish_points", []),
                 "bearish_points": analyzed.get("bearish_points", []),
                 "valuation_context": analyzed.get("valuation_context", "No AI valuation context was generated."),
+                "technical_summary": analyzed.get("technical_summary", ""),
+                "technical": technical,
                 "what_to_monitor": analyzed.get("what_to_monitor", "Earnings, guidance, macro data, valuation changes, and source updates."),
                 "risk_level": analyzed.get("risk_level", "Unknown"),
                 "relevance_score": analyzed.get("relevance_score", "Unknown"),
@@ -120,6 +132,7 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
             "stock_count": len(stocks),
             "total_articles": sum(stock["article_count"] for stock in stocks),
             "errors": errors,
+            "technical_errors": technicals.get("errors", []),
         },
         "stocks": stocks,
     }
