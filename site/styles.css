@@ -31,7 +31,7 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 28px clamp(18px, 4vw, 48px);
+  padding: 20px clamp(18px, 4vw, 48px);
   background: var(--panel);
   border-bottom: 1px solid var(--line);
 }
@@ -68,7 +68,7 @@ h3 {
 
 main {
   width: min(1180px, calc(100% - 32px));
-  margin: 28px auto 56px;
+  margin: 18px auto 48px;
 }
 
 .actions,
@@ -117,7 +117,7 @@ main {
 
 .summary-band > div {
   min-width: 0;
-  padding: 18px;
+  padding: 12px 14px;
   background: var(--panel);
 }
 
@@ -131,18 +131,28 @@ main {
   display: block;
   margin-top: 4px;
   overflow-wrap: anywhere;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .section {
-  margin-top: 28px;
+  margin-top: 18px;
 }
 
-.briefing-section {
-  padding: 20px;
+.disclosure {
+  padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
+}
+
+.disclosure > summary {
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.disclosure[open] > summary {
+  margin-bottom: 14px;
 }
 
 .briefing-text {
@@ -235,12 +245,14 @@ td {
 
 .stock-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 12px;
 }
 
 .stock-card {
-  padding: 16px;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
@@ -250,13 +262,31 @@ td {
   color: var(--muted);
 }
 
+.stock-card-head,
+.quick-row,
 .card-meta {
   display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
 }
 
+.stock-card-head h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.stock-card-head p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.stock-card-head strong {
+  font-size: 22px;
+}
+
+.quick-row span,
 .card-meta span {
   padding: 4px 8px;
   border: 1px solid var(--line);
@@ -265,12 +295,43 @@ td {
   font-size: 12px;
 }
 
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.metric-grid div {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f8fafb;
+}
+
+.metric-grid span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.metric-grid strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+
+.takeaway {
+  margin-bottom: 0;
+  color: var(--ink) !important;
+  font-weight: 700;
+}
+
 .tag-row {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   min-height: 0;
-  margin-bottom: 12px;
 }
 
 .tag-row span {
@@ -282,26 +343,15 @@ td {
   font-weight: 700;
 }
 
-.technical-box {
-  display: grid;
-  gap: 5px;
-  margin: 12px 0;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #f8fafb;
+.card-details {
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
 }
 
-.technical-box span,
-.technical-box p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.technical-box strong {
-  color: var(--ink);
-  font-size: 14px;
+.card-details summary {
+  cursor: pointer;
+  color: var(--accent-strong);
+  font-weight: 800;
 }
 
 .points-grid,
@@ -341,6 +391,10 @@ td {
   padding-left: 18px;
 }
 
+.compact-sources {
+  font-size: 13px;
+}
+
 .source-list li {
   padding-right: 4px;
 }
@@ -367,6 +421,10 @@ td {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .stock-grid {
+    grid-template-columns: 1fr;
+  }
+
   .points-grid,
   .macro-grid {
     grid-template-columns: 1fr;
@@ -381,5 +439,9 @@ td {
   .actions,
   .button {
     width: 100%;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

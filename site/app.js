@@ -42,19 +42,31 @@ function renderStockCards(stocks) {
     const card = document.createElement("article");
     card.className = "stock-card";
 
+    const header = document.createElement("div");
+    header.className = "stock-card-head";
+    const titleWrap = document.createElement("div");
     const title = document.createElement("h3");
-    title.textContent = `${stock.ticker} - ${stock.company}`;
+    title.textContent = stock.ticker;
+    const company = document.createElement("p");
+    company.textContent = stock.company;
+    titleWrap.append(title, company);
+    const close = document.createElement("strong");
+    close.textContent = text(stock.technical?.last_close);
+    header.append(titleWrap, close);
 
     const impact = document.createElement("p");
+    impact.className = "takeaway";
     impact.textContent = stock.key_takeaway || stock.key_news;
 
-    const meta = document.createElement("div");
-    meta.className = "card-meta";
-    meta.innerHTML = `
-      <span>Risk: ${text(stock.risk_level)}</span>
-      <span>Relevance: ${text(stock.relevance_score)}</span>
-      <span>Horizon: ${text(stock.time_horizon)}</span>
-      <span>Confidence: ${text(stock.confidence)}</span>
+    const metrics = document.createElement("div");
+    metrics.className = "metric-grid";
+    metrics.innerHTML = `
+      <div><span>Trend</span><strong>${text(stock.technical?.trend)}</strong></div>
+      <div><span>RSI</span><strong>${text(stock.technical?.rsi14)}</strong></div>
+      <div><span>EMA50</span><strong>${text(stock.technical?.ema50)}</strong></div>
+      <div><span>EMA200</span><strong>${text(stock.technical?.ema200)}</strong></div>
+      <div><span>Support</span><strong>${text((stock.technical?.support_zones || []).slice(0, 2).join(", "))}</strong></div>
+      <div><span>Resistance</span><strong>${text((stock.technical?.resistance_zones || []).slice(0, 2).join(", "))}</strong></div>
     `;
 
     const tags = document.createElement("div");
@@ -65,27 +77,28 @@ function renderStockCards(stocks) {
       tags.appendChild(badge);
     });
 
+    const quick = document.createElement("div");
+    quick.className = "quick-row";
+    quick.innerHTML = `
+      <span>Risk: ${text(stock.risk_level)}</span>
+      <span>Relevance: ${text(stock.relevance_score)}</span>
+      <span>Confidence: ${text(stock.confidence)}</span>
+    `;
+
+    const details = document.createElement("details");
+    details.className = "card-details";
+    const summary = document.createElement("summary");
+    summary.textContent = "Details";
     const possibleImpact = document.createElement("p");
     possibleImpact.innerHTML = `<strong>Possible impact:</strong> ${text(stock.possible_impact || stock.impact)}`;
-
     const valuation = document.createElement("p");
     valuation.innerHTML = `<strong>Valuation context:</strong> ${text(stock.valuation_context)}`;
 
     const relevance = document.createElement("p");
     relevance.innerHTML = `<strong>Relevance:</strong> ${text(stock.relevance_reason, "No relevance reason generated.")}`;
 
-    const technical = document.createElement("div");
-    technical.className = "technical-box";
-    technical.innerHTML = `
-      <strong>Technical snapshot</strong>
-      <span>Trend: ${text(stock.technical?.trend)}</span>
-      <span>Close: ${text(stock.technical?.last_close)}</span>
-      <span>RSI14: ${text(stock.technical?.rsi14)}</span>
-      <span>EMA50 / EMA200: ${text(stock.technical?.ema50)} / ${text(stock.technical?.ema200)}</span>
-      <span>Support: ${text((stock.technical?.support_zones || []).join(", "))}</span>
-      <span>Resistance: ${text((stock.technical?.resistance_zones || []).join(", "))}</span>
-      <p>${text(stock.technical_summary || stock.technical?.technical_note, "No technical context generated.")}</p>
-    `;
+    const technicalNote = document.createElement("p");
+    technicalNote.innerHTML = `<strong>Technical note:</strong> ${text(stock.technical_summary || stock.technical?.technical_note, "No technical context generated.")}`;
 
     const monitor = document.createElement("p");
     monitor.innerHTML = `<strong>Monitor next:</strong> ${text(stock.what_to_monitor)}`;
@@ -98,7 +111,7 @@ function renderStockCards(stocks) {
     );
 
     const sources = document.createElement("ul");
-    sources.className = "source-list";
+    sources.className = "source-list compact-sources";
 
     const articles = stock.articles || [];
     if (articles.length === 0) {
@@ -106,7 +119,7 @@ function renderStockCards(stocks) {
       item.textContent = "No source links available.";
       sources.appendChild(item);
     } else {
-      articles.forEach((article) => {
+      articles.slice(0, 4).forEach((article) => {
         const item = document.createElement("li");
         const link = document.createElement("a");
         link.href = article.url;
@@ -118,7 +131,8 @@ function renderStockCards(stocks) {
       });
     }
 
-    card.append(title, meta, tags, impact, possibleImpact, valuation, technical, relevance, points, monitor, sources);
+    details.append(summary, possibleImpact, valuation, technicalNote, relevance, points, monitor, sources);
+    card.append(header, quick, metrics, tags, impact, details);
     grid.appendChild(card);
   });
 }
