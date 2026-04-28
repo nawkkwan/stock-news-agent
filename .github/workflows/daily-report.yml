@@ -2,8 +2,8 @@ name: Daily portfolio news
 
 on:
   schedule:
-    # 08:00 Asia/Bangkok is 01:00 UTC.
-    - cron: "0 1 * * *"
+    # 08:17 Asia/Bangkok is 01:17 UTC. Avoiding the top of the hour reduces GitHub schedule delays.
+    - cron: "17 1 * * *"
   workflow_dispatch:
 
 permissions:
