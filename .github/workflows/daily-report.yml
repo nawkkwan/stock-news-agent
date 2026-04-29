@@ -2,8 +2,11 @@ name: Daily portfolio news
 
 on:
   schedule:
-    # 08:17 Asia/Bangkok is 01:17 UTC. Avoiding the top of the hour reduces GitHub schedule delays.
+    # Asia/Bangkok is UTC+7. Multiple morning runs make the workflow more resilient
+    # when GitHub delays or skips a scheduled run.
     - cron: "17 1 * * *"
+    - cron: "37 1 * * *"
+    - cron: "5 2 * * *"
   workflow_dispatch:
 
 permissions:
