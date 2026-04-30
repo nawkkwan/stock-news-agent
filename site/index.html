@@ -25,6 +25,10 @@
           <strong id="reportDate">Loading...</strong>
         </div>
         <div>
+          <span class="label">Portfolio value</span>
+          <strong id="portfolioValue">-</strong>
+        </div>
+        <div>
           <span class="label">Stocks</span>
           <strong id="stockCount">-</strong>
         </div>
@@ -43,6 +47,9 @@
           <h2>Stocks</h2>
           <p id="generatedAt"></p>
         </div>
+        <p class="section-intro">
+          Daily news, technical context, and each holding's current weight versus your target.
+        </p>
         <div id="stockCards" class="stock-grid"></div>
       </section>
 
@@ -79,6 +86,8 @@
             <thead>
               <tr>
                 <th>Ticker</th>
+                <th>Weight</th>
+                <th>Target</th>
                 <th>Company</th>
                 <th>Key Takeaway</th>
                 <th>Possible Impact</th>

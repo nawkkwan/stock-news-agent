@@ -107,7 +107,7 @@ main {
 
 .summary-band {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1px;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -136,6 +136,11 @@ main {
 
 .section {
   margin-top: 18px;
+}
+
+.section-intro {
+  margin: 0 0 14px;
+  color: var(--muted);
 }
 
 .disclosure {
@@ -286,6 +291,64 @@ td {
 
 .stock-card-head strong {
   font-size: 22px;
+}
+
+.allocation-strip {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafb;
+}
+
+.allocation-strip.under {
+  background: #eef7f4;
+  border-color: #bcded5;
+}
+
+.allocation-strip.over {
+  background: #fff4ec;
+  border-color: #f0d0b4;
+}
+
+.allocation-strip.balanced {
+  background: #f1f6ff;
+  border-color: #c8d7f2;
+}
+
+.allocation-top,
+.allocation-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.allocation-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.allocation-track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #d9e2ea;
+}
+
+.allocation-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #146c5f, #35a38f);
+}
+
+.allocation-bottom {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .quick-row span,

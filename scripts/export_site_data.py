@@ -11,6 +11,7 @@ from path_utils import display_path
 ROOT_DIR = Path(__file__).resolve().parents[1]
 REPORTS_DIR = ROOT_DIR / "reports"
 SITE_DATA_DIR = ROOT_DIR / "site" / "data"
+PORTFOLIO_PATH = ROOT_DIR / "data" / "portfolio.json"
 MAX_ARTICLES_PER_STOCK = 8
 
 
@@ -23,6 +24,35 @@ def load_text_if_exists(path: Path) -> str:
     if not path.exists():
         return ""
     return path.read_text(encoding="utf-8").strip()
+
+
+def to_float(value: Any) -> float | None:
+    try:
+        if value is None or value == "":
+            return None
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def load_portfolio_meta() -> dict[str, dict[str, Any]]:
+    if not PORTFOLIO_PATH.exists():
+        return {}
+
+    portfolio = load_json(PORTFOLIO_PATH)
+    if not isinstance(portfolio, list):
+        return {}
+
+    metadata: dict[str, dict[str, Any]] = {}
+    for item in portfolio:
+        ticker = str(item.get("ticker", "")).strip().upper()
+        if not ticker:
+            continue
+        metadata[ticker] = {
+            "holding_value_thb": to_float(item.get("holding_value_thb")),
+            "target_weight_pct": to_float(item.get("target_weight_pct")),
+        }
+    return metadata
 
 
 def get_stock_key_news(articles: list[dict[str, Any]]) -> str:
@@ -60,6 +90,16 @@ def analysis_by_ticker(analysis: dict[str, Any]) -> dict[str, dict[str, Any]]:
     }
 
 
+def get_allocation_status(weight_gap_pct: float | None) -> str:
+    if weight_gap_pct is None:
+        return "No target"
+    if abs(weight_gap_pct) < 1:
+        return "Near target"
+    if weight_gap_pct > 0:
+        return "Under target"
+    return "Over target"
+
+
 def build_site_payload(report_date: str) -> dict[str, Any]:
     deduped_path = REPORTS_DIR / f"{report_date}-deduped-news.json"
     markdown_path = REPORTS_DIR / f"{report_date}-portfolio-news-report.md"
@@ -68,21 +108,45 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
     deduped_payload = load_json(deduped_path)
     analysis = load_analysis(report_date)
     technicals = load_technicals(report_date)
+    portfolio_meta = load_portfolio_meta()
     stock_analysis = analysis_by_ticker(analysis)
     stock_technicals = technicals.get("stocks", {})
     markdown = load_text_if_exists(markdown_path)
     google_doc_url = load_text_if_exists(google_doc_url_path)
+    total_portfolio_value = sum(
+        meta["holding_value_thb"]
+        for meta in portfolio_meta.values()
+        if isinstance(meta.get("holding_value_thb"), float)
+    )
 
     stocks: list[dict[str, Any]] = []
     for ticker, stock_data in deduped_payload.get("stocks", {}).items():
         articles = stock_data.get("articles", [])[:MAX_ARTICLES_PER_STOCK]
+        meta = portfolio_meta.get(str(ticker).upper(), {})
         analyzed = stock_analysis.get(str(ticker).upper(), {})
         technical = stock_technicals.get(ticker, {})
+        holding_value_thb = meta.get("holding_value_thb")
+        target_weight_pct = meta.get("target_weight_pct")
+        portfolio_weight_pct = (
+            round((holding_value_thb / total_portfolio_value) * 100, 2)
+            if total_portfolio_value > 0 and isinstance(holding_value_thb, float)
+            else None
+        )
+        weight_gap_pct = (
+            round(target_weight_pct - portfolio_weight_pct, 2)
+            if portfolio_weight_pct is not None and isinstance(target_weight_pct, float)
+            else None
+        )
         stocks.append(
             {
                 "ticker": ticker,
                 "company": stock_data.get("company", ""),
                 "exchange": stock_data.get("exchange", ""),
+                "holding_value_thb": holding_value_thb,
+                "portfolio_weight_pct": portfolio_weight_pct,
+                "target_weight_pct": target_weight_pct,
+                "weight_gap_pct": weight_gap_pct,
+                "allocation_status": get_allocation_status(weight_gap_pct),
                 "article_count": stock_data.get("article_count_after_dedupe", len(stock_data.get("articles", []))),
                 "key_news": analyzed.get("key_takeaway") or get_stock_key_news(articles),
                 "key_takeaway": analyzed.get("key_takeaway") or get_stock_key_news(articles),
@@ -112,6 +176,14 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
             }
         )
 
+    stocks.sort(
+        key=lambda stock: (
+            stock.get("holding_value_thb") is None,
+            -(stock.get("holding_value_thb") or 0),
+            stock.get("ticker", ""),
+        )
+    )
+
     errors = deduped_payload.get("errors", [])
     return {
         "date": report_date,
@@ -131,6 +203,7 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
             "read_more": analysis.get("read_more", []),
             "stock_count": len(stocks),
             "total_articles": sum(stock["article_count"] for stock in stocks),
+            "total_portfolio_value_thb": round(total_portfolio_value, 2) if total_portfolio_value > 0 else None,
             "errors": errors,
             "technical_errors": technicals.get("errors", []),
         },

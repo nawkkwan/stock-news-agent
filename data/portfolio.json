@@ -2,26 +2,43 @@
   {
     "ticker": "VOO",
     "company": "Vanguard S&P 500 ETF",
-    "exchange": "NYSE Arca"
+    "exchange": "NYSE Arca",
+    "holding_value_thb": 7896.41,
+    "target_weight_pct": 45
   },
   {
     "ticker": "GOOGL",
     "company": "Alphabet Inc.",
-    "exchange": "NASDAQ"
+    "exchange": "NASDAQ",
+    "holding_value_thb": 2546.17,
+    "target_weight_pct": 15
   },
   {
     "ticker": "XLV",
     "company": "Health Care Select Sector SPDR Fund",
-    "exchange": "NYSE Arca"
+    "exchange": "NYSE Arca",
+    "holding_value_thb": 1683.39,
+    "target_weight_pct": 10
   },
   {
     "ticker": "VXUS",
     "company": "Vanguard Total International Stock ETF",
-    "exchange": "NASDAQ"
+    "exchange": "NASDAQ",
+    "holding_value_thb": 2000.58,
+    "target_weight_pct": 15
   },
   {
     "ticker": "PLTR",
     "company": "Palantir Technologies Inc.",
-    "exchange": "NASDAQ"
+    "exchange": "NASDAQ",
+    "holding_value_thb": 344.27,
+    "target_weight_pct": 5
+  },
+  {
+    "ticker": "MSFT",
+    "company": "Microsoft Corporation",
+    "exchange": "NASDAQ",
+    "holding_value_thb": 1500,
+    "target_weight_pct": 10
   }
 ]

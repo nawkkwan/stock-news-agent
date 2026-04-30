@@ -1,7 +1,44 @@
 const DATA_URL = "/data/latest-report.json";
+const moneyFormatter = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+});
 
 function text(value, fallback = "-") {
   return value === undefined || value === null || value === "" ? fallback : String(value);
+}
+
+function formatMoney(value) {
+  return value === undefined || value === null ? "-" : `${moneyFormatter.format(value)} THB`;
+}
+
+function formatPct(value) {
+  return value === undefined || value === null ? "-" : `${Number(value).toFixed(2)}%`;
+}
+
+function formatGap(value) {
+  if (value === undefined || value === null) {
+    return "No target";
+  }
+  if (Math.abs(value) < 0.01) {
+    return "On target";
+  }
+  return value > 0
+    ? `Need +${Number(value).toFixed(2)}%`
+    : `Over by ${Math.abs(Number(value)).toFixed(2)}%`;
+}
+
+function getAllocationClass(status) {
+  if (status === "Under target") {
+    return "under";
+  }
+  if (status === "Over target") {
+    return "over";
+  }
+  if (status === "Near target") {
+    return "balanced";
+  }
+  return "none";
 }
 
 function setText(id, value) {
@@ -24,6 +61,8 @@ function renderImpactTable(stocks) {
     ticker.className = "ticker";
     row.append(
       ticker,
+      createCell(formatPct(stock.portfolio_weight_pct)),
+      createCell(formatPct(stock.target_weight_pct)),
       createCell(stock.company),
       createCell(stock.key_takeaway || stock.key_news),
       createCell(stock.possible_impact || stock.impact),
@@ -54,6 +93,22 @@ function renderStockCards(stocks) {
     close.textContent = text(stock.technical?.last_close);
     header.append(titleWrap, close);
 
+    const allocation = document.createElement("div");
+    allocation.className = `allocation-strip ${getAllocationClass(stock.allocation_status)}`;
+    allocation.innerHTML = `
+      <div class="allocation-top">
+        <span class="allocation-label">Portfolio weight</span>
+        <strong>${formatPct(stock.portfolio_weight_pct)}</strong>
+      </div>
+      <div class="allocation-track">
+        <span class="allocation-fill" style="width: ${Math.min(stock.portfolio_weight_pct || 0, 100)}%"></span>
+      </div>
+      <div class="allocation-bottom">
+        <span>Target ${formatPct(stock.target_weight_pct)}</span>
+        <span>${formatGap(stock.weight_gap_pct)}</span>
+      </div>
+    `;
+
     const impact = document.createElement("p");
     impact.className = "takeaway";
     impact.textContent = stock.key_takeaway || stock.key_news;
@@ -80,6 +135,8 @@ function renderStockCards(stocks) {
     const quick = document.createElement("div");
     quick.className = "quick-row";
     quick.innerHTML = `
+      <span>Value: ${formatMoney(stock.holding_value_thb)}</span>
+      <span>Allocation: ${text(stock.allocation_status)}</span>
       <span>Risk: ${text(stock.risk_level)}</span>
       <span>Relevance: ${text(stock.relevance_score)}</span>
       <span>Confidence: ${text(stock.confidence)}</span>
@@ -132,7 +189,7 @@ function renderStockCards(stocks) {
     }
 
     details.append(summary, possibleImpact, valuation, technicalNote, relevance, points, monitor, sources);
-    card.append(header, quick, metrics, tags, impact, details);
+    card.append(header, allocation, quick, metrics, tags, impact, details);
     grid.appendChild(card);
   });
 }
@@ -239,6 +296,7 @@ async function main() {
   const report = await response.json();
 
   setText("reportDate", report.date);
+  setText("portfolioValue", formatMoney(report.summary?.total_portfolio_value_thb));
   setText("stockCount", report.summary?.stock_count);
   setText("articleCount", report.summary?.total_articles);
   setText("status", report.status);
