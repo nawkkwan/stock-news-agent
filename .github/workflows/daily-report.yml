@@ -1,12 +1,6 @@
 name: Daily portfolio news
 
 on:
-  schedule:
-    # Asia/Bangkok is UTC+7. Multiple morning runs make the workflow more resilient
-    # when GitHub delays or skips a scheduled run.
-    - cron: "17 1 * * *"
-    - cron: "37 1 * * *"
-    - cron: "5 2 * * *"
   workflow_dispatch:
 
 permissions:
