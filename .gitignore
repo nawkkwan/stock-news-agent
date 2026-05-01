@@ -1,6 +1,7 @@
 .env
 .venv/
 .tmp/
+logs/
 credentials/
 token.json
 __pycache__/
