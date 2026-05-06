@@ -45,6 +45,33 @@ function setText(id, value) {
   document.getElementById(id).textContent = text(value);
 }
 
+function setGoogleDocStatus(report) {
+  const googleDocLink = document.getElementById("googleDocLink");
+  const status = document.getElementById("googleDocStatus");
+  const docDate = report.google_doc_report_date;
+
+  if (report.google_doc_url) {
+    googleDocLink.href = report.google_doc_url;
+    googleDocLink.classList.remove("disabled");
+    if (docDate && docDate !== report.date) {
+      googleDocLink.textContent = `Google Doc (${docDate})`;
+      status.hidden = false;
+      status.textContent = `Google Doc for ${report.date} is not available yet, so this button opens the latest published doc from ${docDate}.`;
+    } else {
+      googleDocLink.textContent = "Google Doc";
+      status.hidden = true;
+      status.textContent = "";
+    }
+    return;
+  }
+
+  googleDocLink.href = "#";
+  googleDocLink.classList.add("disabled");
+  googleDocLink.textContent = "Google Doc";
+  status.hidden = false;
+  status.textContent = `Google Doc for ${report.date} is not available yet.`;
+}
+
 function createCell(content) {
   const cell = document.createElement("td");
   cell.textContent = text(content);
@@ -308,14 +335,7 @@ async function main() {
   renderTextList("marketContext", report.summary?.market_context || []);
   renderReadMore(report.summary?.read_more || []);
 
-  const googleDocLink = document.getElementById("googleDocLink");
-  if (report.google_doc_url) {
-    googleDocLink.href = report.google_doc_url;
-    googleDocLink.classList.remove("disabled");
-  } else {
-    googleDocLink.href = "#";
-  }
-
+  setGoogleDocStatus(report);
   document.getElementById("notebookLink").href = report.notebooklm_url || "https://notebooklm.google.com/";
   document.getElementById("copyReport").addEventListener("click", async () => {
     await navigator.clipboard.writeText(report.markdown_report || "");

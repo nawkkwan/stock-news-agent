@@ -4,6 +4,7 @@
 logs/
 credentials/
 token.json
+token.json.bak-*
 __pycache__/
 *.pyc
 .pytest_cache/

@@ -36,6 +36,15 @@ a {
   border-bottom: 1px solid var(--line);
 }
 
+.top-status {
+  margin: 0;
+  padding: 10px clamp(18px, 4vw, 48px);
+  border-bottom: 1px solid var(--line);
+  background: #fff8e8;
+  color: var(--warning);
+  font-size: 14px;
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: var(--accent-strong);
@@ -103,6 +112,11 @@ main {
 .button.secondary {
   background: white;
   color: var(--accent-strong);
+}
+
+.button.disabled {
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 .summary-band {

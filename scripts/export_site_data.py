@@ -26,6 +26,22 @@ def load_text_if_exists(path: Path) -> str:
     return path.read_text(encoding="utf-8").strip()
 
 
+def load_google_doc_metadata(report_date: str) -> tuple[str, str, bool]:
+    direct_path = REPORTS_DIR / f"{report_date}-google-doc-url.txt"
+    direct_url = load_text_if_exists(direct_path)
+    if direct_url:
+        return direct_url, report_date, False
+
+    fallback_paths = sorted(REPORTS_DIR.glob("*-google-doc-url.txt"), reverse=True)
+    for path in fallback_paths:
+        fallback_url = load_text_if_exists(path)
+        if fallback_url:
+            fallback_date = path.name.removesuffix("-google-doc-url.txt")
+            return fallback_url, fallback_date, fallback_date != report_date
+
+    return "", "", False
+
+
 def to_float(value: Any) -> float | None:
     try:
         if value is None or value == "":
@@ -103,7 +119,6 @@ def get_allocation_status(weight_gap_pct: float | None) -> str:
 def build_site_payload(report_date: str) -> dict[str, Any]:
     deduped_path = REPORTS_DIR / f"{report_date}-deduped-news.json"
     markdown_path = REPORTS_DIR / f"{report_date}-portfolio-news-report.md"
-    google_doc_url_path = REPORTS_DIR / f"{report_date}-google-doc-url.txt"
 
     deduped_payload = load_json(deduped_path)
     analysis = load_analysis(report_date)
@@ -112,7 +127,7 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
     stock_analysis = analysis_by_ticker(analysis)
     stock_technicals = technicals.get("stocks", {})
     markdown = load_text_if_exists(markdown_path)
-    google_doc_url = load_text_if_exists(google_doc_url_path)
+    google_doc_url, google_doc_report_date, google_doc_is_fallback = load_google_doc_metadata(report_date)
     total_portfolio_value = sum(
         meta["holding_value_thb"]
         for meta in portfolio_meta.values()
@@ -190,6 +205,8 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "status": "ok" if not errors else "completed_with_errors",
         "google_doc_url": google_doc_url,
+        "google_doc_report_date": google_doc_report_date,
+        "google_doc_is_fallback": google_doc_is_fallback,
         "notebooklm_url": "https://notebooklm.google.com/",
         "markdown_report": markdown,
         "summary": {
