@@ -16,7 +16,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 PORTFOLIO_PATH = ROOT_DIR / "data" / "portfolio.json"
 REPORTS_DIR = ROOT_DIR / "reports"
 GOOGLE_NEWS_RSS_URL = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
-REQUEST_TIMEOUT_SECONDS = 20
+REQUEST_TIMEOUT_SECONDS = (5, 8)
 RECENCY_DAYS = 1
 MACRO_QUERIES = [
     f"Federal Reserve interest rates when:{RECENCY_DAYS}d",

@@ -17,6 +17,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 REPORTS_DIR = ROOT_DIR / "reports"
 LOOKBACK_PERIOD = "1y"
 YAHOO_CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+REQUEST_TIMEOUT_SECONDS = (5, 10)
 
 
 def as_float(value: Any) -> float | None:
@@ -85,7 +86,7 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
             "events": "history",
             "includeAdjustedClose": "true",
         },
-        timeout=30,
+        timeout=REQUEST_TIMEOUT_SECONDS,
         headers={"User-Agent": "stock-news-agent/0.1"},
     )
     response.raise_for_status()
