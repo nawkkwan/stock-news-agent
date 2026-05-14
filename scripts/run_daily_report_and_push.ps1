@@ -29,6 +29,13 @@ try {
 
     Write-Host "Running portfolio news report for $Today..."
 
+    $DirtyStatus = git status --porcelain
+    if ($DirtyStatus) {
+        Write-Host "Working tree has local changes; stashing them before pulling latest main..."
+        git stash push -u -m "auto-stash before daily report $Today"
+        Assert-LastExitCode "git stash push before pull"
+    }
+
     git pull --rebase origin main
     Assert-LastExitCode "git pull --rebase origin main"
 
