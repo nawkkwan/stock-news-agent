@@ -8,7 +8,6 @@ from deduplicate_news import deduplicate_payload, save_deduplicated_news
 from export_site_data import export_site_data
 from fetch_news import fetch_macro_news, fetch_news_for_portfolio, load_portfolio, save_raw_news
 from path_utils import display_path
-from publish_google_doc import publish_report_to_google_doc
 from summarize_portfolio import generate_report
 
 from pathlib import Path
@@ -60,12 +59,6 @@ def run_daily_report(report_date: str) -> None:
     log_step(f"Deduplicated news: {display_path(deduped_path, ROOT_DIR)}")
     log_step(f"Technicals: {display_path(technicals_path, ROOT_DIR)}")
     log_step(f"Markdown report: {display_path(report_path, ROOT_DIR)}")
-
-    try:
-        log_step("Publishing Google Doc...")
-        publish_report_to_google_doc(report_date)
-    except Exception as exc:
-        log_step(f"Google Docs publishing failed, but the report workflow will continue: {exc}")
 
     log_step("Exporting site data...")
     export_site_data(report_date)
