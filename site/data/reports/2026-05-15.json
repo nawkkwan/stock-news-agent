@@ -1,52 +1,75 @@
 {
   "date": "2026-05-15",
-  "generated_at": "2026-05-15T09:00:50",
-  "status": "completed_with_errors",
+  "generated_at": "2026-05-15T04:44:37",
+  "status": "ok",
   "notebooklm_url": "https://notebooklm.google.com/",
-  "markdown_report": "# Portfolio News Report - 2026-05-15\n\n## 1. Executive Summary\n\nOpenAI API key was not found, so this report used the basic non-AI fallback. It lists recent RSS headlines and source links without making recommendations.\n\n## 2. Portfolio Impact Table\n\n| Ticker | Company | Key News | Impact | Time Horizon | Confidence |\n|---|---|---|---|---|---|\n| VOO | Vanguard S&P 500 ETF | No important recent news found from the configured RSS searches. | News-only summary; impact needs review. | Short to medium term | Low |\n| GOOGL | Alphabet Inc. | No important recent news found from the configured RSS searches. | News-only summary; impact needs review. | Short to medium term | Low |\n| XLV | Health Care Select Sector SPDR Fund | No important recent news found from the configured RSS searches. | News-only summary; impact needs review. | Short to medium term | Low |\n| VXUS | Vanguard Total International Stock ETF | No important recent news found from the configured RSS searches. | News-only summary; impact needs review. | Short to medium term | Low |\n| PLTR | Palantir Technologies Inc. | No important recent news found from the configured RSS searches. | News-only summary; impact needs review. | Short to medium term | Low |\n| MSFT | Microsoft Corporation | No important recent news found from the configured RSS searches. | News-only summary; impact needs review. | Short to medium term | Low |\n\n## 3. Stock-by-Stock News\n\n### VOO - Vanguard S&P 500 ETF\n\n**News Summary:**\nNo important recent news found from the configured RSS searches.\n\n**Possible Impact:**\nThis non-AI fallback report found related headlines only. Review the linked sources to assess revenue, cost, regulation, demand, sentiment, or competitive implications.\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific headlines affect expectations for growth, margins, regulation, liquidity, or investor sentiment.\n\n**What To Monitor Next:**\nFollow official company announcements, exchange filings, earnings dates, management commentary, analyst coverage, and sector news.\n\n**Sources:**\n- No source links available.\n\n### GOOGL - Alphabet Inc.\n\n**News Summary:**\nNo important recent news found from the configured RSS searches.\n\n**Possible Impact:**\nThis non-AI fallback report found related headlines only. Review the linked sources to assess revenue, cost, regulation, demand, sentiment, or competitive implications.\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific headlines affect expectations for growth, margins, regulation, liquidity, or investor sentiment.\n\n**What To Monitor Next:**\nFollow official company announcements, exchange filings, earnings dates, management commentary, analyst coverage, and sector news.\n\n**Sources:**\n- No source links available.\n\n### XLV - Health Care Select Sector SPDR Fund\n\n**News Summary:**\nNo important recent news found from the configured RSS searches.\n\n**Possible Impact:**\nThis non-AI fallback report found related headlines only. Review the linked sources to assess revenue, cost, regulation, demand, sentiment, or competitive implications.\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific headlines affect expectations for growth, margins, regulation, liquidity, or investor sentiment.\n\n**What To Monitor Next:**\nFollow official company announcements, exchange filings, earnings dates, management commentary, analyst coverage, and sector news.\n\n**Sources:**\n- No source links available.\n\n### VXUS - Vanguard Total International Stock ETF\n\n**News Summary:**\nNo important recent news found from the configured RSS searches.\n\n**Possible Impact:**\nThis non-AI fallback report found related headlines only. Review the linked sources to assess revenue, cost, regulation, demand, sentiment, or competitive implications.\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific headlines affect expectations for growth, margins, regulation, liquidity, or investor sentiment.\n\n**What To Monitor Next:**\nFollow official company announcements, exchange filings, earnings dates, management commentary, analyst coverage, and sector news.\n\n**Sources:**\n- No source links available.\n\n### PLTR - Palantir Technologies Inc.\n\n**News Summary:**\nNo important recent news found from the configured RSS searches.\n\n**Possible Impact:**\nThis non-AI fallback report found related headlines only. Review the linked sources to assess revenue, cost, regulation, demand, sentiment, or competitive implications.\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific headlines affect expectations for growth, margins, regulation, liquidity, or investor sentiment.\n\n**What To Monitor Next:**\nFollow official company announcements, exchange filings, earnings dates, management commentary, analyst coverage, and sector news.\n\n**Sources:**\n- No source links available.\n\n### MSFT - Microsoft Corporation\n\n**News Summary:**\nNo important recent news found from the configured RSS searches.\n\n**Possible Impact:**\nThis non-AI fallback report found related headlines only. Review the linked sources to assess revenue, cost, regulation, demand, sentiment, or competitive implications.\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific headlines affect expectations for growth, margins, regulation, liquidity, or investor sentiment.\n\n**What To Monitor Next:**\nFollow official company announcements, exchange filings, earnings dates, management commentary, analyst coverage, and sector news.\n\n**Sources:**\n- No source links available.\n\n\n## 4. Macro & Market Overview\n\nNo AI-generated macro synthesis was produced. Review broad market indexes, interest rates, sector performance, currency moves, oil prices, and Thailand or US market headlines as relevant to the portfolio.\n\n## 5. Risk Alerts\n\n- This is a news summary, not financial advice.\n- RSS search results can miss important filings or include duplicated syndicated stories.\n- Verify important claims with primary sources before making decisions.\n\n## 6. Stocks With No Important News Today\n\n- VOO - Vanguard S&P 500 ETF\n- GOOGL - Alphabet Inc.\n- XLV - Health Care Select Sector SPDR Fund\n- VXUS - Vanguard Total International Stock ETF\n- PLTR - Palantir Technologies Inc.\n- MSFT - Microsoft Corporation\n\n## 7. Notes / Errors\n\n- \"VOO\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22VOO%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"Vanguard S&P 500 ETF\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Vanguard+S%26P+500+ETF%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"GOOGL\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22GOOGL%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"Alphabet Inc.\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Alphabet+Inc.%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"XLV\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22XLV%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"Health Care Select Sector SPDR Fund\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Health+Care+Select+Sector+SPDR+Fund%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"VXUS\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22VXUS%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"Vanguard Total International Stock ETF\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Vanguard+Total+International+Stock+ETF%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"PLTR\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22PLTR%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"Palantir Technologies Inc.\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Palantir+Technologies+Inc.%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"MSFT\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22MSFT%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- \"Microsoft Corporation\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Microsoft+Corporation%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- Federal Reserve interest rates when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=Federal+Reserve+interest+rates+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- US inflation CPI PCE when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=US+inflation+CPI+PCE+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- US Treasury yields stock market when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=US+Treasury+yields+stock+market+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- US jobs report unemployment market when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=US+jobs+report+unemployment+market+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- S&P 500 Nasdaq market today when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=S%26P+500+Nasdaq+market+today+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))\n- US dollar global markets when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=US+dollar+global+markets+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
+  "markdown_report": "# Portfolio News Report - 2026-05-15\n\n## 1. Executive Summary\n\nThe portfolio is navigating a significant shift in monetary policy with a new Fed Chair, leading to bond market reactions. Large-cap tech holdings like Alphabet and Microsoft are showing strong individual momentum, with Alphabet hitting record highs and Microsoft benefiting from renewed AI interest. The broader S&P 500 ETF saw gains, while the healthcare sector experienced some softness and outflows. Palantir presents a mixed picture of strong revenue growth against recent stock dips and ongoing valuation debates.\n\n### Daily Briefing\n\nToday's market narrative is heavily influenced by the confirmation of Kevin Warsh as the new Federal Reserve Chair, signaling potential shifts in monetary policy and prompting bond market reactions to inflation concerns. Despite this macro backdrop, major technology players are demonstrating robust performance; Alphabet is reaching new record highs driven by its 'Googlebook' launch, and Microsoft is seeing renewed interest in its AI initiatives alongside significant institutional inflows. The S&P 500 ETF (VOO) reflects these large-cap movements, though a notable valuation gap for dividend stocks is emerging. In contrast, the healthcare sector (XLV) is experiencing some weakness and outflows, while Palantir (PLTR) faces a dichotomy of strong revenue growth and persistent valuation skepticism, coupled with recent price volatility.\n\n### Cross-Portfolio Themes\n\n- AI Influence: Microsoft and Palantir news highlights AI's role in driving stock movements.\n- Monetary Policy Shift: The change in Fed leadership and bond market reactions are a significant overarching theme.\n- Large-Cap Tech Strength: Alphabet and Microsoft are showing strong performance, influencing broader market indices.\n- Valuation Debates: Ongoing discussions about asset pricing for the S&P 500 relative to dividend stocks, and Palantir's valuation.\n- ETF Flows/Sector Rotation: Outflows from healthcare and inflows into technology indicate shifts in investor preference.\n\n## 2. Portfolio Impact Table\n\n| Ticker | Company | Key News | Impact | Time Horizon | Confidence |\n|---|---|---|---|---|---|\n| VOO | Vanguard S&P 500 ETF | The S&P 500 ETF is up, influenced by specific large-cap stock movements, while a valuation gap between dividend stocks and the broader S&P 500 is noted. Rising treasury yields are a key macro factor. | Continued strength in large-cap components could support VOO. Rising yields could pressure equity valuations, especially growth-oriented components. VOO's fee advantage over SPY could be a long-term benefit. | Mixed | High |\n| GOOGL | Alphabet Inc. | Alphabet stock is surging to new record highs, driven by positive market re-rating and buzz around the 'Googlebook' launch. | Continued positive sentiment and product success could sustain upward momentum. However, a significant stake in a potential SpaceX IPO could be a future factor. | Medium term | High |\n| XLV | Health Care Select Sector SPDR Fund | The healthcare sector, represented by XLV, showed softness and recorded outflows, contrasting with technology sector inflows. | Continued sector outflows could lead to further underperformance. Broader market trends and the interest rate environment could also influence the sector. | Short term | Medium |\n| VXUS | Vanguard Total International Stock ETF | Discussions around international ETFs like VXUS focus on comparisons with other international funds and broader market ETFs, with some analysis suggesting that individual components might be superior to the whole. | Performance relative to domestic markets and other international funds will be a key driver. Fund flows into specific international regions could also influence. | Long term | Medium |\n| PLTR | Palantir Technologies Inc. | Palantir's stock saw mixed movements, with a reported 85% revenue surge in Q1 2026, but also recent dips and ongoing debates about its valuation, particularly concerning its defense AI exposure. | Strong revenue growth could support the stock long-term, but valuation concerns and geopolitical factors related to defense contracts could introduce volatility. | Medium term | Medium |\n| MSFT | Microsoft Corporation | Microsoft stock is rising, fueled by renewed interest in AI, significant fund inflows, and a new board appointment, despite some recent share pullback and AI investment uncertainty. | Continued AI momentum and strategic board additions could drive further growth. Strong fund flows indicate robust institutional interest. | Medium term | High |\n\n## 3. Stock-by-Stock News\n\n### VOO - Vanguard S&P 500 ETF\n\n**News Summary:**\nThe S&P 500 ETF is up, influenced by specific large-cap stock movements, while a valuation gap between dividend stocks and the broader S&P 500 is noted. Rising treasury yields are a key macro factor.\n\n**Possible Impact:**\nContinued strength in large-cap components could support VOO. Rising yields could pressure equity valuations, especially growth-oriented components. VOO's fee advantage over SPY could be a long-term benefit.\n\n**Good Points:**\n- Up 0.9% today, influenced by positive movements in components like ORCL.\n- VOO's 6.45 basis point fee advantage over SPY matters over a decade.\n\n**Bad Points:**\n- Dividend stocks' valuation gap to S&P 500 nears decade highs, suggesting potential overvaluation in non-dividend growth areas.\n- If the 10-Year Treasury crosses 4.6%, it could impact VOO.\n\n**Valuation Context:**\nThe S&P 500, represented by VOO, may be trading at a higher valuation relative to dividend-paying stocks than it has in a decade. VOO's lower expense ratio compared to SPY offers a long-term cost advantage.\n\n**Technical Context:**\nLast closed at 687.73. The EMA20 (663.71), EMA50 (645.06), and EMA200 (615.72) are all below the current price, indicating an Uptrend. RSI (78.79) is elevated, suggesting short-term momentum may be stretched. MACD (14.26) is above its signal line (13.1), showing positive momentum. Support zones are identified at 678.04, 672.54, and 665.3.\n\n**Relevance:**\nHigh - Represents the broad market, and news covers both daily performance drivers and significant macro valuation concerns.\n\n**Alert Tags:**\n- Macro\n- Fund flows\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nS&P 500 component performance, particularly large-cap tech. Movement in 10-Year Treasury yields. Federal Reserve policy statements.\n\n**Sources:**\n- [VOO is up 0.9% today, on ORCL stock price movement - Quiver Quantitative](https://news.google.com/rss/articles/CBMikAFBVV95cUxQeGFod1NsYUtmdm1vNFNsOWNVcTVQLTJLOXd3M2kyTGN5SDc3aHB1Z1pHOXVxbDNFX0NMZUJUcVdFc1NTS1F6aHNGaFh4ZnhBZEtZZ2dVS1lNZ3JaQmxpUkc2czRGczRtaTJ5aG5wSXJyaDZsZFFmekd0SjVRY2hzdzd6WUVWMWVXT25Cc3lmbGs?oc=5)\n- [DGRO Vs. VOO: Dividend Stocks' Valuation Gap To S&P 500 Nears Decade Highs - Seeking Alpha](https://news.google.com/rss/articles/CBMitwFBVV95cUxPNGpqNmFqVHFFM3N2blhUZFdaXzNkelo0ZGhoZy1qMGFnNWZOenY2X094UEpnaE1UZEdoblFFV1FvRkZHblA2Z2dTZzAxYmpwRmhmNENtZUxhQjN6am9JajZGaEJBVFVlbEVWNjhFTGNhVzZ0R1FmdEhERFljSjl5cGpBN2d2MUNwT2JYLW5NY3FfR1pnVEpldVM2aF8wQmQxd0NYS1dHVWlyRTV1MmJqOWZpLU5uOWs?oc=5)\n- [If the 10-Year Treasury Crosses 4.6%, Here’s What Happens to VOO and IVV - AOL.com](https://news.google.com/rss/articles/CBMidEFVX3lxTE9TbXZHTDI5UGtYVG1tcnFobHJHZko5UlVuZjhwN0RDdlBtaVlobDBGSl9idDlNbnMxaXlaNXl3N3g5RTBnS2gwSG04SUliSVdmNnMxNWJBX1Y1M3VacllUN1Atdm9MT25tT0pxMnJUUmpTeUpS?oc=5)\n- [Why Is Vanguard S&P 500 ETF (VOO) Up Today, 5/14/2026? - TipRanks](https://news.google.com/rss/articles/CBMihgFBVV95cUxQR0F0d285UUlianFEdklSNGtBQVBCZlpoaGJ2NW85NEM4bkZtRFdOUTd2ZlZzbUF3Um5Ybi0yUVhOdWdpaWVlTE5ONXNaYWVLQjV6TllVRmF2d2ZjdG03ckIwY2UyRGNleW83dmFSZXNfMmpYU2luWTc4dUdDUXgzQWMzejFfdw?oc=5)\n- [The Hidden Drag of SPY’s Outdated UIT Structure: Why VOO’s 6.45 Basis Point Fee Advantage Matters Over a Decade - AOL.com](https://news.google.com/rss/articles/CBMie0FVX3lxTE53QnNUcmswaUk2ZEYzQ2VEQ1ZIOHhwNEdjZU5vb3RaMndjSnlacm9haEZRUHJrdW52ZVk4ajdBTkJyUVNBVm5hZHhlLXprSHlueTVwZ0ZsYXFuTmhXMm95dnQxMTZtVmlBdmdlUVhXTVdhRkN4ZnlfWnhwZw?oc=5)\n- [Vanguard S&P 500 ETF (VOO): The smartest investment you can make today - MSN](https://news.google.com/rss/articles/CBMiuAFBVV95cUxPaHNTWHFqamExQU9FbHpZVjlQNDJjaXpRejg5dWhOcWVzbWZSbDNiSW5RWGhWRW1WUm1SXzE1dFRzT1lpNEl2ckhjSm1hOEljQmdyS0dWcDREekctMXVDemZOMlZYN3pJUVY3dFI4Qkk3cDdEbmk3OHdGbHBBT1I4VXl6NUJIY29UQ2trVmpfTFZ3cE9KOFo0NjU3MnpmS0NFdWxILS1hMkJTazFDQXJkNDM0NzhsMloz?oc=5)\n- [Why Stocks Refuse To Crash (It’s Not AI) (SPX) - Seeking Alpha](https://news.google.com/rss/articles/CBMihAFBVV95cUxOLUpHWEN6dkRRSFpIczI2TkdwSDFxRk5MM0x1S1hHeUc0NjE3cXhmcElGVE5jUDgtR0hZQmJHNlV2clg4Wi1YWldGV1hTaWVUdGd3UF9ZUVdnTUF6dTg4V2xmOTN2VGtKR3JaNFNUdHdhUzhnWkUza3dXZS1LVmp4YVhDS0s?oc=5)\n- [3 Low-Cost Vanguard ETFs with 14%+ Upside Potential - TipRanks](https://news.google.com/rss/articles/CBMihgFBVV95cUxOTGdCOGdiMEpjd0tFWV9nSHplalNWMlFQQkMtWW1vaS12QUlvSjZ0MkNjdHdRVVZrTW9zQVNKLW90NjZxT3cyNGZ1RC1LZnlpYnA2Z2F0dkpDdEFxeW8xNkFIZ0g0NF9QeWZiajM4REZOU1hoYVUxQUdCVFZiNTRyMXBWdTExQQ?oc=5)\n\n### GOOGL - Alphabet Inc.\n\n**News Summary:**\nAlphabet stock is surging to new record highs, driven by positive market re-rating and buzz around the 'Googlebook' launch.\n\n**Possible Impact:**\nContinued positive sentiment and product success could sustain upward momentum. However, a significant stake in a potential SpaceX IPO could be a future factor.\n\n**Good Points:**\n- Stock hitting 17th intraday record high of 2026.\n- 'Googlebook' launch driving fresh buzz.\n- Market is re-rating Google stock.\n- Stock surges to all-time high with discussions of more room to run.\n\n**Bad Points:**\n- Analyst warns GOOGL stake in ASTS could shrink to near zero with a SpaceX IPO.\n\n**Valuation Context:**\nThe market is 're-rating Google stock' and it's 'surging to all-time high,' suggesting a positive shift in how the market values the company, potentially due to new product launches and overall strong performance.\n\n**Technical Context:**\nLast closed at 401.07. The EMA20 (373.12), EMA50 (345.63), and EMA200 (292.48) are all below the current price, indicating an Uptrend. RSI (74.16) is elevated, suggesting short-term momentum may be stretched. MACD (20.81) is above its signal line (19.65), showing strong positive momentum. Support zones are 388.43, 387.35, and 383.25. A resistance zone is noted at 402.62.\n\n**Relevance:**\nHigh - Significant price movement to record highs driven by specific company news and market re-rating.\n\n**Alert Tags:**\n- Product Launch\n- AI\n- M&A\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nSuccess and adoption of 'Googlebook.' Further details on any potential SpaceX IPO and its impact on Alphabet's investments. Overall market sentiment towards large-cap tech.\n\n**Sources:**\n- [Alphabet (GOOGL) Stock Quotes, Company News And Chart Analysis - Investor's Business Daily](https://news.google.com/rss/articles/CBMisAFBVV95cUxQZ3RHcWtkOUszb3lIUjQ3ZndGU05XWDlWeU5IQVJJMEJsUjh6NnFUaFdwVGR0QjVadkFOcm9IbkVsejNxUlJieEdzekQ4TXRsQmQ0ejVZMkpHRkw4TnQwWnB5MnJDLTBrSXBzTTVzdlpOc1ZnNEZpcDdBVWhDNG5wcF9NTVZHYVcxR3hCMVpvVU9OeVJhMko0Ym1qMDNiM1R2Wk9qREoyeUVOdGcwNjh2Qg?oc=5)\n- [Alphabet Stock (GOOGL) Opinions on Record Highs and Googlebook Launch - Quiver Quantitative](https://news.google.com/rss/articles/CBMiqgFBVV95cUxQZ205bk9sZk5GVVRuWlo3dUtHNjVJdG5KOUcwODVaaXhURWRUSGRwTXBFUlFYXzQtMEhJU1ZhYWhZSzVtVk5JWko3V1NYem1POE5GcUVpdG14YzJKendNTEJpRUhwNEx0ZXVVcjlCdG9jcGFtM1E3ZFBNMnBzYjRFeEZob3FlRTVHZVBMb0NaYnF0bUZ1dXVaSW1pVERmREZpbzI3RVgwT1F2UQ?oc=5)\n- [Why The Market Is Re-Rating Google Stock - Trefis](https://news.google.com/rss/articles/CBMipAFBVV95cUxNdnBjemVXeFU4WFhmSzBlVGVoZktiMzdUREhnelZhZTBYWURQVGttREZzdEp0MV95emxlMS1yUmlpUUMwOVNVNjNUNmNxRVVsOXJJRmlNZ3JMWEhqZmR1bmV5OFZJMW5kVmZuRGZGOEpxNkR4OVRuc3Q5cDFvSy00cDVQZWItc1VITWVtUGlzcERuNVE0SmNJVGVhWU9hblRvQzNvRw?oc=5)\n- [Alphabet [NASDAQ: GOOGL] Stock Price Hits 17th Intraday Record of 2026 as Googlebook Launch Drives Fresh Buzz - foreignpolicyjournal.com](https://news.google.com/rss/articles/CBMi6wFBVV95cUxPRjREOGp1OXdZSlNsVzVZb2ZVNTVNdzZ0WWEzenZIVllrRVJHeks2bjJjb1pJSTZxWGhoLVQ0NGNPcUFFN0RCNzhQZUktaDBnRExZT0NtSGZ2bGgyQ0lQMHVNZ2IwWG1DanJNV0ExM2s5TVljT19kaW5xRWhZV0RZSGdQUk5MQjlYaFhudEUydHFRcl9rOGNKb1d0Q3UyRmhDLXVQSk5VUDlxbFJSMF9URmJsRU9icFdEd1ZPYjZ6QUZkeVFGMUY0UVRvU1FQSG4xUU5KbzBQRndISDlUX21yTldxM3NGQ1RIbGZr?oc=5)\n- [Alphabet (GOOGL) Stock Surges to All-Time High — Is There More Room to Run? - CoinCentral](https://news.google.com/rss/articles/CBMimwFBVV95cUxOZzA3LTZqaFpDbkR4VWRMZW13Rjd3TFZRYks3QV9XOExJdC1IcmNCRzdZRm92SzE0emhDTlozRkEzcjVkVHFNaXZvQUI3enpvc2Q5Nl9fSk1Zc1lZN2dXeENEUExQR2RKSTdiNjI3TXo1RVlPUlJsRGVRVGxsRkNPbWkxQzBWWmNlTGFHdmhLTXZNY2hzSVRIOS1BUQ?oc=5)\n- [ASTS stock hits 2026 low: Analyst warns GOOGL stake could shrink to near zero with SpaceX IPO - MSN](https://news.google.com/rss/articles/CBMivANBVV95cUxON2V5WGJhV2twYmdveG1OcjdOZ1BiLWR5c3dSRzV3UnZLbExDNmdoV0JKYUFvbnRGcmRRVHBrNFItU3p2RnJ0LVpfUHN3dThaaXBtV3dRZXlmLXhWNGlaVDRtR3Nja2hST0EzVmN2TERIdEZuUC1zTUdBX0ZYcjExQWhtWFpET2VfX3VVRmFHYzNBNTg5RjBqaFNQQlU5YzBNUVlWM21LUi1QVWxfWTVfVWZkaFFSTWx6OG5WaVlYQ2dYY3NQandSYVR0eXpRbE9BcV9XaEgweHo1clE4SXlBQi12amtWTldwMnc0dUQ4QjZOZU0zTmMyZlctWW5rME5QWGFLdDlsaDZPMFpHTWZJWTBjNEpMN3FWQ3N3bkZpaDBJTC16SlhpcG5COVlTMWt4N2xPanZwWENlTm1OMGZCZ2VqRlR3b2VFa2gyV2RKdkdtc3ZncWNCWUVfV09hLThqRnNtWS1rbzdhcENsb29XOE5vNDA1MlJobmsxa2dRai13RmF1TjZSaUZvLTljakczTHlvN2lLMkFZcVRoejhDSWR3eUhoSWg4aW5EeVVWaXJtY1BZNmVfVktOSnM?oc=5)\n- [Alphabet (GOOGL) Stock Reaches Record Peak — Can the Rally Continue? - Blockonomi](https://news.google.com/rss/articles/CBMikAFBVV95cUxOZFd4Um1lRE5UcVZBYUhRazNObEN5VUxxeHlRTXJKR01lUW9oZjZrU1hIT0R2UDQzODR1ZVl3MnZuN3ZRcnVSN2wzOHN0VnV1ekVSNWNVZEhCVjNyeV8tc1J1VkhVdm5QQW5KeDJVSjBXd1ptZFdqRTh0SGE4VExWemM2NFRyUU1WVlVMWUdibDM?oc=5)\n- [Alphabet (GOOGL)’s AI Cloud Surge Accelerates As Anthropic Commits $200 Billion To Google Infrastructure - Insider Monkey](https://news.google.com/rss/articles/CBMi5AFBVV95cUxQZU5PSk5EeDNyUHVYNE1nRjBUeHlkZmJZWk91NUhUNXpreWI3eGlMbGYtNlRzZ1FfUHVzUExPRjg5MTl0UlQ5TkI2QVFlcHNBVGRtd1Zrdm1JVlhGSnFwbFVFeV83TVNnWGNNcXBmSTkzMTF4OG94OW5KZUIyNkNYQmNGLTRzemNVd1FOb3RXaWNJQW0zdndBc1FYeHRRTDcxQmtfb1ljME1XYzl1U0dEVHFHZnUzVG5uRUFGWUtpRVJnVW9ndHVpM3J0Q3Zfa2xUUlR0ZnF4SnRpZEJjd0pXdGRja07SAeQBQVVfeXFMUGVOT0pORHgzclB1WDRNZ0YwVHh5ZGZiWVpPdTVIVDV6a3liN3hpTGxmLTZUc2dRX1B1c1BMT0Y4OTE5dFJUOU5CNkFRZXBzQVRkbXdWa3ZtSVZYRkpxcGxVRXlfN01TZ1hjTXFwZkk5MzExeDhveDluSmVCMjZDWEJjRi00c3pjVXdRTm90V2ljSUFtM3Z3QXNRWHh0UUw3MUJrX29ZYzBNV2M5dVNHRFRxR2Z1M1RubkVBRllLaUVSZ1VvZ3R1aTNydEN2X2tsVFJUdGZxeEp0aWRCY3dKV3RkY2tO?oc=5)\n\n### XLV - Health Care Select Sector SPDR Fund\n\n**News Summary:**\nThe healthcare sector, represented by XLV, showed softness and recorded outflows, contrasting with technology sector inflows.\n\n**Possible Impact:**\nContinued sector outflows could lead to further underperformance. Broader market trends and the interest rate environment could also influence the sector.\n\n**Good Points:**\n- No clear signal from today's sources.\n\n**Bad Points:**\n- Healthcare stocks were 'softer Thursday afternoon.'\n- The sector recorded outflows in weekly ETF data, while technology led inflows.\n\n**Valuation Context:**\nNo specific valuation context for XLV is provided in the news, beyond general market movements and sector outflows.\n\n**Technical Context:**\nLast closed at 146.63. The EMA20 (145.57) is below, while EMA50 (147.33) and EMA200 (146.39) are mixed relative to the current price, indicating a Sideways/Mixed trend. RSI (52.57) is in a neutral range. MACD (-0.52) is above its signal line (-0.87), suggesting a recent shift to positive momentum despite the overall mixed trend. Support zones are 146.61, 146.57, and 146.54. Resistance zones are 146.71, 147.42, and 147.73.\n\n**Relevance:**\nMedium - News indicates sector-specific weakness and fund outflows, which are relevant for portfolio allocation.\n\n**Alert Tags:**\n- Fund flows\n- Macro\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nSector-specific news, broader economic indicators, and interest rate changes. ETF flow data for healthcare.\n\n**Sources:**\n- [Sector Update: Healthcare Stocks Softer Thursday Afternoon - Moomoo](https://news.google.com/rss/articles/CBMizwFBVV95cUxNcWE4NnY3ME15U3VNWU15WmpsZVRGamRsN0REQXlEVUFLLUZhTS1VOUdIOTZXb1BaUS03Q1YybGdnT05XUGxEcEdldDRlTVc4N190eEJKSE1RUmtXcm01ZkNEUFV4Y3dDQzZkVjFmMWp6XzMxRVlKWnZfY3l6a1ZTa1R3UnFDbHVQX1dtdGoxcG1KZDg4c2VYTzRVclAxcFRpUzJGMFB4aURaNTV0QmEzZnR6NHBKa014NXZFQlJ1My11LUxIZmxyTnlyZ0RVYVE?oc=5)\n- [Stock Market News for May 14, 2026 - The Globe and Mail](https://news.google.com/rss/articles/CBMiugFBVV95cUxQbkRGTkRhc3gwbGVPVDk5YW1TTjVSUlhnUERKc0REVXdraC0yZkxKNHdIQ2NLZ2NnNXJ0T1BiRmJyYnlEZXI4Y0ZPRHNoVjVXLTJuMGNveDgyN3AtcEsyVTg0Nk9wMkZWT3M5WTZaTEVkQm93dHJ4QUg2OFlBZWxxWWlSZGl2SW9uemUtRXBfOUpKdXVqRXg4Z25UUlhJREtkWlVfRWJOM0d1RzZKSTI5OUpCM0NERG1YRlE?oc=5)\n- [Stock Market Today: Nasdaq 100 Rises Despite Hot PPI, Nvidia Hits Record High - Sahm](https://news.google.com/rss/articles/CBMixgFBVV95cUxQcjZKaWZsY0gxMk1CczFmdFM1b1dSeUE3d3RUUzViOWVlbWx2TTdxVzY5RzhKNVhQd3JTb05DWXc0VklRVzNYb21zU3Bjc1JRUmdlekF2YldUNGhmQ0FhLXpmaGpieTRFMW9jUm9FRE5XVGkyb0NId0x5Z2s2QW9wbzlnd1hsek90dW9aT1RjeDZpbUpCMEExR0g5Tm9QaUR3WWNkZmxFdmo5dmI4VndJNWRTZG9PZmlxMnhoaUJZRmpqWklzcWc?oc=5)\n- [Weekly ETFs: Seven of 11 sectors record outflows; technology sector leads inflows - MSN](https://news.google.com/rss/articles/CBMi_AFBVV95cUxNUTZrclhTNW1ZNjFDMzdSQkJ5ZVBGSGlNQldjWmQ3c1NQWFpIekdDVkx5TTN4YU5RRmE5MkRJZWFrUmhFM0RhN2tUR25hS1A4dzNKRUFyQV85T3FzYWhQRC1jNTREamh4MlZnVnpWb2FPbjlkTjNWQm1uNlpSTnVDT3gyblBYb1hINV9xNDFQSUdETmRzeEtjSjhJZHdvbGtRU0FlbUxjTWFCODBLX3RYeUxkeXptbUVySWlzclZocVlyTHYtaXlOZEVSM1daTzBPVkFoOUxkVXlJUW5qWUNVY0ZHX0pnRFpXQVF6UU9fZEVaaTg2YjZZUm50WXI?oc=5)\n- [Dow Jones Futures Fall, Yields Top 4.5% After Nvidia Runs, Cerebras IPO Soars; Trump-Xi Summit Continues - Investor's Business Daily](https://news.google.com/rss/articles/CBMixwFBVV95cUxOR0Q0STBtcHNkZDlCUWs2MnE4LVlhTEdtLU1ZS25mZFB6SHl0MXhXakMwYVpLWGJQRnZfbC1ZZjQxUXpWS001OG5IZlRPSmdpd3g1WlRIX19sVzZwcl8tb2JDd0xialRCY3RsSWhSSWNKRllZUnJ5NWF3T0pac0YtajFIaEdZTkxZRDJST01WMmRPMWxIRmMtb2dHZjNyTjd3Z1JTOEJUNWRnYlR0Q3lpZ2JmbkxJNkNaS2o2TnVOeTNqTTVkMzVr?oc=5)\n- [Are Wall Street Analysts Bullish on Edwards Lifesciences Stock? - inkl](https://news.google.com/rss/articles/CBMikgFBVV95cUxNeDRMaXQwS0VFOGRQQnZ4bjdmMTlKNGdjT2UtRE9iV2dIb19CVUxkTWR3QTVWWk0wR0FiLXJYOERFc2VHcm1uR1VMN2lHTmI1U25wMnBzMHh5RmFzODVyc3Jxc2tnVDNpRThnb1ZoVEl6cnlMWFJWd0s0MU5EczlfT0RNRUhoNFVsZzJEaXd3NWNxdw?oc=5)\n- [Weekly ETFs: Eight of 11 sectors record outflows; financial sector leads inflows - MSN](https://news.google.com/rss/articles/CBMi6gFBVV95cUxPQy1Qc0V4SkozTEp2S0ZfRzRQTy03LUw2RnJIbmJhcHNkMk5UWm91aC1Rc2Q0aHc4S3lLUHFNcElpUVZxT3RFQnNGQkx0ZFNBNVlLYkg2eVpQb3h5Y196cTRkREN6Y3ZQaF84UmFXSXVYU25veWxJT2FhbVdPdm5ILS1WdXVCRm1EdmpSMllVYWtXcmUzd2hibWZSVWRUdlhFd1NIWm1RamdhWG1SRm9hOExlVGd3VzN4bUZ0d3JaY0tMTEJvampXVy1qakpHdldlTWlvRDhvLVF5dkxoSzF1em5VdVRMUzE5cEE?oc=5)\n\n### VXUS - Vanguard Total International Stock ETF\n\n**News Summary:**\nDiscussions around international ETFs like VXUS focus on comparisons with other international funds and broader market ETFs, with some analysis suggesting that individual components might be superior to the whole.\n\n**Possible Impact:**\nPerformance relative to domestic markets and other international funds will be a key driver. Fund flows into specific international regions could also influence.\n\n**Good Points:**\n- No clear signal from today's sources.\n\n**Bad Points:**\n- One analysis suggests that the parts (individual international stocks) are superior to the whole (Vanguard’s World Stock Market ETF).\n\n**Valuation Context:**\nThe 'Parts Are Superior To The Whole' article implies that the overall valuation of VXUS might not be as compelling as its underlying components. The domestic market's valuation context (VOO's valuation gap) also provides a comparative backdrop.\n\n**Technical Context:**\nLast closed at 85.02. The EMA20 (83.4), EMA50 (81.59), and EMA200 (76.4) are all below the current price, indicating an Uptrend. RSI (59.96) is in a neutral range. MACD (1.24) is above its signal line (1.17), showing positive momentum. Support zones are 84.23, 83.41, and 82.84. Resistance zones are 85.43 and 85.62.\n\n**Relevance:**\nLow - News is primarily comparative or analytical rather than event-driven, offering general context.\n\n**Alert Tags:**\n- Fund flows\n- Macro\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nGlobal economic data, currency movements, and geopolitical developments. Performance comparisons with other international and domestic ETFs.\n\n**Sources:**\n- [Vanguard VXUS vs SPDR SPGM: Which is the Better International ETF? - The Motley Fool](https://news.google.com/rss/articles/CBMisAFBVV95cUxOUUpyTlZWN0NhWkZwczhyRGV3YTlxc0IzS2pfS2FUWjZSOU90ZmExYzZrRWhfVzNwQUwyeHBNcGxIUmtpLWFvNl9ON1dhVFhJelAtM25iWDJqYVE4bmNMSXk2d3VWcUJ6cUY4VTJ1SlVDbjNjalpfcUJPYVA0aDdLY0t4N0p6Q1c4TGdsQ1JMVmtTbzFfUHJUSXhaYmlCOUlxbFpXdjZXVlo2NVF5dWg5SA?oc=5)\n- [Vanguard’s World Stock Market ETF: The Parts Are Superior To The Whole (NYSEARCA:VTI) - Seeking Alpha](https://news.google.com/rss/articles/CBMirgFBVV95cUxPQ2NlSmt6V3lESk5jWFpMbTBseTVIMzRLZ2lxbndnUkN1Sk8tT3B0NVhheHBmb18wazdZd2plM3F4UVl0akhtVXVab0paMFRZZmwwMGdOcE1yejNJRENxNDJMWnRqSnZaalI4SVNPcUw0dUZfbkhxM25EQ19oMThUZWswXzBkYm03dkR2b1h5c3ZSenc0QnVrd1c0ZzRfTTVhNjRxbVdOT25XREJkLXc?oc=5)\n- [ETFs Investing in PT Bank Rakyat Indonesia (Persero) Tbk Class B Stocks - TradingView](https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ITnpMN2liVmdyb2w1MVpUd2ZfVEtqbW9yTmpWYmJjQmNBSU1xYjZ3TkpzeUhZZlFQeFFpR1ZtdEFTOU9vY1BGVXJkYjJ6V3VVM1FPeGdENTlmdy1sRkNz?oc=5)\n- [I Asked ChatGPT To Create a 2026 'Set-It-and-Forget-It' Portfolio - Here's What a Pro Changed First - AOL.com](https://news.google.com/rss/articles/CBMifEFVX3lxTE9Tc05qcGlfc3N5d0g0TUV0aEpRTXpEaDhWZjBJZ0VMaXlnQ1poOEc3Y3ZuOXVIbERrRzJqejNEaGFueXBFMWtiUzBRMFdXdFFZV3ZocmlJRG0xbzBzSTdkMXlja21pemdhLUp3Rmt5NUpfMkJtc0V6SEZ3Z0I?oc=5)\n- [ETFs Investing in Kuaishou Technology Class B Stocks - TradingView](https://news.google.com/rss/articles/CBMiXkFVX3lxTE83ZlV2WGx6c0pBTHZMSUI1WmxhVHE2RllsT0pjdGZVb2dSa2hZZ2JLZjU3aXFJOVhLS2Q0SUMtcG8xNTlkYjF2YkJXcFdvc1Q0NnE1MjNaaTFzOGxTYnc?oc=5)\n\n### PLTR - Palantir Technologies Inc.\n\n**News Summary:**\nPalantir's stock saw mixed movements, with a reported 85% revenue surge in Q1 2026, but also recent dips and ongoing debates about its valuation, particularly concerning its defense AI exposure.\n\n**Possible Impact:**\nStrong revenue growth could support the stock long-term, but valuation concerns and geopolitical factors related to defense contracts could introduce volatility.\n\n**Good Points:**\n- Stock is up today (as per one source).\n- First-quarter 2026 revenue surged 85%.\n\n**Bad Points:**\n- Stock 'slips 4% after Zelenskiy talks spotlight defense AI exposure.'\n- Stock 'trading lower today' (as per another source, indicating volatility).\n- 'The Valuation Still Makes No Sense' article suggests overvaluation.\n\n**Valuation Context:**\nOne article directly questions Palantir's current market valuation, implying it may be stretched. Despite this, the company reported an 85% revenue surge in Q1 2026, which could be a factor in supporting or justifying some of its valuation.\n\n**Technical Context:**\nLast closed at 133.73. The EMA20 (138.61), EMA50 (143.16), and EMA200 (152.09) are all above the current price, indicating a Downtrend. RSI (43.15) is in a neutral range. MACD (-2.79) is below its signal line (-2.11), suggesting weaker momentum. Support zones are 132.37, 131.41, and 130.6. Resistance zones are 135.24, 135.38, and 135.68.\n\n**Relevance:**\nHigh - Significant revenue growth reported alongside conflicting price movements and strong valuation debates.\n\n**Alert Tags:**\n- Earnings\n- AI\n- Legal\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nFuture earnings reports and revenue growth rates. Developments in defense contracts and geopolitical events. Analyst sentiment regarding valuation.\n\n**Sources:**\n- [Why Palantir Technologies (PLTR) Stock Is Up Today - StockStory](https://news.google.com/rss/articles/CBMisgFBVV95cUxOWm45UV9oUzVnZzBkQ2VaX3VsV3dQQWZtVFpOdF8tTlBGczd0Y3A0a2JCcHczNndWTzU0MnV2T19rT1dGM2l3SGZoclE4T1VmeURkWmt1cnpRUzlId1B5V3JqcHpYZTZwZVR4bmM0U0R5Y3otSElzZ2JVeWZXRFpqdWtLZjNvLVZMVnJhRHVUNUdZbk16ZFk2UEJnNVE1Ylc5V25pVTFGR2ZsRnlMY2hJNzZ3?oc=5)\n- [Palantir: The Valuation Still Makes No Sense - Seeking Alpha](https://news.google.com/rss/articles/CBMijAFBVV95cUxNckg4STZGeExXYl9KN09JdzEtWFo2STlQTXRTc2xYaGY2SndkeWNtR3p3MVRJMWp6aDlpcXdQTlNTbGNkVUZNa3ZkeEI5bW83S0JyMlluWHk3Wk5MYUtWVUdCNDJOTlFnNVVUdl8xZ1Y3eGZJd2tDZVJXWUZfSWk1VS1aNnJpRkwyMjNfUg?oc=5)\n- [Palantir (PLTR) Stock; Slips 4% After Zelenskiy Talks Spotlight Defense AI Exposure - CoinCentral](https://news.google.com/rss/articles/CBMijgFBVV95cUxPLU5WYVhyaVB5VUhRNUo4bkhfSkEzdDJadmUyNWVkSXdiTEJXNjhUTnppMzZZRTBVcExJR2p3bENFb25PcGlJbVVueFhLNlAwLU1MV0JSM3dUeUU4bkE3Ymx3ODdrRkFkY2h3LVpubk5BZHlhUDBJWmtzNFFqSXJHOGo0UU4xZkNyV1FkbTVn?oc=5)\n- [Why Palantir Technologies (PLTR) stock is trading lower today - MSN](https://news.google.com/rss/articles/CBMixwFBVV95cUxPMDh4VldiWXRZUkg2MDhMWGpHbmIyV1ZKclI0NDFJdHAtT3k2M3BreE9ya3FVMFctMjNTOUUxUlFURnRLVl91eWFldzM4d1Z1V3VzME0tMGx2clJNZHdhOFNwXzFfcGgtdkdRc1lQb29FaWEtWnpUU0p0U3VvQ3k2cHUwaC1lZHhWNWRUM1B0VWVBYzVuWTR6VGtYUHRwR3BUY0FydEs4SWFRd2x4bzFwanpNcU9nVjhCMVlHbUE5bHU4ZkhoQ3FV?oc=5)\n- [Palantir stock trades up as first-quarter 2026 revenue surges 85% - Traders Union](https://news.google.com/rss/articles/CBMinwFBVV95cUxQTUdKZEhzWlNFaGhyNlB1YTBrLVA2UU9RMjdTQW1UU0xWTTRyc0Q3ZXdTN0wxYlI4eGstZlBBNlFjTDRzeFRqWkFCUWYwN1lDSkJtbXpBbG5QTENia2dGNVU1SDFGcjlOZHNabGlJOUUzbHJDSlNsaVpVeVVhcVFGTTJ3a3UwNlpIT2xNMnFQNkpidFQxNWN2UnRCU1kya28?oc=5)\n- [SoundHound Stock Is Down 13% Today – Is It Outperforming Other AI Stocks Like Palantir and C3.ai? - AOL.com](https://news.google.com/rss/articles/CBMif0FVX3lxTE5HX3pmXzE0OGY0eVV5MWJVblAtZ0tUZmozZHNQZnlmSmt1VHBBRE41U1AyeDlQQ215azJsVjJZdGMzT0g0aC1OUklPZXJVLVQ3YVZsSjhLRmg2d1A0UnJ5X0E4NnFDM1N1Xy1mTVZpaHExTm5sSnNFYmFTekFWTXM?oc=5)\n- [Palantir Stock’s Fog of War Creates an Aggressive Buying Opportunity - inkl](https://news.google.com/rss/articles/CBMimgFBVV95cUxPZ3VQQnNyV0E0UFVoaVJMUmJzWEVvNXhaMl9zT1FSOWQ2bGRlMzFQRzdhT1I3WkhMdHB6RF9WMklSemF3WHpETFFZOGN5clRRdDBPSVRkekswZHE5LTN4TDFYT2trdnhueDh5aEJiSmZKcXhpbExJS0MyWXd4YTlqWU9uZzNhYjk1OGgzUFFrcDRsdmVJUV9TenpB?oc=5)\n- [Palantir Technologies Inc. (PLTR) laps the stock market: Here's why - MSN](https://news.google.com/rss/articles/CBMi0gFBVV95cUxQbnlCdnkzcEdXRUpJdWVLaHpuWVVPZjM1UVo1RFJXTjRWaVZ5NnVjTW1qb1VGZU5kNnRLS290NktzeTkwa3NRU290Y282cld4bUhHdU5PZFhDR200NjNYQ2FrZXFvQnVqY2VCeXJ3S1dXXzYyNmR4REwzQlZkUlNjemUwUDFBX3hTci1WdloyUXp5VDJfYkpZSWFUZDJ2UTF3OUVudUZaRDN2OGliYTZmcTFlX21Iaks5UnM3OVpyUUFXVUpLVjJHMVdpWS03cDhXbmc?oc=5)\n\n### MSFT - Microsoft Corporation\n\n**News Summary:**\nMicrosoft stock is rising, fueled by renewed interest in AI, significant fund inflows, and a new board appointment, despite some recent share pullback and AI investment uncertainty.\n\n**Possible Impact:**\nContinued AI momentum and strategic board additions could drive further growth. Strong fund flows indicate robust institutional interest.\n\n**Good Points:**\n- Stock rises as AI trade reignites.\n- Dodge & Cox added over 4.5 million shares to its portfolio.\n- Ex-EY boss joins Microsoft's board, serving on pay and audit committees.\n- Stock jumps as gamers await a Forza Horizon 6 release date for PS5.\n\n**Bad Points:**\n- Recent share pullback and ongoing AI investment uncertainty are noted in valuation assessment.\n\n**Valuation Context:**\nWhile there has been a recent share pullback, the market is still assessing Microsoft's valuation in light of ongoing AI investments. The stock's rise due to 'AI trade reigniting' suggests positive valuation sentiment tied to its AI initiatives.\n\n**Technical Context:**\nLast closed at 409.43. The EMA20 (410.69) is above, EMA50 (408.44) is below, and EMA200 (440.57) is above the current price, indicating a Sideways/Mixed trend. RSI (50.32) is in a neutral range. MACD (2.8) is below its signal line (5.03), suggesting weaker momentum despite the stock rising today. Support zones are 407.78, 407.77, and 405.21. Resistance zones are 410.68, 411.22, and 412.33.\n\n**Relevance:**\nHigh - Strong positive catalysts (AI, fund flows, board changes) are driving stock movement and investor interest.\n\n**Alert Tags:**\n- AI\n- Fund flows\n- Governance\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nFurther AI product developments and adoption. Impact of the new board member. Future fund flow data.\n\n**Sources:**\n- [Microsoft Stock Rises As AI Trade Reignites: Why MSFT Shares Moved Today - TechStock²](https://news.google.com/rss/articles/CBMilwFBVV95cUxOdnA4bnZtdVBDZExaZlNSUW1VSnVmdWw1Y01rb0FpMVpsRU4zbXZqLXhEaUllZWoxeTRQOHRvWU1Ic2VRMTFMYnE5OG8xU3I4cE9tTFZTVGJfT2tMR1gxVklVeTF6WWpfcU9qQ3o1QmZ6SVc2QUNxOTZ3WWVISkUzQnEtcVhxWnBlNUlHaEhkY3JIWVdOdGxJ?oc=5)\n- [Fund Update: 4,518,185 MICROSOFT (MSFT) shares added to DODGE & COX portfolio - Quiver Quantitative](https://news.google.com/rss/articles/CBMivwFBVV95cUxQVGluVWRiLWhscElXTmZzSGIyUmIya1kzVjF6VG5MWERtM3dJY0hiS185VEhWd01GcUtLaGlCMEJ4TFRJNkNUODZDVnNMNEtzS2lwMnNRRkhQVzVIM25rWVhCdmZHeFBkMEJtd1RVNGt4eFFxdlBpYVItcXRhaGE5azhEemxkQmFETXVYamFUSVF3WjEyM2paa0puZG13d3MzN2FGN3JEUEM5ck9YNUY3RjM4bnpOVzZMdk5SS3JTaw?oc=5)\n- [Ex-EY boss joins Microsoft's board, to serve on pay and audit committees - Stock Titan](https://news.google.com/rss/articles/CBMiugFBVV95cUxQX2N2WWJRSEhYd2RZRWJxdGhLS0I3cDNUV2dPTkdaQUlmR1hlWlB0dnZYUjFqVHNFcG96Zkwxak03aVBfSUo3TGdmNWExN3FzX2F0QTAyTVNrQVhHaEQzNTdxUmNyQ1RmbTZmd1BSeHpqelNkcXQ3X1NQYlA2OTRZaTQ1Ym1RR0gxU2NLdEVOVkN1LTl3dzg2ZFdBMlMtNTZ6U1U1SVJzTnlfQUQ2RG9vRmlkUjBWZUpNclE?oc=5)\n- [Assessing Microsoft (MSFT) Valuation After Recent Share Pullback And Ongoing AI Investment Uncertainty - simplywall.st](https://news.google.com/rss/articles/CBMixwFBVV95cUxORmN1RkxKNkd2RzNGYVhqUFVKOGNTTGNveHpiell3V1BoSDhuTXB3b0RxNTRCc082WV9jLXMtUmRmZmxtSi02T1ZXT2lJMVJXRFExdDllOG5NVERVekhTazROamphd3FwZGhZOHBDc2RJaEVlVV9nQ1c2MmIzZHFiaG9oaDdTZDZ2RjB5TVpoNkxPSmI4REJVNGVPSTJ5M3dnMWZXVXNoaXEzTzhiZnZacVpGQUhkUWg5MlcxRTJVVWNpRmRVcUxn0gHMAUFVX3lxTFAtZjBxdHJYV2kzdnljSWRLcEdOVGJKVGQwdGVYaXV1SFZyRDJHN2pRcGR4bEo4a19ULXZCUnVZbVBKeUZHc0hZWGw3aGJHaVVwVkVHTjRvbkJ5MUk1bTJLRzFQSXhCZ2UzRm44UWtGNFNCWGRPMUNEc1JfaHAzNHZYYmh6ejJ0M1hCbFd2Ti1nR1dCOHpjRU1pcVR2Sk5uWF9xQmZfMjd0dUY3cGl2blFkdDBCang0SV8zSmxCMGd4Szdvak9YZ0tJRm1hNA?oc=5)\n- [Microsoft Stock (MSFT) Jumps as Gamers Await a Forza Horizon 6 Release Date for PS5 - TipRanks](https://news.google.com/rss/articles/CBMisAFBVV95cUxPcFRoMFJvNWZWdjFIWFN1bGd2b0lxRmFCd0NXdlVkMkV3SXBoQ1pBYW14QWJ1bmtvZXYwMmkwSFBzaVQwMzZNY05yMHZ3enJkcVhFbGZxdlNvZ0xGRld3S1ZIaTVqdFRBYXE3aFd5UFpmaFZRRTk1aFI4SUxFeWFPNjdVdjREcXRjTE42QlZqdEZnMC00ajZtVUNRS1JoSElPVWZ0Rl9TdEFOQjVNbjBPTA?oc=5)\n- [John McGuire from Virginia’s 5th district buys Apple, Microsoft, and Nvidia stocks - Investing.com Australia](https://news.google.com/rss/articles/CBMi1wFBVV95cUxQWkxTZGZreGZPdnNfUVFnVGJkbUNsdmRrWU9ra2FoclQycEt4RWR3a0Q4ZjljZnBZYXd5MldWaF9URHllNmdaWUtCQk0za0JvUGtiRGpCOXJnZkZURjJUVndnYU1BcEpMQTA5ZmpBYUV4QnJaQko4MXd5MFRTN3NxUUdpZmJsdlJsZjZmRlZqdnBidTRPZG5WZC1FOHphbWJRUEt1ZXFPTmlCVUhRQUR5UmlpUEU1dUZiQmgtQ3hXZzJVLVpCenR5ZUtfWURaUkRvZzVMS0Vjcw?oc=5)\n- [Trump's Major Stock Purchases Include NVDA, MSFT, and ORCL - GuruFocus](https://news.google.com/rss/articles/CBMimgFBVV95cUxONllqby1qR1RybGtxWHJYbmZUTVpzaEFaOElGSTkzdHY1bkgxOXlEN0FHLURfck9HLVZYUHlRcjBGcGh4WkRiZVUwSHJybkc1Y2w5dUQwNUtaNzVOWHVMQTFmbzg5VnBMY2czSnBXeGtVRGo3anRZY3E5SWV1VTRIRHVGVVQxX3BhOGt0Y0tKMUt0OEpJTjFucFJB?oc=5)\n- [MSFT (NASDAQ: MSFT) files notice for planned sales of vested common stock - Stock Titan](https://news.google.com/rss/articles/CBMilgFBVV95cUxOemZ2S2FCQ3hNOC1pbnVVM0xuZXNIX1Z2MEJOdWlsWkVZNTlYMHJmb1MxQWF2dXh2YTJNeHFxam93WkFlck5vQ2pLLTJueWxteTloU0IwQTNpQ0RHb0JGZ09QWDRMYW4zbG5PMXZ3TFdTUHZzNHJJUDdYb3Vsa3VBUkoyTmVBSjlUUkZGaWhBay1teHJFcGc?oc=5)\n\n\n## 4. Macro & Market Overview\n\nKevin Warsh has been confirmed as the new Federal Reserve Chair, replacing Jerome Powell. The bond market is reacting to this change, with expectations of potential rate hikes due to inflation concerns, and the 10-Year Treasury yield nearing 4.6%.\n\n### Market Context\n\n- S&P 500 (VOO) is up, influenced by large-cap tech movements.\n- Dividend stocks show a valuation gap to the broader S&P 500.\n- Healthcare sector (XLV) experienced softness and outflows.\n- Technology sector leads inflows in weekly ETF data.\n- Rising bond yields, with the 10-Year Treasury nearing 4.6%, are a key market factor.\n\n## 5. Risk Alerts\n\n- Rising bond yields (10-Year Treasury nearing 4.6%) could pressure equity valuations.\n- Uncertainty surrounding new Fed Chair Kevin Warsh's policy direction and potential for rate hikes.\n- Valuation concerns for some high-growth stocks (PLTR) and the broader S&P 500 (VOO) relative to dividend stocks.\n- This is decision support, not financial advice.\n- The report does not recommend buying, selling, holding, or trading.\n\n## 6. Read More\n\n- [VOO - DGRO Vs. VOO: Dividend Stocks' Valuation Gap To S&P 500 Nears Decade Highs - Seeking Alpha](https://news.google.com/rss/articles/CBMitwFBVV95cUxPNGpqNmFqVHFFM3N2blhUZFdaXzNkelo0ZGhoZy1qMGFnNWZOenY2X094UEpnaE1UZEdoblFFV1FvRkZHblA2Z2dTZzAxYmpwRmhmNENtZUxhQjN6am9JajZGaEJBVFVlbEVWNjhFTGNhVzZ0R1FmdEhERFljSjl5cGpBN2d2MUNwT2JYLW5NY3FfR1pnVEpldVM2aF8wQmQxd0NYS1dHVWlyRTV1MmJqOWZpLU5uOWs?oc=5) | Seeking Alpha | Provides context on the relative valuation of the S&P 500 (VOO) compared to dividend stocks, highlighting a decade-high gap.\n- [GOOGL - Alphabet [NASDAQ: GOOGL] Stock Price Hits 17th Intraday Record of 2026 as Googlebook Launch Drives Fresh Buzz - foreignpolicyjournal.com](https://news.google.com/rss/articles/CBMi6wFBVV95cUxPRjREOGp1OXdZSlNsVzVZb2ZVNTVNdzZ0WWEzenZIVllrRVJHeks2bjJjb1pJSTZxWGhoLVQ0NGNPcUFFN0RCNzhQZUktaDBnRExZT0NtSGZ2bGgyQ0lQMHVNZ2IwWG1DanJNV0ExM2s5TVljT19kaW5xRWhZV0RZSGdQUk5MQjlYaFhudEUydHFRcl9rOGNKb1d0Q3UyRmhDLXVQSk5VUDlxbFJSMF9URmJsRU9icFdEd1ZPYjZ6QUZkeVFGMUY0UVRvU1FQSG4xUU5KbzBQRndISDlUX21yTldxM3NGQ1RIbGZr?oc=5) | foreignpolicyjournal.com | Details the specific catalyst (Googlebook launch) driving Alphabet's recent record stock performance.\n- [PLTR - Palantir: The Valuation Still Makes No Sense - Seeking Alpha](https://news.google.com/rss/articles/CBMijAFBVV95cUxNckg4STZGeExXYl9KN09JdzEtWFo2STlQTXRTc2xYaGY2SndkeWNtR3p3MVRJMWp6aDlpcXdQTlNTbGNkVUZNa3ZkeEI5bW83S0JyMlluWHk3Wk5MYUtWVUdCNDJOTlFnNVVUdl8xZ1Y3eGZJd2tDZVJXWUZfSWk1VS1aNnJpRkwyMjNfUg?oc=5) | Seeking Alpha | Provides a critical perspective on Palantir's valuation, which is a key debate point for the stock.\n- [MSFT - Fund Update: 4,518,185 MICROSOFT (MSFT) shares added to DODGE & COX portfolio - Quiver Quantitative](https://news.google.com/rss/articles/CBMivwFBVV95cUxQVGluVWRiLWhscElXTmZzSGIyUmIya1kzVjF6VG5MWERtM3dJY0hiS185VEhWd01GcUtLaGlCMEJ4TFRJNkNUODZDVnNMNEtzS2lwMnNRRkhQVzVIM25rWVhCdmZHeFBkMEJtd1RVNGt4eFFxdlBpYVItcXRhaGE5azhEemxkQmFETXVYamFUSVF3WjEyM2paa0puZG13d3MzN2FGN3JEUEM5ck9YNUY3RjM4bnpOVzZMdk5SS3JTaw?oc=5) | Quiver Quantitative | Highlights significant institutional fund flows into Microsoft, indicating strong investor confidence.\n- [MACRO - The bond market is already hiking rates as Kevin Warsh takes over as Fed’s new chair - MarketWatch](https://news.google.com/rss/articles/CBMixAFBVV95cUxQZ2piUnE4YjJQYXZROWRHX2cwZHFlNVBfREJMeFRDbnd0OWUxOTdOdDRlSlM1b09DX0ExMmNyVjZPdEt6NzE0eFJabnpmZENpWjNta0xhS2dXQUFYc0lCOF91eXFKSXlWQU9NWUFWSEdMMnpsYkwxRXBkSnNOTVAyZFpiVXhGSFJjM1dtOWZ3dGRLTUJWSi1na0xLM0F4MVY3VWZhMU9ZbnlNZDNMU19vU2pnTU1JbKotVVJ0cXVFeFZMcTZK?oc=5) | MarketWatch | Explains the immediate market reaction to the new Fed Chair and the implications for interest rates.\n\n## 7. Stocks With No Important News Today\n\n- Every configured stock had at least one matching RSS headline.\n\n## 8. Notes / Errors\n\n- None.",
   "summary": {
-    "mode": "basic",
-    "portfolio_summary": "OpenAI API key was not found, so only basic headline-based analysis was generated.",
-    "daily_briefing": "Basic mode cannot generate a full portfolio briefing. Add GEMINI_API_KEY or OPENAI_API_KEY for contextual analysis.",
-    "macro_overview": "No AI macro synthesis was generated.",
-    "market_context": [],
-    "cross_portfolio_themes": [],
+    "mode": "gemini",
+    "portfolio_summary": "The portfolio is navigating a significant shift in monetary policy with a new Fed Chair, leading to bond market reactions. Large-cap tech holdings like Alphabet and Microsoft are showing strong individual momentum, with Alphabet hitting record highs and Microsoft benefiting from renewed AI interest. The broader S&P 500 ETF saw gains, while the healthcare sector experienced some softness and outflows. Palantir presents a mixed picture of strong revenue growth against recent stock dips and ongoing valuation debates.",
+    "daily_briefing": "Today's market narrative is heavily influenced by the confirmation of Kevin Warsh as the new Federal Reserve Chair, signaling potential shifts in monetary policy and prompting bond market reactions to inflation concerns. Despite this macro backdrop, major technology players are demonstrating robust performance; Alphabet is reaching new record highs driven by its 'Googlebook' launch, and Microsoft is seeing renewed interest in its AI initiatives alongside significant institutional inflows. The S&P 500 ETF (VOO) reflects these large-cap movements, though a notable valuation gap for dividend stocks is emerging. In contrast, the healthcare sector (XLV) is experiencing some weakness and outflows, while Palantir (PLTR) faces a dichotomy of strong revenue growth and persistent valuation skepticism, coupled with recent price volatility.",
+    "macro_overview": "Kevin Warsh has been confirmed as the new Federal Reserve Chair, replacing Jerome Powell. The bond market is reacting to this change, with expectations of potential rate hikes due to inflation concerns, and the 10-Year Treasury yield nearing 4.6%.",
+    "market_context": [
+      "S&P 500 (VOO) is up, influenced by large-cap tech movements.",
+      "Dividend stocks show a valuation gap to the broader S&P 500.",
+      "Healthcare sector (XLV) experienced softness and outflows.",
+      "Technology sector leads inflows in weekly ETF data.",
+      "Rising bond yields, with the 10-Year Treasury nearing 4.6%, are a key market factor."
+    ],
+    "cross_portfolio_themes": [
+      "AI Influence: Microsoft and Palantir news highlights AI's role in driving stock movements.",
+      "Monetary Policy Shift: The change in Fed leadership and bond market reactions are a significant overarching theme.",
+      "Large-Cap Tech Strength: Alphabet and Microsoft are showing strong performance, influencing broader market indices.",
+      "Valuation Debates: Ongoing discussions about asset pricing for the S&P 500 relative to dividend stocks, and Palantir's valuation.",
+      "ETF Flows/Sector Rotation: Outflows from healthcare and inflows into technology indicate shifts in investor preference."
+    ],
     "risk_alerts": [
-      "This is a news summary, not financial advice.",
-      "The report does not recommend buying, selling, or trading."
+      "Rising bond yields (10-Year Treasury nearing 4.6%) could pressure equity valuations.",
+      "Uncertainty surrounding new Fed Chair Kevin Warsh's policy direction and potential for rate hikes.",
+      "Valuation concerns for some high-growth stocks (PLTR) and the broader S&P 500 (VOO) relative to dividend stocks."
     ],
-    "read_more": [],
+    "read_more": [
+      {
+        "ticker": "VOO",
+        "title": "DGRO Vs. VOO: Dividend Stocks' Valuation Gap To S&P 500 Nears Decade Highs - Seeking Alpha",
+        "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPNGpqNmFqVHFFM3N2blhUZFdaXzNkelo0ZGhoZy1qMGFnNWZOenY2X094UEpnaE1UZEdoblFFV1FvRkZHblA2Z2dTZzAxYmpwRmhmNENtZUxhQjN6am9JajZGaEJBVFVlbEVWNjhFTGNhVzZ0R1FmdEhERFljSjl5cGpBN2d2MUNwT2JYLW5NY3FfR1pnVEpldVM2aF8wQmQxd0NYS1dHVWlyRTV1MmJqOWZpLU5uOWs?oc=5",
+        "source": "Seeking Alpha",
+        "why_read": "Provides context on the relative valuation of the S&P 500 (VOO) compared to dividend stocks, highlighting a decade-high gap."
+      },
+      {
+        "ticker": "GOOGL",
+        "title": "Alphabet [NASDAQ: GOOGL] Stock Price Hits 17th Intraday Record of 2026 as Googlebook Launch Drives Fresh Buzz - foreignpolicyjournal.com",
+        "url": "https://news.google.com/rss/articles/CBMi6wFBVV95cUxPRjREOGp1OXdZSlNsVzVZb2ZVNTVNdzZ0WWEzenZIVllrRVJHeks2bjJjb1pJSTZxWGhoLVQ0NGNPcUFFN0RCNzhQZUktaDBnRExZT0NtSGZ2bGgyQ0lQMHVNZ2IwWG1DanJNV0ExM2s5TVljT19kaW5xRWhZV0RZSGdQUk5MQjlYaFhudEUydHFRcl9rOGNKb1d0Q3UyRmhDLXVQSk5VUDlxbFJSMF9URmJsRU9icFdEd1ZPYjZ6QUZkeVFGMUY0UVRvU1FQSG4xUU5KbzBQRndISDlUX21yTldxM3NGQ1RIbGZr?oc=5",
+        "source": "foreignpolicyjournal.com",
+        "why_read": "Details the specific catalyst (Googlebook launch) driving Alphabet's recent record stock performance."
+      },
+      {
+        "ticker": "PLTR",
+        "title": "Palantir: The Valuation Still Makes No Sense - Seeking Alpha",
+        "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNckg4STZGeExXYl9KN09JdzEtWFo2STlQTXRTc2xYaGY2SndkeWNtR3p3MVRJMWp6aDlpcXdQTlNTbGNkVUZNa3ZkeEI5bW83S0JyMlluWHk3Wk5MYUtWVUdCNDJOTlFnNVVUdl8xZ1Y3eGZJd2tDZVJXWUZfSWk1VS1aNnJpRkwyMjNfUg?oc=5",
+        "source": "Seeking Alpha",
+        "why_read": "Provides a critical perspective on Palantir's valuation, which is a key debate point for the stock."
+      },
+      {
+        "ticker": "MSFT",
+        "title": "Fund Update: 4,518,185 MICROSOFT (MSFT) shares added to DODGE & COX portfolio - Quiver Quantitative",
+        "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQVGluVWRiLWhscElXTmZzSGIyUmIya1kzVjF6VG5MWERtM3dJY0hiS185VEhWd01GcUtLaGlCMEJ4TFRJNkNUODZDVnNMNEtzS2lwMnNRRkhQVzVIM25rWVhCdmZHeFBkMEJtd1RVNGt4eFFxdlBpYVItcXRhaGE5azhEemxkQmFETXVYamFUSVF3WjEyM2paa0puZG13d3MzN2FGN3JEUEM5ck9YNUY3RjM4bnpOVzZMdk5SS3JTaw?oc=5",
+        "source": "Quiver Quantitative",
+        "why_read": "Highlights significant institutional fund flows into Microsoft, indicating strong investor confidence."
+      },
+      {
+        "ticker": "MACRO",
+        "title": "The bond market is already hiking rates as Kevin Warsh takes over as Fed’s new chair - MarketWatch",
+        "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQZ2piUnE4YjJQYXZROWRHX2cwZHFlNVBfREJMeFRDbnd0OWUxOTdOdDRlSlM1b09DX0ExMmNyVjZPdEt6NzE0eFJabnpmZENpWjNta0xhS2dXQUFYc0lCOF91eXFKSXlWQU9NWUFWSEdMMnpsYkwxRXBkSnNOTVAyZFpiVXhGSFJjM1dtOWZ3dGRLTUJWSi1na0xLM0F4MVY3VWZhMU9ZbnlNZDNMU19vU2pnTU1JbKotVVJ0cXVFeFZMcTZK?oc=5",
+        "source": "MarketWatch",
+        "why_read": "Explains the immediate market reaction to the new Fed Chair and the implications for interest rates."
+      }
+    ],
     "stock_count": 6,
-    "total_articles": 0,
+    "total_articles": 108,
     "total_portfolio_value_thb": 15970.82,
-    "errors": [
-      "\"VOO\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22VOO%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"Vanguard S&P 500 ETF\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Vanguard+S%26P+500+ETF%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"GOOGL\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22GOOGL%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"Alphabet Inc.\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Alphabet+Inc.%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"XLV\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22XLV%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"Health Care Select Sector SPDR Fund\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Health+Care+Select+Sector+SPDR+Fund%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"VXUS\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22VXUS%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"Vanguard Total International Stock ETF\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Vanguard+Total+International+Stock+ETF%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"PLTR\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22PLTR%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"Palantir Technologies Inc.\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Palantir+Technologies+Inc.%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"MSFT\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22MSFT%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "\"Microsoft Corporation\" stock news when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=%22Microsoft+Corporation%22+stock+news+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "Federal Reserve interest rates when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=Federal+Reserve+interest+rates+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "US inflation CPI PCE when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=US+inflation+CPI+PCE+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "US Treasury yields stock market when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=US+Treasury+yields+stock+market+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "US jobs report unemployment market when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=US+jobs+report+unemployment+market+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "S&P 500 Nasdaq market today when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=S%26P+500+Nasdaq+market+today+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "US dollar global markets when:1d: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: /rss/search?q=US+dollar+global+markets+when%3A1d&hl=en-US&gl=US&ceid=US:en (Caused by NewConnectionError(\"HTTPSConnection(host='news.google.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
-    ],
-    "technical_errors": [
-      "VOO: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/VOO?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "GOOGL: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/GOOGL?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "XLV: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/XLV?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "VXUS: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/VXUS?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "PLTR: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/PLTR?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))",
-      "MSFT: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/MSFT?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
-    ]
+    "errors": [],
+    "technical_errors": []
   },
   "stocks": [
     {
@@ -58,28 +81,103 @@
       "target_weight_pct": 45.0,
       "weight_gap_pct": -4.44,
       "allocation_status": "Over target",
-      "article_count": 0,
-      "key_news": "No important recent news found from the configured RSS searches.",
-      "key_takeaway": "No important recent news found from the configured RSS searches.",
-      "impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "possible_impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "bullish_points": [],
-      "bearish_points": [],
-      "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
-      "technical_summary": "No technical analysis was generated.",
+      "article_count": 21,
+      "key_news": "The S&P 500 ETF is up, influenced by specific large-cap stock movements, while a valuation gap between dividend stocks and the broader S&P 500 is noted. Rising treasury yields are a key macro factor.",
+      "key_takeaway": "The S&P 500 ETF is up, influenced by specific large-cap stock movements, while a valuation gap between dividend stocks and the broader S&P 500 is noted. Rising treasury yields are a key macro factor.",
+      "impact": "Continued strength in large-cap components could support VOO. Rising yields could pressure equity valuations, especially growth-oriented components. VOO's fee advantage over SPY could be a long-term benefit.",
+      "possible_impact": "Continued strength in large-cap components could support VOO. Rising yields could pressure equity valuations, especially growth-oriented components. VOO's fee advantage over SPY could be a long-term benefit.",
+      "bullish_points": [
+        "Up 0.9% today, influenced by positive movements in components like ORCL.",
+        "VOO's 6.45 basis point fee advantage over SPY matters over a decade."
+      ],
+      "bearish_points": [
+        "Dividend stocks' valuation gap to S&P 500 nears decade highs, suggesting potential overvaluation in non-dividend growth areas.",
+        "If the 10-Year Treasury crosses 4.6%, it could impact VOO."
+      ],
+      "valuation_context": "The S&P 500, represented by VOO, may be trading at a higher valuation relative to dividend-paying stocks than it has in a decade. VOO's lower expense ratio compared to SPY offers a long-term cost advantage.",
+      "technical_summary": "Last closed at 687.73. The EMA20 (663.71), EMA50 (645.06), and EMA200 (615.72) are all below the current price, indicating an Uptrend. RSI (78.79) is elevated, suggesting short-term momentum may be stretched. MACD (14.26) is above its signal line (13.1), showing positive momentum. Support zones are identified at 678.04, 672.54, and 665.3.",
       "technical": {
         "ticker": "VOO",
         "company": "Vanguard S&P 500 ETF",
-        "error": "HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/VOO?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
+        "last_close": 687.73,
+        "last_date": "2026-05-14",
+        "ema20": 663.71,
+        "ema50": 645.06,
+        "ema200": 615.72,
+        "rsi14": 78.79,
+        "macd": 14.26,
+        "macd_signal": 13.1,
+        "trend": "Uptrend",
+        "support_zones": [
+          678.04,
+          672.54,
+          665.3
+        ],
+        "resistance_zones": [],
+        "volume_latest": 5355700,
+        "technical_note": "RSI is elevated, so short-term momentum may be stretched. MACD is above signal, suggesting positive momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
       },
-      "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
-      "risk_level": "Unknown",
-      "relevance_score": "Low",
-      "relevance_reason": "Basic mode cannot judge detailed relevance.",
-      "alert_tags": [],
-      "time_horizon": "Short to medium term",
-      "confidence": "Low",
-      "articles": []
+      "what_to_monitor": "S&P 500 component performance, particularly large-cap tech. Movement in 10-Year Treasury yields. Federal Reserve policy statements.",
+      "risk_level": "Medium",
+      "relevance_score": "High",
+      "relevance_reason": "Represents the broad market, and news covers both daily performance drivers and significant macro valuation concerns.",
+      "alert_tags": [
+        "Macro",
+        "Fund flows"
+      ],
+      "time_horizon": "Mixed",
+      "confidence": "High",
+      "articles": [
+        {
+          "title": "VOO is up 0.9% today, on ORCL stock price movement - Quiver Quantitative",
+          "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQeGFod1NsYUtmdm1vNFNsOWNVcTVQLTJLOXd3M2kyTGN5SDc3aHB1Z1pHOXVxbDNFX0NMZUJUcVdFc1NTS1F6aHNGaFh4ZnhBZEtZZ2dVS1lNZ3JaQmxpUkc2czRGczRtaTJ5aG5wSXJyaDZsZFFmekd0SjVRY2hzdzd6WUVWMWVXT25Cc3lmbGs?oc=5",
+          "source": "Quiver Quantitative",
+          "published": "Thu, 14 May 2026 16:16:00 GMT"
+        },
+        {
+          "title": "DGRO Vs. VOO: Dividend Stocks' Valuation Gap To S&P 500 Nears Decade Highs - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPNGpqNmFqVHFFM3N2blhUZFdaXzNkelo0ZGhoZy1qMGFnNWZOenY2X094UEpnaE1UZEdoblFFV1FvRkZHblA2Z2dTZzAxYmpwRmhmNENtZUxhQjN6am9JajZGaEJBVFVlbEVWNjhFTGNhVzZ0R1FmdEhERFljSjl5cGpBN2d2MUNwT2JYLW5NY3FfR1pnVEpldVM2aF8wQmQxd0NYS1dHVWlyRTV1MmJqOWZpLU5uOWs?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Thu, 14 May 2026 16:59:06 GMT"
+        },
+        {
+          "title": "If the 10-Year Treasury Crosses 4.6%, Here’s What Happens to VOO and IVV - AOL.com",
+          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9TbXZHTDI5UGtYVG1tcnFobHJHZko5UlVuZjhwN0RDdlBtaVlobDBGSl9idDlNbnMxaXlaNXl3N3g5RTBnS2gwSG04SUliSVdmNnMxNWJBX1Y1M3VacllUN1Atdm9MT25tT0pxMnJUUmpTeUpS?oc=5",
+          "source": "AOL.com",
+          "published": "Thu, 14 May 2026 20:57:02 GMT"
+        },
+        {
+          "title": "Why Is Vanguard S&P 500 ETF (VOO) Up Today, 5/14/2026? - TipRanks",
+          "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQR0F0d285UUlianFEdklSNGtBQVBCZlpoaGJ2NW85NEM4bkZtRFdOUTd2ZlZzbUF3Um5Ybi0yUVhOdWdpaWVlTE5ONXNaYWVLQjV6TllVRmF2d2ZjdG03ckIwY2UyRGNleW83dmFSZXNfMmpYU2luWTc4dUdDUXgzQWMzejFfdw?oc=5",
+          "source": "TipRanks",
+          "published": "Thu, 14 May 2026 09:17:18 GMT"
+        },
+        {
+          "title": "The Hidden Drag of SPY’s Outdated UIT Structure: Why VOO’s 6.45 Basis Point Fee Advantage Matters Over a Decade - AOL.com",
+          "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE53QnNUcmswaUk2ZEYzQ2VEQ1ZIOHhwNEdjZU5vb3RaMndjSnlacm9haEZRUHJrdW52ZVk4ajdBTkJyUVNBVm5hZHhlLXprSHlueTVwZ0ZsYXFuTmhXMm95dnQxMTZtVmlBdmdlUVhXTVdhRkN4ZnlfWnhwZw?oc=5",
+          "source": "AOL.com",
+          "published": "Thu, 14 May 2026 14:53:40 GMT"
+        },
+        {
+          "title": "Vanguard S&P 500 ETF (VOO): The smartest investment you can make today - MSN",
+          "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPaHNTWHFqamExQU9FbHpZVjlQNDJjaXpRejg5dWhOcWVzbWZSbDNiSW5RWGhWRW1WUm1SXzE1dFRzT1lpNEl2ckhjSm1hOEljQmdyS0dWcDREekctMXVDemZOMlZYN3pJUVY3dFI4Qkk3cDdEbmk3OHdGbHBBT1I4VXl6NUJIY29UQ2trVmpfTFZ3cE9KOFo0NjU3MnpmS0NFdWxILS1hMkJTazFDQXJkNDM0NzhsMloz?oc=5",
+          "source": "MSN",
+          "published": "Thu, 14 May 2026 16:43:18 GMT"
+        },
+        {
+          "title": "Why Stocks Refuse To Crash (It’s Not AI) (SPX) - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOLUpHWEN6dkRRSFpIczI2TkdwSDFxRk5MM0x1S1hHeUc0NjE3cXhmcElGVE5jUDgtR0hZQmJHNlV2clg4Wi1YWldGV1hTaWVUdGd3UF9ZUVdnTUF6dTg4V2xmOTN2VGtKR3JaNFNUdHdhUzhnWkUza3dXZS1LVmp4YVhDS0s?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Thu, 14 May 2026 17:55:45 GMT"
+        },
+        {
+          "title": "3 Low-Cost Vanguard ETFs with 14%+ Upside Potential - TipRanks",
+          "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxOTGdCOGdiMEpjd0tFWV9nSHplalNWMlFQQkMtWW1vaS12QUlvSjZ0MkNjdHdRVVZrTW9zQVNKLW90NjZxT3cyNGZ1RC1LZnlpYnA2Z2F0dkpDdEFxeW8xNkFIZ0g0NF9QeWZiajM4REZOU1hoYVUxQUdCVFZiNTRyMXBWdTExQQ?oc=5",
+          "source": "TipRanks",
+          "published": "Thu, 14 May 2026 16:41:56 GMT"
+        }
+      ]
     },
     {
       "ticker": "GOOGL",
@@ -90,28 +188,107 @@
       "target_weight_pct": 15.0,
       "weight_gap_pct": -0.94,
       "allocation_status": "Near target",
-      "article_count": 0,
-      "key_news": "No important recent news found from the configured RSS searches.",
-      "key_takeaway": "No important recent news found from the configured RSS searches.",
-      "impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "possible_impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "bullish_points": [],
-      "bearish_points": [],
-      "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
-      "technical_summary": "No technical analysis was generated.",
+      "article_count": 45,
+      "key_news": "Alphabet stock is surging to new record highs, driven by positive market re-rating and buzz around the 'Googlebook' launch.",
+      "key_takeaway": "Alphabet stock is surging to new record highs, driven by positive market re-rating and buzz around the 'Googlebook' launch.",
+      "impact": "Continued positive sentiment and product success could sustain upward momentum. However, a significant stake in a potential SpaceX IPO could be a future factor.",
+      "possible_impact": "Continued positive sentiment and product success could sustain upward momentum. However, a significant stake in a potential SpaceX IPO could be a future factor.",
+      "bullish_points": [
+        "Stock hitting 17th intraday record high of 2026.",
+        "'Googlebook' launch driving fresh buzz.",
+        "Market is re-rating Google stock.",
+        "Stock surges to all-time high with discussions of more room to run."
+      ],
+      "bearish_points": [
+        "Analyst warns GOOGL stake in ASTS could shrink to near zero with a SpaceX IPO."
+      ],
+      "valuation_context": "The market is 're-rating Google stock' and it's 'surging to all-time high,' suggesting a positive shift in how the market values the company, potentially due to new product launches and overall strong performance.",
+      "technical_summary": "Last closed at 401.07. The EMA20 (373.12), EMA50 (345.63), and EMA200 (292.48) are all below the current price, indicating an Uptrend. RSI (74.16) is elevated, suggesting short-term momentum may be stretched. MACD (20.81) is above its signal line (19.65), showing strong positive momentum. Support zones are 388.43, 387.35, and 383.25. A resistance zone is noted at 402.62.",
       "technical": {
         "ticker": "GOOGL",
         "company": "Alphabet Inc.",
-        "error": "HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/GOOGL?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
+        "last_close": 401.07,
+        "last_date": "2026-05-14",
+        "ema20": 373.12,
+        "ema50": 345.63,
+        "ema200": 292.48,
+        "rsi14": 74.16,
+        "macd": 20.81,
+        "macd_signal": 19.65,
+        "trend": "Uptrend",
+        "support_zones": [
+          388.43,
+          387.35,
+          383.25
+        ],
+        "resistance_zones": [
+          402.62
+        ],
+        "volume_latest": 21103800,
+        "technical_note": "RSI is elevated, so short-term momentum may be stretched. MACD is above signal, suggesting positive momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
       },
-      "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
-      "risk_level": "Unknown",
-      "relevance_score": "Low",
-      "relevance_reason": "Basic mode cannot judge detailed relevance.",
-      "alert_tags": [],
-      "time_horizon": "Short to medium term",
-      "confidence": "Low",
-      "articles": []
+      "what_to_monitor": "Success and adoption of 'Googlebook.' Further details on any potential SpaceX IPO and its impact on Alphabet's investments. Overall market sentiment towards large-cap tech.",
+      "risk_level": "Medium",
+      "relevance_score": "High",
+      "relevance_reason": "Significant price movement to record highs driven by specific company news and market re-rating.",
+      "alert_tags": [
+        "Product Launch",
+        "AI",
+        "M&A"
+      ],
+      "time_horizon": "Medium term",
+      "confidence": "High",
+      "articles": [
+        {
+          "title": "Alphabet (GOOGL) Stock Quotes, Company News And Chart Analysis - Investor's Business Daily",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQZ3RHcWtkOUszb3lIUjQ3ZndGU05XWDlWeU5IQVJJMEJsUjh6NnFUaFdwVGR0QjVadkFOcm9IbkVsejNxUlJieEdzekQ4TXRsQmQ0ejVZMkpHRkw4TnQwWnB5MnJDLTBrSXBzTTVzdlpOc1ZnNEZpcDdBVWhDNG5wcF9NTVZHYVcxR3hCMVpvVU9OeVJhMko0Ym1qMDNiM1R2Wk9qREoyeUVOdGcwNjh2Qg?oc=5",
+          "source": "Investor's Business Daily",
+          "published": "Thu, 14 May 2026 16:35:00 GMT"
+        },
+        {
+          "title": "Alphabet Stock (GOOGL) Opinions on Record Highs and Googlebook Launch - Quiver Quantitative",
+          "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQZ205bk9sZk5GVVRuWlo3dUtHNjVJdG5KOUcwODVaaXhURWRUSGRwTXBFUlFYXzQtMEhJU1ZhYWhZSzVtVk5JWko3V1NYem1POE5GcUVpdG14YzJKendNTEJpRUhwNEx0ZXVVcjlCdG9jcGFtM1E3ZFBNMnBzYjRFeEZob3FlRTVHZVBMb0NaYnF0bUZ1dXVaSW1pVERmREZpbzI3RVgwT1F2UQ?oc=5",
+          "source": "Quiver Quantitative",
+          "published": "Thu, 14 May 2026 14:13:00 GMT"
+        },
+        {
+          "title": "Why The Market Is Re-Rating Google Stock - Trefis",
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNdnBjemVXeFU4WFhmSzBlVGVoZktiMzdUREhnelZhZTBYWURQVGttREZzdEp0MV95emxlMS1yUmlpUUMwOVNVNjNUNmNxRVVsOXJJRmlNZ3JMWEhqZmR1bmV5OFZJMW5kVmZuRGZGOEpxNkR4OVRuc3Q5cDFvSy00cDVQZWItc1VITWVtUGlzcERuNVE0SmNJVGVhWU9hblRvQzNvRw?oc=5",
+          "source": "Trefis",
+          "published": "Thu, 14 May 2026 13:32:44 GMT"
+        },
+        {
+          "title": "Alphabet [NASDAQ: GOOGL] Stock Price Hits 17th Intraday Record of 2026 as Googlebook Launch Drives Fresh Buzz - foreignpolicyjournal.com",
+          "url": "https://news.google.com/rss/articles/CBMi6wFBVV95cUxPRjREOGp1OXdZSlNsVzVZb2ZVNTVNdzZ0WWEzenZIVllrRVJHeks2bjJjb1pJSTZxWGhoLVQ0NGNPcUFFN0RCNzhQZUktaDBnRExZT0NtSGZ2bGgyQ0lQMHVNZ2IwWG1DanJNV0ExM2s5TVljT19kaW5xRWhZV0RZSGdQUk5MQjlYaFhudEUydHFRcl9rOGNKb1d0Q3UyRmhDLXVQSk5VUDlxbFJSMF9URmJsRU9icFdEd1ZPYjZ6QUZkeVFGMUY0UVRvU1FQSG4xUU5KbzBQRndISDlUX21yTldxM3NGQ1RIbGZr?oc=5",
+          "source": "foreignpolicyjournal.com",
+          "published": "Thu, 14 May 2026 22:18:00 GMT"
+        },
+        {
+          "title": "Alphabet (GOOGL) Stock Surges to All-Time High — Is There More Room to Run? - CoinCentral",
+          "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOZzA3LTZqaFpDbkR4VWRMZW13Rjd3TFZRYks3QV9XOExJdC1IcmNCRzdZRm92SzE0emhDTlozRkEzcjVkVHFNaXZvQUI3enpvc2Q5Nl9fSk1Zc1lZN2dXeENEUExQR2RKSTdiNjI3TXo1RVlPUlJsRGVRVGxsRkNPbWkxQzBWWmNlTGFHdmhLTXZNY2hzSVRIOS1BUQ?oc=5",
+          "source": "CoinCentral",
+          "published": "Thu, 14 May 2026 08:37:38 GMT"
+        },
+        {
+          "title": "ASTS stock hits 2026 low: Analyst warns GOOGL stake could shrink to near zero with SpaceX IPO - MSN",
+          "url": "https://news.google.com/rss/articles/CBMivANBVV95cUxON2V5WGJhV2twYmdveG1OcjdOZ1BiLWR5c3dSRzV3UnZLbExDNmdoV0JKYUFvbnRGcmRRVHBrNFItU3p2RnJ0LVpfUHN3dThaaXBtV3dRZXlmLXhWNGlaVDRtR3Nja2hST0EzVmN2TERIdEZuUC1zTUdBX0ZYcjExQWhtWFpET2VfX3VVRmFHYzNBNTg5RjBqaFNQQlU5YzBNUVlWM21LUi1QVWxfWTVfVWZkaFFSTWx6OG5WaVlYQ2dYY3NQandSYVR0eXpRbE9BcV9XaEgweHo1clE4SXlBQi12amtWTldwMnc0dUQ4QjZOZU0zTmMyZlctWW5rME5QWGFLdDlsaDZPMFpHTWZJWTBjNEpMN3FWQ3N3bkZpaDBJTC16SlhpcG5COVlTMWt4N2xPanZwWENlTm1OMGZCZ2VqRlR3b2VFa2gyV2RKdkdtc3ZncWNCWUVfV09hLThqRnNtWS1rbzdhcENsb29XOE5vNDA1MlJobmsxa2dRai13RmF1TjZSaUZvLTljakczTHlvN2lLMkFZcVRoejhDSWR3eUhoSWg4aW5EeVVWaXJtY1BZNmVfVktOSnM?oc=5",
+          "source": "MSN",
+          "published": "Fri, 15 May 2026 02:15:00 GMT"
+        },
+        {
+          "title": "Alphabet (GOOGL) Stock Reaches Record Peak — Can the Rally Continue? - Blockonomi",
+          "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOZFd4Um1lRE5UcVZBYUhRazNObEN5VUxxeHlRTXJKR01lUW9oZjZrU1hIT0R2UDQzODR1ZVl3MnZuN3ZRcnVSN2wzOHN0VnV1ekVSNWNVZEhCVjNyeV8tc1J1VkhVdm5QQW5KeDJVSjBXd1ptZFdqRTh0SGE4VExWemM2NFRyUU1WVlVMWUdibDM?oc=5",
+          "source": "Blockonomi",
+          "published": "Thu, 14 May 2026 08:47:30 GMT"
+        },
+        {
+          "title": "Alphabet (GOOGL)’s AI Cloud Surge Accelerates As Anthropic Commits $200 Billion To Google Infrastructure - Insider Monkey",
+          "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxQZU5PSk5EeDNyUHVYNE1nRjBUeHlkZmJZWk91NUhUNXpreWI3eGlMbGYtNlRzZ1FfUHVzUExPRjg5MTl0UlQ5TkI2QVFlcHNBVGRtd1Zrdm1JVlhGSnFwbFVFeV83TVNnWGNNcXBmSTkzMTF4OG94OW5KZUIyNkNYQmNGLTRzemNVd1FOb3RXaWNJQW0zdndBc1FYeHRRTDcxQmtfb1ljME1XYzl1U0dEVHFHZnUzVG5uRUFGWUtpRVJnVW9ndHVpM3J0Q3Zfa2xUUlR0ZnF4SnRpZEJjd0pXdGRja07SAeQBQVVfeXFMUGVOT0pORHgzclB1WDRNZ0YwVHh5ZGZiWVpPdTVIVDV6a3liN3hpTGxmLTZUc2dRX1B1c1BMT0Y4OTE5dFJUOU5CNkFRZXBzQVRkbXdWa3ZtSVZYRkpxcGxVRXlfN01TZ1hjTXFwZkk5MzExeDhveDluSmVCMjZDWEJjRi00c3pjVXdRTm90V2ljSUFtM3Z3QXNRWHh0UUw3MUJrX29ZYzBNV2M5dVNHRFRxR2Z1M1RubkVBRllLaUVSZ1VvZ3R1aTNydEN2X2tsVFJUdGZxeEp0aWRCY3dKV3RkY2tO?oc=5",
+          "source": "Insider Monkey",
+          "published": "Thu, 14 May 2026 17:03:07 GMT"
+        }
+      ]
     },
     {
       "ticker": "VXUS",
@@ -122,28 +299,84 @@
       "target_weight_pct": 15.0,
       "weight_gap_pct": 2.47,
       "allocation_status": "Under target",
-      "article_count": 0,
-      "key_news": "No important recent news found from the configured RSS searches.",
-      "key_takeaway": "No important recent news found from the configured RSS searches.",
-      "impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "possible_impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
+      "article_count": 5,
+      "key_news": "Discussions around international ETFs like VXUS focus on comparisons with other international funds and broader market ETFs, with some analysis suggesting that individual components might be superior to the whole.",
+      "key_takeaway": "Discussions around international ETFs like VXUS focus on comparisons with other international funds and broader market ETFs, with some analysis suggesting that individual components might be superior to the whole.",
+      "impact": "Performance relative to domestic markets and other international funds will be a key driver. Fund flows into specific international regions could also influence.",
+      "possible_impact": "Performance relative to domestic markets and other international funds will be a key driver. Fund flows into specific international regions could also influence.",
       "bullish_points": [],
-      "bearish_points": [],
-      "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
-      "technical_summary": "No technical analysis was generated.",
+      "bearish_points": [
+        "One analysis suggests that the parts (individual international stocks) are superior to the whole (Vanguard’s World Stock Market ETF)."
+      ],
+      "valuation_context": "The 'Parts Are Superior To The Whole' article implies that the overall valuation of VXUS might not be as compelling as its underlying components. The domestic market's valuation context (VOO's valuation gap) also provides a comparative backdrop.",
+      "technical_summary": "Last closed at 85.02. The EMA20 (83.4), EMA50 (81.59), and EMA200 (76.4) are all below the current price, indicating an Uptrend. RSI (59.96) is in a neutral range. MACD (1.24) is above its signal line (1.17), showing positive momentum. Support zones are 84.23, 83.41, and 82.84. Resistance zones are 85.43 and 85.62.",
       "technical": {
         "ticker": "VXUS",
         "company": "Vanguard Total International Stock ETF",
-        "error": "HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/VXUS?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
+        "last_close": 85.02,
+        "last_date": "2026-05-14",
+        "ema20": 83.4,
+        "ema50": 81.59,
+        "ema200": 76.4,
+        "rsi14": 59.96,
+        "macd": 1.24,
+        "macd_signal": 1.17,
+        "trend": "Uptrend",
+        "support_zones": [
+          84.23,
+          83.41,
+          82.84
+        ],
+        "resistance_zones": [
+          85.43,
+          85.62
+        ],
+        "volume_latest": 5608300,
+        "technical_note": "RSI is in a neutral range. MACD is above signal, suggesting positive momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
       },
-      "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
-      "risk_level": "Unknown",
+      "what_to_monitor": "Global economic data, currency movements, and geopolitical developments. Performance comparisons with other international and domestic ETFs.",
+      "risk_level": "Medium",
       "relevance_score": "Low",
-      "relevance_reason": "Basic mode cannot judge detailed relevance.",
-      "alert_tags": [],
-      "time_horizon": "Short to medium term",
-      "confidence": "Low",
-      "articles": []
+      "relevance_reason": "News is primarily comparative or analytical rather than event-driven, offering general context.",
+      "alert_tags": [
+        "Fund flows",
+        "Macro"
+      ],
+      "time_horizon": "Long term",
+      "confidence": "Medium",
+      "articles": [
+        {
+          "title": "Vanguard VXUS vs SPDR SPGM: Which is the Better International ETF? - The Motley Fool",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOUUpyTlZWN0NhWkZwczhyRGV3YTlxc0IzS2pfS2FUWjZSOU90ZmExYzZrRWhfVzNwQUwyeHBNcGxIUmtpLWFvNl9ON1dhVFhJelAtM25iWDJqYVE4bmNMSXk2d3VWcUJ6cUY4VTJ1SlVDbjNjalpfcUJPYVA0aDdLY0t4N0p6Q1c4TGdsQ1JMVmtTbzFfUHJUSXhaYmlCOUlxbFpXdjZXVlo2NVF5dWg5SA?oc=5",
+          "source": "The Motley Fool",
+          "published": "Thu, 14 May 2026 19:49:00 GMT"
+        },
+        {
+          "title": "Vanguard’s World Stock Market ETF: The Parts Are Superior To The Whole (NYSEARCA:VTI) - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPQ2NlSmt6V3lESk5jWFpMbTBseTVIMzRLZ2lxbndnUkN1Sk8tT3B0NVhheHBmb18wazdZd2plM3F4UVl0akhtVXVab0paMFRZZmwwMGdOcE1yejNJRENxNDJMWnRqSnZaalI4SVNPcUw0dUZfbkhxM25EQ19oMThUZWswXzBkYm03dkR2b1h5c3ZSenc0QnVrd1c0ZzRfTTVhNjRxbVdOT25XREJkLXc?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Thu, 14 May 2026 15:46:30 GMT"
+        },
+        {
+          "title": "ETFs Investing in PT Bank Rakyat Indonesia (Persero) Tbk Class B Stocks - TradingView",
+          "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ITnpMN2liVmdyb2w1MVpUd2ZfVEtqbW9yTmpWYmJjQmNBSU1xYjZ3TkpzeUhZZlFQeFFpR1ZtdEFTOU9vY1BGVXJkYjJ6V3VVM1FPeGdENTlmdy1sRkNz?oc=5",
+          "source": "TradingView",
+          "published": "Thu, 14 May 2026 06:51:47 GMT"
+        },
+        {
+          "title": "I Asked ChatGPT To Create a 2026 'Set-It-and-Forget-It' Portfolio - Here's What a Pro Changed First - AOL.com",
+          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9Tc05qcGlfc3N5d0g0TUV0aEpRTXpEaDhWZjBJZ0VMaXlnQ1poOEc3Y3ZuOXVIbERrRzJqejNEaGFueXBFMWtiUzBRMFdXdFFZV3ZocmlJRG0xbzBzSTdkMXlja21pemdhLUp3Rmt5NUpfMkJtc0V6SEZ3Z0I?oc=5",
+          "source": "AOL.com",
+          "published": "Fri, 15 May 2026 00:32:14 GMT"
+        },
+        {
+          "title": "ETFs Investing in Kuaishou Technology Class B Stocks - TradingView",
+          "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE83ZlV2WGx6c0pBTHZMSUI1WmxhVHE2RllsT0pjdGZVb2dSa2hZZ2JLZjU3aXFJOVhLS2Q0SUMtcG8xNTlkYjF2YkJXcFdvc1Q0NnE1MjNaaTFzOGxTYnc?oc=5",
+          "source": "TradingView",
+          "published": "Thu, 14 May 2026 21:39:34 GMT"
+        }
+      ]
     },
     {
       "ticker": "XLV",
@@ -154,28 +387,98 @@
       "target_weight_pct": 10.0,
       "weight_gap_pct": -0.54,
       "allocation_status": "Near target",
-      "article_count": 0,
-      "key_news": "No important recent news found from the configured RSS searches.",
-      "key_takeaway": "No important recent news found from the configured RSS searches.",
-      "impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "possible_impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
+      "article_count": 7,
+      "key_news": "The healthcare sector, represented by XLV, showed softness and recorded outflows, contrasting with technology sector inflows.",
+      "key_takeaway": "The healthcare sector, represented by XLV, showed softness and recorded outflows, contrasting with technology sector inflows.",
+      "impact": "Continued sector outflows could lead to further underperformance. Broader market trends and the interest rate environment could also influence the sector.",
+      "possible_impact": "Continued sector outflows could lead to further underperformance. Broader market trends and the interest rate environment could also influence the sector.",
       "bullish_points": [],
-      "bearish_points": [],
-      "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
-      "technical_summary": "No technical analysis was generated.",
+      "bearish_points": [
+        "Healthcare stocks were 'softer Thursday afternoon.'",
+        "The sector recorded outflows in weekly ETF data, while technology led inflows."
+      ],
+      "valuation_context": "No specific valuation context for XLV is provided in the news, beyond general market movements and sector outflows.",
+      "technical_summary": "Last closed at 146.63. The EMA20 (145.57) is below, while EMA50 (147.33) and EMA200 (146.39) are mixed relative to the current price, indicating a Sideways/Mixed trend. RSI (52.57) is in a neutral range. MACD (-0.52) is above its signal line (-0.87), suggesting a recent shift to positive momentum despite the overall mixed trend. Support zones are 146.61, 146.57, and 146.54. Resistance zones are 146.71, 147.42, and 147.73.",
       "technical": {
         "ticker": "XLV",
         "company": "Health Care Select Sector SPDR Fund",
-        "error": "HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/XLV?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
+        "last_close": 146.63,
+        "last_date": "2026-05-14",
+        "ema20": 145.57,
+        "ema50": 147.33,
+        "ema200": 146.39,
+        "rsi14": 52.57,
+        "macd": -0.52,
+        "macd_signal": -0.87,
+        "trend": "Sideways/Mixed",
+        "support_zones": [
+          146.61,
+          146.57,
+          146.54
+        ],
+        "resistance_zones": [
+          146.71,
+          147.42,
+          147.73
+        ],
+        "volume_latest": 7762900,
+        "technical_note": "RSI is in a neutral range. MACD is above signal, suggesting positive momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
       },
-      "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
-      "risk_level": "Unknown",
-      "relevance_score": "Low",
-      "relevance_reason": "Basic mode cannot judge detailed relevance.",
-      "alert_tags": [],
-      "time_horizon": "Short to medium term",
-      "confidence": "Low",
-      "articles": []
+      "what_to_monitor": "Sector-specific news, broader economic indicators, and interest rate changes. ETF flow data for healthcare.",
+      "risk_level": "Medium",
+      "relevance_score": "Medium",
+      "relevance_reason": "News indicates sector-specific weakness and fund outflows, which are relevant for portfolio allocation.",
+      "alert_tags": [
+        "Fund flows",
+        "Macro"
+      ],
+      "time_horizon": "Short term",
+      "confidence": "Medium",
+      "articles": [
+        {
+          "title": "Sector Update: Healthcare Stocks Softer Thursday Afternoon - Moomoo",
+          "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxNcWE4NnY3ME15U3VNWU15WmpsZVRGamRsN0REQXlEVUFLLUZhTS1VOUdIOTZXb1BaUS03Q1YybGdnT05XUGxEcEdldDRlTVc4N190eEJKSE1RUmtXcm01ZkNEUFV4Y3dDQzZkVjFmMWp6XzMxRVlKWnZfY3l6a1ZTa1R3UnFDbHVQX1dtdGoxcG1KZDg4c2VYTzRVclAxcFRpUzJGMFB4aURaNTV0QmEzZnR6NHBKa014NXZFQlJ1My11LUxIZmxyTnlyZ0RVYVE?oc=5",
+          "source": "Moomoo",
+          "published": "Thu, 14 May 2026 18:08:52 GMT"
+        },
+        {
+          "title": "Stock Market News for May 14, 2026 - The Globe and Mail",
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQbkRGTkRhc3gwbGVPVDk5YW1TTjVSUlhnUERKc0REVXdraC0yZkxKNHdIQ2NLZ2NnNXJ0T1BiRmJyYnlEZXI4Y0ZPRHNoVjVXLTJuMGNveDgyN3AtcEsyVTg0Nk9wMkZWT3M5WTZaTEVkQm93dHJ4QUg2OFlBZWxxWWlSZGl2SW9uemUtRXBfOUpKdXVqRXg4Z25UUlhJREtkWlVfRWJOM0d1RzZKSTI5OUpCM0NERG1YRlE?oc=5",
+          "source": "The Globe and Mail",
+          "published": "Thu, 14 May 2026 11:18:00 GMT"
+        },
+        {
+          "title": "Stock Market Today: Nasdaq 100 Rises Despite Hot PPI, Nvidia Hits Record High - Sahm",
+          "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQcjZKaWZsY0gxMk1CczFmdFM1b1dSeUE3d3RUUzViOWVlbWx2TTdxVzY5RzhKNVhQd3JTb05DWXc0VklRVzNYb21zU3Bjc1JRUmdlekF2YldUNGhmQ0FhLXpmaGpieTRFMW9jUm9FRE5XVGkyb0NId0x5Z2s2QW9wbzlnd1hsek90dW9aT1RjeDZpbUpCMEExR0g5Tm9QaUR3WWNkZmxFdmo5dmI4VndJNWRTZG9PZmlxMnhoaUJZRmpqWklzcWc?oc=5",
+          "source": "Sahm",
+          "published": "Thu, 14 May 2026 10:55:14 GMT"
+        },
+        {
+          "title": "Weekly ETFs: Seven of 11 sectors record outflows; technology sector leads inflows - MSN",
+          "url": "https://news.google.com/rss/articles/CBMi_AFBVV95cUxNUTZrclhTNW1ZNjFDMzdSQkJ5ZVBGSGlNQldjWmQ3c1NQWFpIekdDVkx5TTN4YU5RRmE5MkRJZWFrUmhFM0RhN2tUR25hS1A4dzNKRUFyQV85T3FzYWhQRC1jNTREamh4MlZnVnpWb2FPbjlkTjNWQm1uNlpSTnVDT3gyblBYb1hINV9xNDFQSUdETmRzeEtjSjhJZHdvbGtRU0FlbUxjTWFCODBLX3RYeUxkeXptbUVySWlzclZocVlyTHYtaXlOZEVSM1daTzBPVkFoOUxkVXlJUW5qWUNVY0ZHX0pnRFpXQVF6UU9fZEVaaTg2YjZZUm50WXI?oc=5",
+          "source": "MSN",
+          "published": "Thu, 14 May 2026 13:24:52 GMT"
+        },
+        {
+          "title": "Dow Jones Futures Fall, Yields Top 4.5% After Nvidia Runs, Cerebras IPO Soars; Trump-Xi Summit Continues - Investor's Business Daily",
+          "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOR0Q0STBtcHNkZDlCUWs2MnE4LVlhTEdtLU1ZS25mZFB6SHl0MXhXakMwYVpLWGJQRnZfbC1ZZjQxUXpWS001OG5IZlRPSmdpd3g1WlRIX19sVzZwcl8tb2JDd0xialRCY3RsSWhSSWNKRllZUnJ5NWF3T0pac0YtajFIaEdZTkxZRDJST01WMmRPMWxIRmMtb2dHZjNyTjd3Z1JTOEJUNWRnYlR0Q3lpZ2JmbkxJNkNaS2o2TnVOeTNqTTVkMzVr?oc=5",
+          "source": "Investor's Business Daily",
+          "published": "Fri, 15 May 2026 02:55:00 GMT"
+        },
+        {
+          "title": "Are Wall Street Analysts Bullish on Edwards Lifesciences Stock? - inkl",
+          "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNeDRMaXQwS0VFOGRQQnZ4bjdmMTlKNGdjT2UtRE9iV2dIb19CVUxkTWR3QTVWWk0wR0FiLXJYOERFc2VHcm1uR1VMN2lHTmI1U25wMnBzMHh5RmFzODVyc3Jxc2tnVDNpRThnb1ZoVEl6cnlMWFJWd0s0MU5EczlfT0RNRUhoNFVsZzJEaXd3NWNxdw?oc=5",
+          "source": "inkl",
+          "published": "Thu, 14 May 2026 09:03:14 GMT"
+        },
+        {
+          "title": "Weekly ETFs: Eight of 11 sectors record outflows; financial sector leads inflows - MSN",
+          "url": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxPQy1Qc0V4SkozTEp2S0ZfRzRQTy03LUw2RnJIbmJhcHNkMk5UWm91aC1Rc2Q0aHc4S3lLUHFNcElpUVZxT3RFQnNGQkx0ZFNBNVlLYkg2eVpQb3h5Y196cTRkREN6Y3ZQaF84UmFXSXVYU25veWxJT2FhbVdPdm5ILS1WdXVCRm1EdmpSMllVYWtXcmUzd2hibWZSVWRUdlhFd1NIWm1RamdhWG1SRm9hOExlVGd3VzN4bUZ0d3JaY0tMTEJvampXVy1qakpHdldlTWlvRDhvLVF5dkxoSzF1em5VdVRMUzE5cEE?oc=5",
+          "source": "MSN",
+          "published": "Thu, 14 May 2026 04:56:42 GMT"
+        }
+      ]
     },
     {
       "ticker": "MSFT",
@@ -186,28 +489,109 @@
       "target_weight_pct": 10.0,
       "weight_gap_pct": 0.61,
       "allocation_status": "Near target",
-      "article_count": 0,
-      "key_news": "No important recent news found from the configured RSS searches.",
-      "key_takeaway": "No important recent news found from the configured RSS searches.",
-      "impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "possible_impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "bullish_points": [],
-      "bearish_points": [],
-      "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
-      "technical_summary": "No technical analysis was generated.",
+      "article_count": 17,
+      "key_news": "Microsoft stock is rising, fueled by renewed interest in AI, significant fund inflows, and a new board appointment, despite some recent share pullback and AI investment uncertainty.",
+      "key_takeaway": "Microsoft stock is rising, fueled by renewed interest in AI, significant fund inflows, and a new board appointment, despite some recent share pullback and AI investment uncertainty.",
+      "impact": "Continued AI momentum and strategic board additions could drive further growth. Strong fund flows indicate robust institutional interest.",
+      "possible_impact": "Continued AI momentum and strategic board additions could drive further growth. Strong fund flows indicate robust institutional interest.",
+      "bullish_points": [
+        "Stock rises as AI trade reignites.",
+        "Dodge & Cox added over 4.5 million shares to its portfolio.",
+        "Ex-EY boss joins Microsoft's board, serving on pay and audit committees.",
+        "Stock jumps as gamers await a Forza Horizon 6 release date for PS5."
+      ],
+      "bearish_points": [
+        "Recent share pullback and ongoing AI investment uncertainty are noted in valuation assessment."
+      ],
+      "valuation_context": "While there has been a recent share pullback, the market is still assessing Microsoft's valuation in light of ongoing AI investments. The stock's rise due to 'AI trade reigniting' suggests positive valuation sentiment tied to its AI initiatives.",
+      "technical_summary": "Last closed at 409.43. The EMA20 (410.69) is above, EMA50 (408.44) is below, and EMA200 (440.57) is above the current price, indicating a Sideways/Mixed trend. RSI (50.32) is in a neutral range. MACD (2.8) is below its signal line (5.03), suggesting weaker momentum despite the stock rising today. Support zones are 407.78, 407.77, and 405.21. Resistance zones are 410.68, 411.22, and 412.33.",
       "technical": {
         "ticker": "MSFT",
         "company": "Microsoft Corporation",
-        "error": "HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/MSFT?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
+        "last_close": 409.43,
+        "last_date": "2026-05-14",
+        "ema20": 410.69,
+        "ema50": 408.44,
+        "ema200": 440.57,
+        "rsi14": 50.32,
+        "macd": 2.8,
+        "macd_signal": 5.03,
+        "trend": "Sideways/Mixed",
+        "support_zones": [
+          407.78,
+          407.77,
+          405.21
+        ],
+        "resistance_zones": [
+          410.68,
+          411.22,
+          412.33
+        ],
+        "volume_latest": 27027600,
+        "technical_note": "RSI is in a neutral range. MACD is below signal, suggesting weaker momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
       },
-      "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
-      "risk_level": "Unknown",
-      "relevance_score": "Low",
-      "relevance_reason": "Basic mode cannot judge detailed relevance.",
-      "alert_tags": [],
-      "time_horizon": "Short to medium term",
-      "confidence": "Low",
-      "articles": []
+      "what_to_monitor": "Further AI product developments and adoption. Impact of the new board member. Future fund flow data.",
+      "risk_level": "Low",
+      "relevance_score": "High",
+      "relevance_reason": "Strong positive catalysts (AI, fund flows, board changes) are driving stock movement and investor interest.",
+      "alert_tags": [
+        "AI",
+        "Fund flows",
+        "Governance"
+      ],
+      "time_horizon": "Medium term",
+      "confidence": "High",
+      "articles": [
+        {
+          "title": "Microsoft Stock Rises As AI Trade Reignites: Why MSFT Shares Moved Today - TechStock²",
+          "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOdnA4bnZtdVBDZExaZlNSUW1VSnVmdWw1Y01rb0FpMVpsRU4zbXZqLXhEaUllZWoxeTRQOHRvWU1Ic2VRMTFMYnE5OG8xU3I4cE9tTFZTVGJfT2tMR1gxVklVeTF6WWpfcU9qQ3o1QmZ6SVc2QUNxOTZ3WWVISkUzQnEtcVhxWnBlNUlHaEhkY3JIWVdOdGxJ?oc=5",
+          "source": "TechStock²",
+          "published": "Thu, 14 May 2026 22:47:46 GMT"
+        },
+        {
+          "title": "Fund Update: 4,518,185 MICROSOFT (MSFT) shares added to DODGE & COX portfolio - Quiver Quantitative",
+          "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQVGluVWRiLWhscElXTmZzSGIyUmIya1kzVjF6VG5MWERtM3dJY0hiS185VEhWd01GcUtLaGlCMEJ4TFRJNkNUODZDVnNMNEtzS2lwMnNRRkhQVzVIM25rWVhCdmZHeFBkMEJtd1RVNGt4eFFxdlBpYVItcXRhaGE5azhEemxkQmFETXVYamFUSVF3WjEyM2paa0puZG13d3MzN2FGN3JEUEM5ck9YNUY3RjM4bnpOVzZMdk5SS3JTaw?oc=5",
+          "source": "Quiver Quantitative",
+          "published": "Thu, 14 May 2026 16:54:00 GMT"
+        },
+        {
+          "title": "Ex-EY boss joins Microsoft's board, to serve on pay and audit committees - Stock Titan",
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQX2N2WWJRSEhYd2RZRWJxdGhLS0I3cDNUV2dPTkdaQUlmR1hlWlB0dnZYUjFqVHNFcG96Zkwxak03aVBfSUo3TGdmNWExN3FzX2F0QTAyTVNrQVhHaEQzNTdxUmNyQ1RmbTZmd1BSeHpqelNkcXQ3X1NQYlA2OTRZaTQ1Ym1RR0gxU2NLdEVOVkN1LTl3dzg2ZFdBMlMtNTZ6U1U1SVJzTnlfQUQ2RG9vRmlkUjBWZUpNclE?oc=5",
+          "source": "Stock Titan",
+          "published": "Thu, 14 May 2026 20:07:00 GMT"
+        },
+        {
+          "title": "Assessing Microsoft (MSFT) Valuation After Recent Share Pullback And Ongoing AI Investment Uncertainty - simplywall.st",
+          "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxORmN1RkxKNkd2RzNGYVhqUFVKOGNTTGNveHpiell3V1BoSDhuTXB3b0RxNTRCc082WV9jLXMtUmRmZmxtSi02T1ZXT2lJMVJXRFExdDllOG5NVERVekhTazROamphd3FwZGhZOHBDc2RJaEVlVV9nQ1c2MmIzZHFiaG9oaDdTZDZ2RjB5TVpoNkxPSmI4REJVNGVPSTJ5M3dnMWZXVXNoaXEzTzhiZnZacVpGQUhkUWg5MlcxRTJVVWNpRmRVcUxn0gHMAUFVX3lxTFAtZjBxdHJYV2kzdnljSWRLcEdOVGJKVGQwdGVYaXV1SFZyRDJHN2pRcGR4bEo4a19ULXZCUnVZbVBKeUZHc0hZWGw3aGJHaVVwVkVHTjRvbkJ5MUk1bTJLRzFQSXhCZ2UzRm44UWtGNFNCWGRPMUNEc1JfaHAzNHZYYmh6ejJ0M1hCbFd2Ti1nR1dCOHpjRU1pcVR2Sk5uWF9xQmZfMjd0dUY3cGl2blFkdDBCang0SV8zSmxCMGd4Szdvak9YZ0tJRm1hNA?oc=5",
+          "source": "simplywall.st",
+          "published": "Thu, 14 May 2026 16:50:01 GMT"
+        },
+        {
+          "title": "Microsoft Stock (MSFT) Jumps as Gamers Await a Forza Horizon 6 Release Date for PS5 - TipRanks",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPcFRoMFJvNWZWdjFIWFN1bGd2b0lxRmFCd0NXdlVkMkV3SXBoQ1pBYW14QWJ1bmtvZXYwMmkwSFBzaVQwMzZNY05yMHZ3enJkcVhFbGZxdlNvZ0xGRld3S1ZIaTVqdFRBYXE3aFd5UFpmaFZRRTk1aFI4SUxFeWFPNjdVdjREcXRjTE42QlZqdEZnMC00ajZtVUNRS1JoSElPVWZ0Rl9TdEFOQjVNbjBPTA?oc=5",
+          "source": "TipRanks",
+          "published": "Thu, 14 May 2026 17:30:11 GMT"
+        },
+        {
+          "title": "John McGuire from Virginia’s 5th district buys Apple, Microsoft, and Nvidia stocks - Investing.com Australia",
+          "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQWkxTZGZreGZPdnNfUVFnVGJkbUNsdmRrWU9ra2FoclQycEt4RWR3a0Q4ZjljZnBZYXd5MldWaF9URHllNmdaWUtCQk0za0JvUGtiRGpCOXJnZkZURjJUVndnYU1BcEpMQTA5ZmpBYUV4QnJaQko4MXd5MFRTN3NxUUdpZmJsdlJsZjZmRlZqdnBidTRPZG5WZC1FOHphbWJRUEt1ZXFPTmlCVUhRQUR5UmlpUEU1dUZiQmgtQ3hXZzJVLVpCenR5ZUtfWURaUkRvZzVMS0Vjcw?oc=5",
+          "source": "Investing.com Australia",
+          "published": "Thu, 14 May 2026 19:31:42 GMT"
+        },
+        {
+          "title": "Trump's Major Stock Purchases Include NVDA, MSFT, and ORCL - GuruFocus",
+          "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxONllqby1qR1RybGtxWHJYbmZUTVpzaEFaOElGSTkzdHY1bkgxOXlEN0FHLURfck9HLVZYUHlRcjBGcGh4WkRiZVUwSHJybkc1Y2w5dUQwNUtaNzVOWHVMQTFmbzg5VnBMY2czSnBXeGtVRGo3anRZY3E5SWV1VTRIRHVGVVQxX3BhOGt0Y0tKMUt0OEpJTjFucFJB?oc=5",
+          "source": "GuruFocus",
+          "published": "Fri, 15 May 2026 01:41:21 GMT"
+        },
+        {
+          "title": "MSFT (NASDAQ: MSFT) files notice for planned sales of vested common stock - Stock Titan",
+          "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOemZ2S2FCQ3hNOC1pbnVVM0xuZXNIX1Z2MEJOdWlsWkVZNTlYMHJmb1MxQWF2dXh2YTJNeHFxam93WkFlck5vQ2pLLTJueWxteTloU0IwQTNpQ0RHb0JGZ09QWDRMYW4zbG5PMXZ3TFdTUHZzNHJJUDdYb3Vsa3VBUkoyTmVBSjlUUkZGaWhBay1teHJFcGc?oc=5",
+          "source": "Stock Titan",
+          "published": "Thu, 14 May 2026 17:02:24 GMT"
+        }
+      ]
     },
     {
       "ticker": "PLTR",
@@ -218,28 +602,109 @@
       "target_weight_pct": 5.0,
       "weight_gap_pct": 2.84,
       "allocation_status": "Under target",
-      "article_count": 0,
-      "key_news": "No important recent news found from the configured RSS searches.",
-      "key_takeaway": "No important recent news found from the configured RSS searches.",
-      "impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "possible_impact": "Basic mode: review the linked sources to judge possible effects on sentiment, fundamentals, sector trends, or valuation.",
-      "bullish_points": [],
-      "bearish_points": [],
-      "valuation_context": "No AI valuation context was generated. This is not a buy or sell recommendation.",
-      "technical_summary": "No technical analysis was generated.",
+      "article_count": 13,
+      "key_news": "Palantir's stock saw mixed movements, with a reported 85% revenue surge in Q1 2026, but also recent dips and ongoing debates about its valuation, particularly concerning its defense AI exposure.",
+      "key_takeaway": "Palantir's stock saw mixed movements, with a reported 85% revenue surge in Q1 2026, but also recent dips and ongoing debates about its valuation, particularly concerning its defense AI exposure.",
+      "impact": "Strong revenue growth could support the stock long-term, but valuation concerns and geopolitical factors related to defense contracts could introduce volatility.",
+      "possible_impact": "Strong revenue growth could support the stock long-term, but valuation concerns and geopolitical factors related to defense contracts could introduce volatility.",
+      "bullish_points": [
+        "Stock is up today (as per one source).",
+        "First-quarter 2026 revenue surged 85%."
+      ],
+      "bearish_points": [
+        "Stock 'slips 4% after Zelenskiy talks spotlight defense AI exposure.'",
+        "Stock 'trading lower today' (as per another source, indicating volatility).",
+        "'The Valuation Still Makes No Sense' article suggests overvaluation."
+      ],
+      "valuation_context": "One article directly questions Palantir's current market valuation, implying it may be stretched. Despite this, the company reported an 85% revenue surge in Q1 2026, which could be a factor in supporting or justifying some of its valuation.",
+      "technical_summary": "Last closed at 133.73. The EMA20 (138.61), EMA50 (143.16), and EMA200 (152.09) are all above the current price, indicating a Downtrend. RSI (43.15) is in a neutral range. MACD (-2.79) is below its signal line (-2.11), suggesting weaker momentum. Support zones are 132.37, 131.41, and 130.6. Resistance zones are 135.24, 135.38, and 135.68.",
       "technical": {
         "ticker": "PLTR",
         "company": "Palantir Technologies Inc.",
-        "error": "HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/PLTR?period1=1746842449&period2=1778810449&interval=1d&events=history&includeAdjustedClose=true (Caused by NewConnectionError(\"HTTPSConnection(host='query1.finance.yahoo.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
+        "last_close": 133.73,
+        "last_date": "2026-05-14",
+        "ema20": 138.61,
+        "ema50": 143.16,
+        "ema200": 152.09,
+        "rsi14": 43.15,
+        "macd": -2.79,
+        "macd_signal": -2.11,
+        "trend": "Downtrend",
+        "support_zones": [
+          132.37,
+          131.41,
+          130.6
+        ],
+        "resistance_zones": [
+          135.24,
+          135.38,
+          135.68
+        ],
+        "volume_latest": 36945600,
+        "technical_note": "RSI is in a neutral range. MACD is below signal, suggesting weaker momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
       },
-      "what_to_monitor": "Earnings, guidance, sector news, macro data, valuation changes, and official company or fund updates.",
-      "risk_level": "Unknown",
-      "relevance_score": "Low",
-      "relevance_reason": "Basic mode cannot judge detailed relevance.",
-      "alert_tags": [],
-      "time_horizon": "Short to medium term",
-      "confidence": "Low",
-      "articles": []
+      "what_to_monitor": "Future earnings reports and revenue growth rates. Developments in defense contracts and geopolitical events. Analyst sentiment regarding valuation.",
+      "risk_level": "High",
+      "relevance_score": "High",
+      "relevance_reason": "Significant revenue growth reported alongside conflicting price movements and strong valuation debates.",
+      "alert_tags": [
+        "Earnings",
+        "AI",
+        "Legal"
+      ],
+      "time_horizon": "Medium term",
+      "confidence": "Medium",
+      "articles": [
+        {
+          "title": "Why Palantir Technologies (PLTR) Stock Is Up Today - StockStory",
+          "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOWm45UV9oUzVnZzBkQ2VaX3VsV3dQQWZtVFpOdF8tTlBGczd0Y3A0a2JCcHczNndWTzU0MnV2T19rT1dGM2l3SGZoclE4T1VmeURkWmt1cnpRUzlId1B5V3JqcHpYZTZwZVR4bmM0U0R5Y3otSElzZ2JVeWZXRFpqdWtLZjNvLVZMVnJhRHVUNUdZbk16ZFk2UEJnNVE1Ylc5V25pVTFGR2ZsRnlMY2hJNzZ3?oc=5",
+          "source": "StockStory",
+          "published": "Thu, 14 May 2026 20:02:06 GMT"
+        },
+        {
+          "title": "Palantir: The Valuation Still Makes No Sense - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNckg4STZGeExXYl9KN09JdzEtWFo2STlQTXRTc2xYaGY2SndkeWNtR3p3MVRJMWp6aDlpcXdQTlNTbGNkVUZNa3ZkeEI5bW83S0JyMlluWHk3Wk5MYUtWVUdCNDJOTlFnNVVUdl8xZ1Y3eGZJd2tDZVJXWUZfSWk1VS1aNnJpRkwyMjNfUg?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Thu, 14 May 2026 12:50:02 GMT"
+        },
+        {
+          "title": "Palantir (PLTR) Stock; Slips 4% After Zelenskiy Talks Spotlight Defense AI Exposure - CoinCentral",
+          "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPLU5WYVhyaVB5VUhRNUo4bkhfSkEzdDJadmUyNWVkSXdiTEJXNjhUTnppMzZZRTBVcExJR2p3bENFb25PcGlJbVVueFhLNlAwLU1MV0JSM3dUeUU4bkE3Ymx3ODdrRkFkY2h3LVpubk5BZHlhUDBJWmtzNFFqSXJHOGo0UU4xZkNyV1FkbTVn?oc=5",
+          "source": "CoinCentral",
+          "published": "Thu, 14 May 2026 08:39:08 GMT"
+        },
+        {
+          "title": "Why Palantir Technologies (PLTR) stock is trading lower today - MSN",
+          "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPMDh4VldiWXRZUkg2MDhMWGpHbmIyV1ZKclI0NDFJdHAtT3k2M3BreE9ya3FVMFctMjNTOUUxUlFURnRLVl91eWFldzM4d1Z1V3VzME0tMGx2clJNZHdhOFNwXzFfcGgtdkdRc1lQb29FaWEtWnpUU0p0U3VvQ3k2cHUwaC1lZHhWNWRUM1B0VWVBYzVuWTR6VGtYUHRwR3BUY0FydEs4SWFRd2x4bzFwanpNcU9nVjhCMVlHbUE5bHU4ZkhoQ3FV?oc=5",
+          "source": "MSN",
+          "published": "Thu, 14 May 2026 05:56:28 GMT"
+        },
+        {
+          "title": "Palantir stock trades up as first-quarter 2026 revenue surges 85% - Traders Union",
+          "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQTUdKZEhzWlNFaGhyNlB1YTBrLVA2UU9RMjdTQW1UU0xWTTRyc0Q3ZXdTN0wxYlI4eGstZlBBNlFjTDRzeFRqWkFCUWYwN1lDSkJtbXpBbG5QTENia2dGNVU1SDFGcjlOZHNabGlJOUUzbHJDSlNsaVpVeVVhcVFGTTJ3a3UwNlpIT2xNMnFQNkpidFQxNWN2UnRCU1kya28?oc=5",
+          "source": "Traders Union",
+          "published": "Thu, 14 May 2026 15:10:30 GMT"
+        },
+        {
+          "title": "SoundHound Stock Is Down 13% Today – Is It Outperforming Other AI Stocks Like Palantir and C3.ai? - AOL.com",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5HX3pmXzE0OGY0eVV5MWJVblAtZ0tUZmozZHNQZnlmSmt1VHBBRE41U1AyeDlQQ215azJsVjJZdGMzT0g0aC1OUklPZXJVLVQ3YVZsSjhLRmg2d1A0UnJ5X0E4NnFDM1N1Xy1mTVZpaHExTm5sSnNFYmFTekFWTXM?oc=5",
+          "source": "AOL.com",
+          "published": "Thu, 14 May 2026 14:15:03 GMT"
+        },
+        {
+          "title": "Palantir Stock’s Fog of War Creates an Aggressive Buying Opportunity - inkl",
+          "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPZ3VQQnNyV0E0UFVoaVJMUmJzWEVvNXhaMl9zT1FSOWQ2bGRlMzFQRzdhT1I3WkhMdHB6RF9WMklSemF3WHpETFFZOGN5clRRdDBPSVRkekswZHE5LTN4TDFYT2trdnhueDh5aEJiSmZKcXhpbExJS0MyWXd4YTlqWU9uZzNhYjk1OGgzUFFrcDRsdmVJUV9TenpB?oc=5",
+          "source": "inkl",
+          "published": "Thu, 14 May 2026 14:37:04 GMT"
+        },
+        {
+          "title": "Palantir Technologies Inc. (PLTR) laps the stock market: Here's why - MSN",
+          "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxQbnlCdnkzcEdXRUpJdWVLaHpuWVVPZjM1UVo1RFJXTjRWaVZ5NnVjTW1qb1VGZU5kNnRLS290NktzeTkwa3NRU290Y282cld4bUhHdU5PZFhDR200NjNYQ2FrZXFvQnVqY2VCeXJ3S1dXXzYyNmR4REwzQlZkUlNjemUwUDFBX3hTci1WdloyUXp5VDJfYkpZSWFUZDJ2UTF3OUVudUZaRDN2OGliYTZmcTFlX21Iaks5UnM3OVpyUUFXVUpLVjJHMVdpWS03cDhXbmc?oc=5",
+          "source": "MSN",
+          "published": "Thu, 14 May 2026 23:02:01 GMT"
+        }
+      ]
     }
   ]
 }
