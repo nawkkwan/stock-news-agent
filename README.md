@@ -237,8 +237,10 @@ The workflow:
 2. Runs `scripts/run_daily_report.py`.
 3. Updates `site/data/latest-report.json`.
 4. Saves an archive JSON under `site/data/reports/`.
-5. Commits the updated site data back to GitHub.
-6. Lets Vercel auto-deploy from the new commit.
+5. Validates that the report contains real articles before deploy.
+6. Optionally publishes a Google Doc when credentials are available.
+7. Commits the updated site data back to GitHub.
+8. Lets Vercel auto-deploy from the new commit.
 
 GitHub secrets you can add:
 
@@ -266,7 +268,7 @@ When `OPENAI_API_KEY` is present, the workflow sends a small capped set of RSS i
 
 The analysis is decision support only. It does not recommend buying, selling, holding, or trading.
 
-`GOOGLE_CREDENTIALS_JSON` and `GOOGLE_TOKEN_JSON` are optional. Without them, Google Docs publishing is skipped, but the website still updates.
+`GOOGLE_CREDENTIALS_JSON` and `GOOGLE_TOKEN_JSON` are optional. Without both of them, Google Docs publishing is skipped, but the website still updates.
 
 To add Google secrets:
 
@@ -284,7 +286,8 @@ To add Google secrets:
 - `scripts/publish_google_doc.py`: Publishes a Markdown report to Google Docs as plain text and saves the Doc URL.
 - `scripts/analyze_technicals.py`: Fetches daily price data and calculates technical context. This is not trading advice.
 - `scripts/export_site_data.py`: Exports report data for the static website.
-- `scripts/run_daily_report.py`: Runs fetch, deduplicate, summarize, and optional Google Docs publishing in one command.
+- `scripts/run_daily_report.py`: Runs fetch, deduplicate, summarize, and export in one command.
+- `scripts/deploy_daily_report.py`: Runs the daily report, validates the site payload, optionally publishes Google Docs, and commits site data when the report is healthy.
 - `site/`: Static Vercel website.
 - `prompts/portfolio_news_prompt.md`: The AI prompt that enforces the safe, news-only report format.
 - `reports/.gitkeep`: Keeps the reports folder in Git.

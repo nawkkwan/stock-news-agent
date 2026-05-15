@@ -39,28 +39,10 @@ try {
     git pull --rebase origin main
     Assert-LastExitCode "git pull --rebase origin main"
 
-    & $Python ".\scripts\run_daily_report.py" --date $Today
-    Assert-LastExitCode "run_daily_report.py"
+    & $Python ".\scripts\deploy_daily_report.py" --date $Today
+    Assert-LastExitCode "deploy_daily_report.py"
 
-    & $Python -c "import json, sys; p=json.load(open('site/data/latest-report.json', encoding='utf-8')); sys.exit(0 if p.get('date') == '$Today' else 1)"
-    Assert-LastExitCode "latest-report.json date validation"
-
-    git add "site\data\latest-report.json" "site\data\reports\$Today.json"
-    Assert-LastExitCode "git add site data"
-
-    git diff --cached --quiet
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "No site data changes to commit."
-        exit 0
-    }
-
-    git commit -m "Update daily portfolio news for $Today"
-    Assert-LastExitCode "git commit"
-
-    git push
-    Assert-LastExitCode "git push"
-
-    Write-Host "Portfolio news report pushed for $Today."
+    Write-Host "Portfolio news report flow completed for $Today."
 }
 finally {
     Stop-Transcript
