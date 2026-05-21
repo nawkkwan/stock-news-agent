@@ -2,18 +2,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 SITE_DATA_DIR = ROOT_DIR / "site" / "data"
 LATEST_REPORT_PATH = SITE_DATA_DIR / "latest-report.json"
-GOOGLE_CREDENTIALS_PATH = ROOT_DIR / "credentials" / "credentials.json"
-GOOGLE_TOKEN_PATH = ROOT_DIR / "token.json"
+REPORT_TIMEZONE = "Asia/Bangkok"
 
 
 def run_command(args: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -26,12 +25,8 @@ def run_command(args: list[str], *, check: bool = True) -> subprocess.CompletedP
     )
 
 
-def ensure_secret_file(env_name: str, target: Path) -> None:
-    raw = os.getenv(env_name)
-    if not raw:
-        return
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(raw.strip() + "\n", encoding="utf-8")
+def default_report_date() -> str:
+    return datetime.now(ZoneInfo(REPORT_TIMEZONE)).date().isoformat()
 
 
 def load_latest_report() -> dict[str, Any]:
@@ -60,13 +55,6 @@ def run_python(script: str, *args: str) -> None:
     run_command([sys.executable, script, *args])
 
 
-def maybe_publish_google_doc(report_date: str) -> None:
-    if not GOOGLE_CREDENTIALS_PATH.exists() or not GOOGLE_TOKEN_PATH.exists():
-        print("Google Docs publishing skipped because credentials are missing.")
-        return
-    run_python("scripts/publish_google_doc.py", "--date", report_date)
-
-
 def git_commit_and_push(report_date: str) -> None:
     run_command(["git", "add", "site/data/latest-report.json", f"site/data/reports/{report_date}.json"])
     diff = subprocess.run(
@@ -88,15 +76,11 @@ def git_commit_and_push(report_date: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run, validate, publish, and deploy the daily portfolio report.")
-    parser.add_argument("--date", default=datetime.now().date().isoformat())
+    parser.add_argument("--date", default=default_report_date())
     args = parser.parse_args()
-
-    ensure_secret_file("GOOGLE_CREDENTIALS_JSON", ROOT_DIR / "credentials" / "credentials.json")
-    ensure_secret_file("GOOGLE_TOKEN_JSON", ROOT_DIR / "token.json")
 
     run_python("scripts/run_daily_report.py", "--date", args.date)
     validate_report(args.date)
-    maybe_publish_google_doc(args.date)
     git_commit_and_push(args.date)
 
 

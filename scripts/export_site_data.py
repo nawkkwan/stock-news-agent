@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from path_utils import display_path
 
@@ -13,6 +14,7 @@ REPORTS_DIR = ROOT_DIR / "reports"
 SITE_DATA_DIR = ROOT_DIR / "site" / "data"
 PORTFOLIO_PATH = ROOT_DIR / "data" / "portfolio.json"
 MAX_ARTICLES_PER_STOCK = 8
+REPORT_TIMEZONE = "Asia/Bangkok"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -24,6 +26,14 @@ def load_text_if_exists(path: Path) -> str:
     if not path.exists():
         return ""
     return path.read_text(encoding="utf-8").strip()
+
+
+def now_iso() -> str:
+    return datetime.now(ZoneInfo(REPORT_TIMEZONE)).isoformat(timespec="seconds")
+
+
+def default_report_date() -> str:
+    return datetime.now(ZoneInfo(REPORT_TIMEZONE)).date().isoformat()
 
 
 def to_float(value: Any) -> float | None:
@@ -185,7 +195,7 @@ def build_site_payload(report_date: str) -> dict[str, Any]:
     errors = deduped_payload.get("errors", [])
     return {
         "date": report_date,
-        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "generated_at": now_iso(),
         "status": "ok" if not errors else "completed_with_errors",
         "notebooklm_url": "https://notebooklm.google.com/",
         "markdown_report": markdown,
@@ -233,7 +243,7 @@ def export_site_data(report_date: str) -> tuple[Path, Path]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Export report data for the static Vercel site.")
-    parser.add_argument("--date", default=datetime.now().date().isoformat())
+    parser.add_argument("--date", default=default_report_date())
     args = parser.parse_args()
     export_site_data(args.date)
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from analyze_technicals import analyze_portfolio
 from deduplicate_news import deduplicate_payload, save_deduplicated_news
@@ -14,10 +15,15 @@ from pathlib import Path
 from time import perf_counter
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
+REPORT_TIMEZONE = "Asia/Bangkok"
 
 
 def log_step(message: str) -> None:
     print(message, flush=True)
+
+
+def default_report_date() -> str:
+    return datetime.now(ZoneInfo(REPORT_TIMEZONE)).date().isoformat()
 
 
 def run_daily_report(report_date: str) -> None:
@@ -67,7 +73,7 @@ def run_daily_report(report_date: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch, deduplicate, and summarize portfolio news.")
-    parser.add_argument("--date", default=datetime.now().date().isoformat())
+    parser.add_argument("--date", default=default_report_date())
     args = parser.parse_args()
     run_daily_report(args.date)
 
