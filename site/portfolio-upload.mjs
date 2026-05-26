@@ -1,0 +1,110 @@
+const MONEY_PATTERN = /-?\s*(?:฿|THB)?\s*\d[\d,]*(?:\.\d+)?\s*(?:THB|บาท)?/gi;
+
+function roundMoney(value) {
+  return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+}
+
+export function parseMoney(value) {
+  if (value === undefined || value === null) {
+    return null;
+  }
+
+  const cleaned = String(value)
+    .replace(/[฿บาทA-Za-z]/g, "")
+    .replace(/\s+/g, "")
+    .replace(/,/g, "");
+  const number = Number(cleaned);
+  return Number.isFinite(number) ? number : null;
+}
+
+export function calculateGainLoss(currentValue, costValue) {
+  const current = Number(currentValue);
+  const cost = Number(costValue);
+
+  if (!Number.isFinite(current) || !Number.isFinite(cost) || cost <= 0) {
+    return { amount: null, pct: null };
+  }
+
+  const amount = roundMoney(current - cost);
+  return {
+    amount,
+    pct: roundMoney((amount / cost) * 100),
+  };
+}
+
+function normalizeLine(line) {
+  return line.replace(/\s+/g, " ").trim();
+}
+
+function lineContainsTicker(line, ticker) {
+  return new RegExp(`\\b${ticker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(line);
+}
+
+function readAmounts(lines) {
+  return lines
+    .flatMap((line) => Array.from(line.matchAll(MONEY_PATTERN), (match) => parseMoney(match[0])))
+    .filter((value) => value !== null);
+}
+
+function scoreLine(line, type) {
+  const normalized = line.toLowerCase();
+  if (type === "current") {
+    if (/มูลค่าปัจจุบัน|current|market\s*value|value/.test(normalized)) {
+      return 3;
+    }
+  }
+  if (/เงินลงทุน|ต้นทุน|cost|invest/.test(normalized)) {
+    return 3;
+  }
+  return 1;
+}
+
+function pickAmount(lines, type, fallbackIndex) {
+  const candidates = lines
+    .map((line, index) => ({
+      amounts: readAmounts([line]),
+      score: scoreLine(line, type),
+      index,
+    }))
+    .filter((candidate) => candidate.amounts.length > 0)
+    .sort((a, b) => b.score - a.score || a.index - b.index);
+
+  if (candidates.length > 0) {
+    return candidates[0].amounts[0];
+  }
+
+  return readAmounts(lines)[fallbackIndex] ?? null;
+}
+
+export function extractDimeHoldings(ocrText, tickers) {
+  const lines = String(ocrText || "")
+    .split(/\r?\n/)
+    .map(normalizeLine)
+    .filter(Boolean);
+
+  return tickers.flatMap((ticker) => {
+    const tickerIndex = lines.findIndex((line) => lineContainsTicker(line, ticker));
+    if (tickerIndex === -1) {
+      return [];
+    }
+
+    const nextTickerIndex = lines.findIndex(
+      (line, index) => index > tickerIndex && tickers.some((nextTicker) => lineContainsTicker(line, nextTicker))
+    );
+    const endIndex = nextTickerIndex === -1 ? tickerIndex + 6 : Math.min(nextTickerIndex, tickerIndex + 6);
+    const block = lines.slice(tickerIndex, endIndex);
+    const currentValue = pickAmount(block, "current", 0);
+    const costValue = pickAmount(block, "cost", 1);
+    const gainLoss = calculateGainLoss(currentValue, costValue);
+
+    return [
+      {
+        ticker,
+        currentValue,
+        costValue,
+        gainLossAmount: gainLoss.amount,
+        gainLossPct: gainLoss.pct,
+      },
+    ];
+  });
+}

@@ -13,6 +13,7 @@
         <h1>Daily market notes</h1>
       </div>
       <div class="actions">
+        <a class="button secondary" href="https://www.domemarkets.com/" target="_blank" rel="noreferrer">Dome Markets</a>
         <a id="notebookLink" class="button" href="https://notebooklm.google.com/" target="_blank" rel="noreferrer">NotebookLM</a>
       </div>
     </header>
@@ -38,6 +39,53 @@
         <div>
           <span class="label">Status</span>
           <strong id="status">-</strong>
+        </div>
+      </section>
+
+      <section class="section dime-upload">
+        <div class="section-head">
+          <div>
+            <h2>Dime Portfolio Upload</h2>
+            <p id="dimeStatus" class="small-note">Upload a Dime screenshot to add cost and gain/loss.</p>
+          </div>
+          <label class="button secondary file-button">
+            Upload image
+            <input id="dimeImageInput" type="file" accept="image/*">
+          </label>
+        </div>
+        <div class="dime-panel">
+          <textarea id="dimeTextInput" rows="4" placeholder="Paste Dime text here if OCR needs help"></textarea>
+          <button id="parseDimeText" class="button secondary" type="button">Parse text</button>
+        </div>
+        <div id="dimeResult" class="dime-result" hidden>
+          <div class="dime-summary">
+            <div>
+              <span class="label">Dime value</span>
+              <strong id="dimeTotalValue">-</strong>
+            </div>
+            <div>
+              <span class="label">Dime cost</span>
+              <strong id="dimeTotalCost">-</strong>
+            </div>
+            <div>
+              <span class="label">Dime gain/loss</span>
+              <strong id="dimeTotalGain">-</strong>
+            </div>
+          </div>
+          <div class="table-wrap dime-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticker</th>
+                  <th>Current value</th>
+                  <th>Cost</th>
+                  <th>Gain/Loss</th>
+                  <th>Gain/Loss %</th>
+                </tr>
+              </thead>
+              <tbody id="dimeRows"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -116,6 +164,6 @@
       </details>
     </main>
 
-    <script src="/app.js"></script>
+    <script type="module" src="/app.js"></script>
   </body>
 </html>

@@ -1,8 +1,12 @@
+import { calculateGainLoss, extractDimeHoldings } from "./portfolio-upload.mjs";
+
 const DATA_URL = "/data/latest-report.json";
 const moneyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
 });
+let latestStocks = [];
+let dimeHoldingsByTicker = new Map();
 
 function text(value, fallback = "-") {
   return value === undefined || value === null || value === "" ? fallback : String(value);
@@ -12,8 +16,24 @@ function formatMoney(value) {
   return value === undefined || value === null ? "-" : `${moneyFormatter.format(value)} THB`;
 }
 
+function formatSignedMoney(value) {
+  if (value === undefined || value === null) {
+    return "-";
+  }
+  const sign = Number(value) > 0 ? "+" : "";
+  return `${sign}${moneyFormatter.format(value)} THB`;
+}
+
 function formatPct(value) {
   return value === undefined || value === null ? "-" : `${Number(value).toFixed(2)}%`;
+}
+
+function formatSignedPct(value) {
+  if (value === undefined || value === null) {
+    return "-";
+  }
+  const sign = Number(value) > 0 ? "+" : "";
+  return `${sign}${Number(value).toFixed(2)}%`;
 }
 
 function formatGap(value) {
@@ -43,6 +63,10 @@ function getAllocationClass(status) {
 
 function setText(id, value) {
   document.getElementById(id).textContent = text(value);
+}
+
+function setDimeStatus(value) {
+  setText("dimeStatus", value);
 }
 
 function createCell(content) {
@@ -78,8 +102,14 @@ function renderStockCards(stocks) {
   grid.innerHTML = "";
 
   stocks.forEach((stock) => {
+    const dimeHolding = dimeHoldingsByTicker.get(stock.ticker);
     const card = document.createElement("article");
     card.className = "stock-card";
+    if (dimeHolding?.gainLossPct > 0) {
+      card.classList.add("profit");
+    } else if (dimeHolding?.gainLossPct < 0) {
+      card.classList.add("loss");
+    }
 
     const header = document.createElement("div");
     header.className = "stock-card-head";
@@ -134,13 +164,26 @@ function renderStockCards(stocks) {
 
     const quick = document.createElement("div");
     quick.className = "quick-row";
-    quick.innerHTML = `
-      <span>Value: ${formatMoney(stock.holding_value_thb)}</span>
-      <span>Allocation: ${text(stock.allocation_status)}</span>
-      <span>Risk: ${text(stock.risk_level)}</span>
-      <span>Relevance: ${text(stock.relevance_score)}</span>
-      <span>Confidence: ${text(stock.confidence)}</span>
-    `;
+    const quickItems = [
+      `Value: ${formatMoney(dimeHolding?.currentValue ?? stock.holding_value_thb)}`,
+      `Allocation: ${text(stock.allocation_status)}`,
+      `Risk: ${text(stock.risk_level)}`,
+      `Relevance: ${text(stock.relevance_score)}`,
+      `Confidence: ${text(stock.confidence)}`,
+    ];
+    if (dimeHolding) {
+      quickItems.splice(
+        1,
+        0,
+        `Cost: ${formatMoney(dimeHolding.costValue)}`,
+        `P/L: ${formatSignedMoney(dimeHolding.gainLossAmount)} (${formatSignedPct(dimeHolding.gainLossPct)})`
+      );
+    }
+    quickItems.forEach((item) => {
+      const pill = document.createElement("span");
+      pill.textContent = item;
+      quick.appendChild(pill);
+    });
 
     const details = document.createElement("details");
     details.className = "card-details";
@@ -191,6 +234,129 @@ function renderStockCards(stocks) {
     details.append(summary, possibleImpact, valuation, technicalNote, relevance, points, monitor, sources);
     card.append(header, allocation, quick, metrics, tags, impact, details);
     grid.appendChild(card);
+  });
+}
+
+function renderDimeRows() {
+  const result = document.getElementById("dimeResult");
+  const body = document.getElementById("dimeRows");
+  body.innerHTML = "";
+
+  const holdings = Array.from(dimeHoldingsByTicker.values());
+  result.hidden = holdings.length === 0;
+
+  let totalValue = 0;
+  let totalCost = 0;
+
+  holdings.forEach((holding) => {
+    totalValue += Number(holding.currentValue) || 0;
+    totalCost += Number(holding.costValue) || 0;
+
+    const row = document.createElement("tr");
+    const ticker = createCell(holding.ticker);
+    ticker.className = "ticker";
+
+    const current = document.createElement("td");
+    const currentInput = document.createElement("input");
+    currentInput.type = "number";
+    currentInput.step = "0.01";
+    currentInput.value = holding.currentValue ?? "";
+    currentInput.addEventListener("change", () => updateDimeHolding(holding.ticker, "currentValue", currentInput.value));
+    current.appendChild(currentInput);
+
+    const cost = document.createElement("td");
+    const costInput = document.createElement("input");
+    costInput.type = "number";
+    costInput.step = "0.01";
+    costInput.value = holding.costValue ?? "";
+    costInput.addEventListener("change", () => updateDimeHolding(holding.ticker, "costValue", costInput.value));
+    cost.appendChild(costInput);
+
+    row.append(
+      ticker,
+      current,
+      cost,
+      createCell(formatSignedMoney(holding.gainLossAmount)),
+      createCell(formatSignedPct(holding.gainLossPct))
+    );
+    body.appendChild(row);
+  });
+
+  const totalGain = calculateGainLoss(totalValue, totalCost);
+  setText("dimeTotalValue", formatMoney(totalValue));
+  setText("dimeTotalCost", formatMoney(totalCost));
+  setText("dimeTotalGain", `${formatSignedMoney(totalGain.amount)} (${formatSignedPct(totalGain.pct)})`);
+}
+
+function updateDimeHolding(ticker, key, value) {
+  const holding = dimeHoldingsByTicker.get(ticker);
+  if (!holding) {
+    return;
+  }
+  holding[key] = value === "" ? null : Number(value);
+  const gainLoss = calculateGainLoss(holding.currentValue, holding.costValue);
+  holding.gainLossAmount = gainLoss.amount;
+  holding.gainLossPct = gainLoss.pct;
+  renderDimeRows();
+  renderStockCards(latestStocks);
+}
+
+function applyDimeHoldings(holdings) {
+  dimeHoldingsByTicker = new Map(
+    holdings.map((holding) => [
+      holding.ticker,
+      {
+        ...holding,
+        currentValue: holding.currentValue ?? null,
+        costValue: holding.costValue ?? null,
+      },
+    ])
+  );
+  renderDimeRows();
+  renderStockCards(latestStocks);
+}
+
+function parseDimeText(value) {
+  const tickers = latestStocks.map((stock) => stock.ticker);
+  const holdings = extractDimeHoldings(value, tickers);
+  applyDimeHoldings(holdings);
+  setDimeStatus(
+    holdings.length > 0
+      ? `Found ${holdings.length} Dime holding(s). Review the numbers before using them.`
+      : "No matching tickers found. Paste or upload a clearer Dime screenshot."
+  );
+}
+
+async function readDimeImage(file) {
+  setDimeStatus("Reading Dime screenshot...");
+  const { createWorker } = await import("https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js");
+  const worker = await createWorker("eng+tha");
+  try {
+    const result = await worker.recognize(file);
+    const ocrText = result.data?.text || "";
+    document.getElementById("dimeTextInput").value = ocrText;
+    parseDimeText(ocrText);
+  } finally {
+    await worker.terminate();
+  }
+}
+
+function setupDimeUpload() {
+  document.getElementById("parseDimeText").addEventListener("click", () => {
+    parseDimeText(document.getElementById("dimeTextInput").value);
+  });
+
+  document.getElementById("dimeImageInput").addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    try {
+      await readDimeImage(file);
+    } catch (error) {
+      setDimeStatus(`OCR could not read this image: ${error.message}`);
+    }
   });
 }
 
@@ -294,6 +460,7 @@ async function main() {
     throw new Error(`Could not load ${DATA_URL}`);
   }
   const report = await response.json();
+  latestStocks = report.stocks || [];
 
   setText("reportDate", report.date);
   setText("portfolioValue", formatMoney(report.summary?.total_portfolio_value_thb));
@@ -317,8 +484,9 @@ async function main() {
     }, 1600);
   });
 
-  renderImpactTable(report.stocks || []);
-  renderStockCards(report.stocks || []);
+  setupDimeUpload();
+  renderImpactTable(latestStocks);
+  renderStockCards(latestStocks);
   renderNotes(report);
 }
 
