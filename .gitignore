@@ -8,6 +8,8 @@ token.json.bak-*
 __pycache__/
 *.pyc
 .pytest_cache/
+node_modules/
+npm-debug.log*
 
 reports/*-raw-news.json
 reports/*-deduped-news.json

@@ -42,53 +42,6 @@
         </div>
       </section>
 
-      <section class="section dime-upload">
-        <div class="section-head">
-          <div>
-            <h2>Dime Portfolio Upload</h2>
-            <p id="dimeStatus" class="small-note">Upload a Dime screenshot to add cost and gain/loss.</p>
-          </div>
-          <label class="button secondary file-button">
-            Upload image
-            <input id="dimeImageInput" type="file" accept="image/*">
-          </label>
-        </div>
-        <div class="dime-panel">
-          <textarea id="dimeTextInput" rows="4" placeholder="Paste Dime text here if OCR needs help"></textarea>
-          <button id="parseDimeText" class="button secondary" type="button">Parse text</button>
-        </div>
-        <div id="dimeResult" class="dime-result" hidden>
-          <div class="dime-summary">
-            <div>
-              <span class="label">Dime value</span>
-              <strong id="dimeTotalValue">-</strong>
-            </div>
-            <div>
-              <span class="label">Dime cost</span>
-              <strong id="dimeTotalCost">-</strong>
-            </div>
-            <div>
-              <span class="label">Dime gain/loss</span>
-              <strong id="dimeTotalGain">-</strong>
-            </div>
-          </div>
-          <div class="table-wrap dime-table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Ticker</th>
-                  <th>Current value</th>
-                  <th>Cost</th>
-                  <th>Gain/Loss</th>
-                  <th>Gain/Loss %</th>
-                </tr>
-              </thead>
-              <tbody id="dimeRows"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
       <section class="section stock-first">
         <div class="section-head">
           <h2>Stocks</h2>
@@ -99,6 +52,14 @@
         </p>
         <div id="stockCards" class="stock-grid"></div>
       </section>
+
+      <details class="section disclosure" open>
+        <summary>Investment Journal</summary>
+        <div class="section-head">
+          <span id="journalStatus" class="small-note">Loading journal...</span>
+        </div>
+        <div id="journalList" class="journal-list"></div>
+      </details>
 
       <details class="section disclosure" open>
         <summary>Daily Briefing</summary>
@@ -163,6 +124,60 @@
         <ul id="notes"></ul>
       </details>
     </main>
+
+    <aside id="portfolioImport" class="portfolio-import" aria-label="Import portfolio">
+      <button id="portfolioImportToggle" class="import-fab" type="button" aria-expanded="false" aria-controls="portfolioImportPanel">
+        <span aria-hidden="true">⚡</span>
+      </button>
+      <section id="portfolioImportPanel" class="import-panel" hidden>
+        <div class="import-head">
+          <div>
+            <h2>Import Portfolio</h2>
+            <p id="dimeStatus" class="small-note">Upload a Dime screenshot to view holdings and gain/loss.</p>
+          </div>
+          <button id="closePortfolioImport" class="icon-button" type="button" aria-label="Close import panel">×</button>
+        </div>
+        <label class="upload-dropzone">
+          <span>Upload screenshot</span>
+          <small>PNG, JPG, or image from Dime</small>
+          <input id="dimeImageInput" type="file" accept="image/*">
+        </label>
+        <img id="dimeImagePreview" class="upload-preview" alt="" hidden>
+        <textarea id="dimeTextInput" rows="4" placeholder="Paste OCR text here if the image reader needs help"></textarea>
+        <button id="parseDimeText" class="button secondary" type="button">Parse text</button>
+        <div id="dimeResult" class="dime-result" hidden>
+          <div class="dime-summary">
+            <div>
+              <span class="label">Value</span>
+              <strong id="dimeTotalValue">-</strong>
+            </div>
+            <div>
+              <span class="label">Cost</span>
+              <strong id="dimeTotalCost">-</strong>
+            </div>
+            <div>
+              <span class="label">Gain/Loss</span>
+              <strong id="dimeTotalGain">-</strong>
+            </div>
+          </div>
+          <div id="dimeHoldingCards" class="import-card-grid"></div>
+          <div class="table-wrap dime-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticker</th>
+                  <th>Current value</th>
+                  <th>Cost</th>
+                  <th>Gain/Loss</th>
+                  <th>Gain/Loss %</th>
+                </tr>
+              </thead>
+              <tbody id="dimeRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </aside>
 
     <script type="module" src="/app.js"></script>
   </body>

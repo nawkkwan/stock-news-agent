@@ -55,3 +55,50 @@ test("extractDimeHoldings matches report tickers and nearby current/cost amounts
     },
   ]);
 });
+
+test("extractDimeHoldings can infer tickers for another user's portfolio", () => {
+  const ocrText = `
+    NVDA
+    Market value 10,500.00 THB
+    Cost 9,000.00 THB
+
+    AAPL
+    Current value 4,200.00 THB
+    Invested 4,500.00 THB
+  `;
+
+  assert.deepEqual(extractDimeHoldings(ocrText), [
+    {
+      ticker: "NVDA",
+      currentValue: 10500,
+      costValue: 9000,
+      gainLossAmount: 1500,
+      gainLossPct: 16.67,
+    },
+    {
+      ticker: "AAPL",
+      currentValue: 4200,
+      costValue: 4500,
+      gainLossAmount: -300,
+      gainLossPct: -6.67,
+    },
+  ]);
+});
+
+test("extractDimeHoldings does not infer S and P from S&P 500 names", () => {
+  const ocrText = `
+    VOO Vanguard S&P 500 ETF
+    Market value 7,896.41 THB
+    Cost 7,500.00 THB
+  `;
+
+  assert.deepEqual(extractDimeHoldings(ocrText), [
+    {
+      ticker: "VOO",
+      currentValue: 7896.41,
+      costValue: 7500,
+      gainLossAmount: 396.41,
+      gainLossPct: 5.29,
+    },
+  ]);
+});

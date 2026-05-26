@@ -1,4 +1,6 @@
-const MONEY_PATTERN = /-?\s*(?:฿|THB)?\s*\d[\d,]*(?:\.\d+)?\s*(?:THB|บาท)?/gi;
+const MONEY_PATTERN = /-?\s*\d[\d,]*(?:\.\d+)?/g;
+const TICKER_PATTERN = /\b[A-Z]{1,5}\b/g;
+const IGNORED_TOKENS = new Set(["THB", "ETF", "USD", "NYSE", "NASDAQ"]);
 
 function roundMoney(value) {
   return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
@@ -10,7 +12,7 @@ export function parseMoney(value) {
   }
 
   const cleaned = String(value)
-    .replace(/[฿บาทA-Za-z]/g, "")
+    .replace(/[^\d.-]/g, "")
     .replace(/\s+/g, "")
     .replace(/,/g, "");
   const number = Number(cleaned);
@@ -36,6 +38,19 @@ function normalizeLine(line) {
   return line.replace(/\s+/g, " ").trim();
 }
 
+function inferTickers(lines) {
+  const tickers = [];
+  lines.forEach((line) => {
+    const ticker = Array.from(line.matchAll(TICKER_PATTERN), (match) => match[0]).find(
+      (candidate) => !IGNORED_TOKENS.has(candidate)
+    );
+    if (ticker && !tickers.includes(ticker)) {
+      tickers.push(ticker);
+    }
+  });
+  return tickers;
+}
+
 function lineContainsTicker(line, ticker) {
   return new RegExp(`\\b${ticker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(line);
 }
@@ -49,11 +64,11 @@ function readAmounts(lines) {
 function scoreLine(line, type) {
   const normalized = line.toLowerCase();
   if (type === "current") {
-    if (/มูลค่าปัจจุบัน|current|market\s*value|value/.test(normalized)) {
+    if (/current|market\s*value|value/.test(normalized)) {
       return 3;
     }
   }
-  if (/เงินลงทุน|ต้นทุน|cost|invest/.test(normalized)) {
+  if (/cost|invest/.test(normalized)) {
     return 3;
   }
   return 1;
@@ -69,27 +84,29 @@ function pickAmount(lines, type, fallbackIndex) {
     .filter((candidate) => candidate.amounts.length > 0)
     .sort((a, b) => b.score - a.score || a.index - b.index);
 
-  if (candidates.length > 0) {
-    return candidates[0].amounts[0];
+  const labeledCandidates = candidates.filter((candidate) => candidate.score > 1);
+  if (labeledCandidates.length > 0) {
+    return labeledCandidates[0].amounts[0];
   }
 
-  return readAmounts(lines)[fallbackIndex] ?? null;
+  return readAmounts(lines.slice(1))[fallbackIndex] ?? null;
 }
 
-export function extractDimeHoldings(ocrText, tickers) {
+export function extractDimeHoldings(ocrText, tickers = null) {
   const lines = String(ocrText || "")
     .split(/\r?\n/)
     .map(normalizeLine)
     .filter(Boolean);
+  const portfolioTickers = tickers && tickers.length ? tickers : inferTickers(lines);
 
-  return tickers.flatMap((ticker) => {
+  return portfolioTickers.flatMap((ticker) => {
     const tickerIndex = lines.findIndex((line) => lineContainsTicker(line, ticker));
     if (tickerIndex === -1) {
       return [];
     }
 
     const nextTickerIndex = lines.findIndex(
-      (line, index) => index > tickerIndex && tickers.some((nextTicker) => lineContainsTicker(line, nextTicker))
+      (line, index) => index > tickerIndex && portfolioTickers.some((nextTicker) => lineContainsTicker(line, nextTicker))
     );
     const endIndex = nextTickerIndex === -1 ? tickerIndex + 6 : Math.min(nextTickerIndex, tickerIndex + 6);
     const block = lines.slice(tickerIndex, endIndex);

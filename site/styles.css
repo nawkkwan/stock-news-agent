@@ -14,6 +14,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -114,18 +118,6 @@ main {
   color: var(--accent-strong);
 }
 
-.file-button {
-  position: relative;
-  overflow: hidden;
-}
-
-.file-button input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
 .button.disabled {
   pointer-events: none;
   opacity: 0.6;
@@ -186,39 +178,9 @@ main {
   margin-bottom: 14px;
 }
 
-.dime-upload {
-  padding: 14px 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel);
-}
-
-.dime-upload h2 {
-  margin-bottom: 4px;
-}
-
-.dime-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: start;
-}
-
-.dime-panel textarea {
-  width: 100%;
-  min-height: 92px;
-  resize: vertical;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  color: var(--ink);
-  font: inherit;
-}
-
 .dime-result {
   display: grid;
   gap: 12px;
-  margin-top: 12px;
 }
 
 .dime-summary {
@@ -256,6 +218,144 @@ main {
   border-radius: 6px;
   color: var(--ink);
   font: inherit;
+}
+
+.portfolio-import {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 20;
+}
+
+.import-fab,
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+}
+
+.import-fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #6753d8;
+  color: #ffb84d;
+  box-shadow: 0 16px 32px rgba(46, 35, 128, 0.28);
+  font-size: 25px;
+}
+
+.import-panel {
+  position: absolute;
+  right: 0;
+  bottom: 68px;
+  display: grid;
+  gap: 12px;
+  width: min(440px, calc(100vw - 32px));
+  max-height: min(760px, calc(100vh - 120px));
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 20px 50px rgba(23, 32, 42, 0.18);
+}
+
+.import-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.import-head h2 {
+  margin-bottom: 4px;
+}
+
+.icon-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eef2f6;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.upload-dropzone {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  min-height: 94px;
+  place-items: center;
+  padding: 16px;
+  border: 1px dashed #b7c2cd;
+  border-radius: 8px;
+  background: #f8fafb;
+  color: var(--accent-strong);
+  cursor: pointer;
+  text-align: center;
+}
+
+.upload-dropzone span {
+  font-weight: 800;
+}
+
+.upload-dropzone small {
+  color: var(--muted);
+}
+
+.upload-dropzone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.upload-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafb;
+}
+
+.import-panel textarea {
+  width: 100%;
+  min-height: 92px;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  font: inherit;
+}
+
+.import-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 8px;
+}
+
+.import-card {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafb;
+}
+
+.import-card strong {
+  font-size: 18px;
+}
+
+.import-card span {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .briefing-text {
@@ -369,6 +469,41 @@ td {
 
 .stock-card.loss {
   border-color: #efc1bd;
+}
+
+.journal-list {
+  display: grid;
+  gap: 10px;
+}
+
+.journal-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafb;
+}
+
+.journal-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.journal-card-head h3 {
+  margin-bottom: 0;
+}
+
+.journal-card-head span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e8f2ef;
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .stock-card p {
@@ -601,7 +736,6 @@ td {
     grid-template-columns: 1fr;
   }
 
-  .dime-panel,
   .dime-summary {
     grid-template-columns: 1fr;
   }

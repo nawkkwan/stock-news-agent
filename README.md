@@ -217,6 +217,78 @@ To deploy it on Vercel:
 5. Use no build command.
 6. Deploy.
 
+## Personal Journal Backend
+
+The live Vercel site can run the personal investment journal through Serverless Functions in `site/api/`. It is intentionally not a full login system. Public reads are allowed, while create/update/delete requests require an `ADMIN_TOKEN`.
+
+For Vercel, keep the project root set to:
+
+```text
+site
+```
+
+Then add these Environment Variables in the Vercel project:
+
+```text
+MONGODB_URI=mongodb+srv://...
+MONGODB_DB=stock_news_agent
+ADMIN_TOKEN=use-a-long-random-token
+```
+
+If `MONGODB_URI` is not set, the main website still loads and the journal section shows an empty disconnected state.
+
+Local Express backend is also available in `server/` for development.
+
+Install Node dependencies:
+
+```powershell
+npm install
+```
+
+Copy `.env.example` to `.env` and set:
+
+```text
+MONGODB_URI=mongodb://127.0.0.1:27017
+MONGODB_DB=stock_news_agent
+ADMIN_TOKEN=use-a-long-random-token
+PORT=4174
+```
+
+Start the backend and static site together:
+
+```powershell
+npm run server
+```
+
+Open:
+
+```text
+http://127.0.0.1:4174/
+```
+
+Journal API:
+
+```text
+GET    /api/journal
+POST   /api/journal       x-admin-token: ADMIN_TOKEN
+PATCH  /api/journal/:id   x-admin-token: ADMIN_TOKEN
+DELETE /api/journal/:id   x-admin-token: ADMIN_TOKEN
+```
+
+Example journal entry:
+
+```json
+{
+  "date": "2026-05-26",
+  "ticker": "VOO",
+  "action": "buy",
+  "amount_thb": 3000,
+  "reason": "DCA into my S&P 500 core holding",
+  "thesis": "Long-term broad US equity exposure",
+  "mood": "Adding while staying within target allocation"
+}
+```
+
 ## Daily GitHub Automation
 
 The workflow file is:

@@ -1,6 +1,7 @@
 import { calculateGainLoss, extractDimeHoldings } from "./portfolio-upload.mjs";
 
 const DATA_URL = "/data/latest-report.json";
+const JOURNAL_URL = "/api/journal?limit=20";
 const moneyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
@@ -240,7 +241,9 @@ function renderStockCards(stocks) {
 function renderDimeRows() {
   const result = document.getElementById("dimeResult");
   const body = document.getElementById("dimeRows");
+  const cards = document.getElementById("dimeHoldingCards");
   body.innerHTML = "";
+  cards.innerHTML = "";
 
   const holdings = Array.from(dimeHoldingsByTicker.values());
   result.hidden = holdings.length === 0;
@@ -280,6 +283,15 @@ function renderDimeRows() {
       createCell(formatSignedPct(holding.gainLossPct))
     );
     body.appendChild(row);
+
+    const card = document.createElement("article");
+    card.className = "import-card";
+    card.innerHTML = `
+      <strong>${holding.ticker}</strong>
+      <span>Value ${formatMoney(holding.currentValue)}</span>
+      <span>P/L ${formatSignedPct(holding.gainLossPct)}</span>
+    `;
+    cards.appendChild(card);
   });
 
   const totalGain = calculateGainLoss(totalValue, totalCost);
@@ -317,20 +329,19 @@ function applyDimeHoldings(holdings) {
 }
 
 function parseDimeText(value) {
-  const tickers = latestStocks.map((stock) => stock.ticker);
-  const holdings = extractDimeHoldings(value, tickers);
+  const holdings = extractDimeHoldings(value);
   applyDimeHoldings(holdings);
   setDimeStatus(
     holdings.length > 0
-      ? `Found ${holdings.length} Dime holding(s). Review the numbers before using them.`
-      : "No matching tickers found. Paste or upload a clearer Dime screenshot."
+      ? `Found ${holdings.length} holding(s). Review the numbers before using them.`
+      : "No holdings found. Paste OCR text or upload a clearer screenshot."
   );
 }
 
 async function readDimeImage(file) {
-  setDimeStatus("Reading Dime screenshot...");
+  setDimeStatus(`Image selected: ${file.name}. Reading screenshot...`);
   const { createWorker } = await import("https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js");
-  const worker = await createWorker("eng+tha");
+  const worker = await createWorker("eng");
   try {
     const result = await worker.recognize(file);
     const ocrText = result.data?.text || "";
@@ -341,7 +352,23 @@ async function readDimeImage(file) {
   }
 }
 
+function setImportPanelOpen(isOpen) {
+  const panel = document.getElementById("portfolioImportPanel");
+  const toggle = document.getElementById("portfolioImportToggle");
+  panel.hidden = !isOpen;
+  toggle.setAttribute("aria-expanded", String(isOpen));
+}
+
 function setupDimeUpload() {
+  document.getElementById("portfolioImportToggle").addEventListener("click", () => {
+    const panel = document.getElementById("portfolioImportPanel");
+    setImportPanelOpen(panel.hidden);
+  });
+
+  document.getElementById("closePortfolioImport").addEventListener("click", () => {
+    setImportPanelOpen(false);
+  });
+
   document.getElementById("parseDimeText").addEventListener("click", () => {
     parseDimeText(document.getElementById("dimeTextInput").value);
   });
@@ -352,10 +379,14 @@ function setupDimeUpload() {
       return;
     }
 
+    const preview = document.getElementById("dimeImagePreview");
+    preview.src = URL.createObjectURL(file);
+    preview.hidden = false;
+
     try {
       await readDimeImage(file);
     } catch (error) {
-      setDimeStatus(`OCR could not read this image: ${error.message}`);
+      setDimeStatus(`Image uploaded, but OCR could not run: ${error.message}. Paste text below to parse manually.`);
     }
   });
 }
@@ -454,6 +485,80 @@ function renderNotes(report) {
   });
 }
 
+function renderJournal(entries) {
+  const list = document.getElementById("journalList");
+  list.innerHTML = "";
+
+  if (!entries.length) {
+    const empty = document.createElement("p");
+    empty.className = "small-note";
+    empty.textContent = "No investment journal entries yet.";
+    list.appendChild(empty);
+    return;
+  }
+
+  entries.forEach((entry) => {
+    const card = document.createElement("article");
+    card.className = "journal-card";
+
+    const heading = document.createElement("div");
+    heading.className = "journal-card-head";
+    const title = document.createElement("h3");
+    title.textContent = `${entry.date} · ${entry.ticker}`;
+    const action = document.createElement("span");
+    action.textContent = entry.action;
+    heading.append(title, action);
+
+    const reason = document.createElement("p");
+    reason.className = "takeaway";
+    reason.textContent = entry.reason;
+
+    const meta = document.createElement("div");
+    meta.className = "quick-row";
+    [
+      entry.amount_thb ? `Amount: ${formatMoney(entry.amount_thb)}` : null,
+      entry.price ? `Price: ${moneyFormatter.format(entry.price)}` : null,
+      entry.quantity ? `Qty: ${entry.quantity}` : null,
+      entry.thesis ? `Thesis: ${entry.thesis}` : null,
+      entry.mood ? `Mood: ${entry.mood}` : null,
+    ]
+      .filter(Boolean)
+      .forEach((item) => {
+        const pill = document.createElement("span");
+        pill.textContent = item;
+        meta.appendChild(pill);
+      });
+
+    card.append(heading, reason, meta);
+    if (entry.notes) {
+      const notes = document.createElement("p");
+      notes.textContent = entry.notes;
+      card.appendChild(notes);
+    }
+    list.appendChild(card);
+  });
+}
+
+async function loadJournal() {
+  const status = document.getElementById("journalStatus");
+  try {
+    const response = await fetch(JOURNAL_URL, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`Journal API returned ${response.status}`);
+    }
+    const payload = await response.json();
+    const entries = payload.entries || [];
+    status.textContent =
+      payload.configured === false
+        ? "Journal database is not connected yet."
+        : `Showing ${entries.length} recent entry/entries`;
+    renderJournal(entries);
+  } catch (error) {
+    status.textContent = "Journal backend is not running yet.";
+    renderJournal([]);
+  }
+}
+
 async function main() {
   const response = await fetch(DATA_URL, { cache: "no-store" });
   if (!response.ok) {
@@ -487,6 +592,7 @@ async function main() {
   setupDimeUpload();
   renderImpactTable(latestStocks);
   renderStockCards(latestStocks);
+  loadJournal();
   renderNotes(report);
 }
 
