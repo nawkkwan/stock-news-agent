@@ -105,6 +105,7 @@ function pickDimeTableValues(lines) {
 
   const currentValue = valueCandidates[0] ?? null;
   const profitAmount = profitAmounts[0] ?? null;
+  const portfolioWeightPct = profitPercents.length > 1 ? profitPercents[0] : null;
   const gainLossPct = profitPercents.length > 0 ? profitPercents[profitPercents.length - 1] : null;
 
   if (currentValue === null || profitAmount === null) {
@@ -112,6 +113,7 @@ function pickDimeTableValues(lines) {
   }
 
   return {
+    portfolioWeightPct,
     currentValue,
     costValue: roundMoney(currentValue - profitAmount),
     gainLossAmount: roundMoney(profitAmount),

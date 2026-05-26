@@ -62,6 +62,17 @@ function getAllocationClass(status) {
   return "none";
 }
 
+function getDisplayAllocationStatus(weight, targetWeight) {
+  if (weight === undefined || weight === null || targetWeight === undefined || targetWeight === null) {
+    return "No target";
+  }
+  const gap = Number(targetWeight) - Number(weight);
+  if (Math.abs(gap) <= 1) {
+    return "Near target";
+  }
+  return gap > 0 ? "Under target" : "Over target";
+}
+
 function setText(id, value) {
   document.getElementById(id).textContent = text(value);
 }
@@ -104,6 +115,16 @@ function renderStockCards(stocks) {
 
   stocks.forEach((stock) => {
     const dimeHolding = dimeHoldingsByTicker.get(stock.ticker);
+    const displayWeight = dimeHolding?.portfolioWeightPct ?? stock.portfolio_weight_pct;
+    const displayGap =
+      dimeHolding?.portfolioWeightPct === undefined || dimeHolding?.portfolioWeightPct === null
+        ? stock.weight_gap_pct
+        : (stock.target_weight_pct ?? 0) - dimeHolding.portfolioWeightPct;
+    const displayAllocationStatus =
+      dimeHolding?.portfolioWeightPct === undefined || dimeHolding?.portfolioWeightPct === null
+        ? stock.allocation_status
+        : getDisplayAllocationStatus(dimeHolding.portfolioWeightPct, stock.target_weight_pct);
+    const displayValue = dimeHolding?.currentValue ?? stock.holding_value_thb;
     const card = document.createElement("article");
     card.className = "stock-card";
     if (dimeHolding?.gainLossPct > 0) {
@@ -125,18 +146,18 @@ function renderStockCards(stocks) {
     header.append(titleWrap, close);
 
     const allocation = document.createElement("div");
-    allocation.className = `allocation-strip ${getAllocationClass(stock.allocation_status)}`;
+    allocation.className = `allocation-strip ${getAllocationClass(displayAllocationStatus)}`;
     allocation.innerHTML = `
       <div class="allocation-top">
         <span class="allocation-label">Portfolio weight</span>
-        <strong>${formatPct(stock.portfolio_weight_pct)}</strong>
+        <strong>${formatPct(displayWeight)}</strong>
       </div>
       <div class="allocation-track">
-        <span class="allocation-fill" style="width: ${Math.min(stock.portfolio_weight_pct || 0, 100)}%"></span>
+        <span class="allocation-fill" style="width: ${Math.min(displayWeight || 0, 100)}%"></span>
       </div>
       <div class="allocation-bottom">
         <span>Target ${formatPct(stock.target_weight_pct)}</span>
-        <span>${formatGap(stock.weight_gap_pct)}</span>
+        <span>${formatGap(displayGap)}</span>
       </div>
     `;
 
@@ -166,8 +187,8 @@ function renderStockCards(stocks) {
     const quick = document.createElement("div");
     quick.className = "quick-row";
     const quickItems = [
-      `Value: ${formatMoney(dimeHolding?.currentValue ?? stock.holding_value_thb)}`,
-      `Allocation: ${text(stock.allocation_status)}`,
+      `Value: ${formatMoney(displayValue)}`,
+      `Allocation: ${text(displayAllocationStatus)}`,
       `Risk: ${text(stock.risk_level)}`,
       `Relevance: ${text(stock.relevance_score)}`,
       `Confidence: ${text(stock.confidence)}`,
@@ -288,6 +309,7 @@ function renderDimeRows() {
     card.className = "import-card";
     card.innerHTML = `
       <strong>${holding.ticker}</strong>
+      <span>Weight ${formatPct(holding.portfolioWeightPct)}</span>
       <span>Value ${formatMoney(holding.currentValue)}</span>
       <span>P/L ${formatSignedPct(holding.gainLossPct)}</span>
     `;

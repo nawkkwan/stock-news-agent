@@ -151,6 +151,7 @@ test("extractDimeHoldings reads Dime holding value with profit amount format", (
   assert.deepEqual(extractDimeHoldings(ocrText), [
     {
       ticker: "VOO",
+      portfolioWeightPct: 49.91,
       currentValue: 8244.27,
       costValue: 7455.56,
       gainLossAmount: 788.71,
@@ -158,6 +159,7 @@ test("extractDimeHoldings reads Dime holding value with profit amount format", (
     },
     {
       ticker: "GOOGL",
+      portfolioWeightPct: 15.69,
       currentValue: 2591.97,
       costValue: 2145.69,
       gainLossAmount: 446.28,
@@ -165,6 +167,7 @@ test("extractDimeHoldings reads Dime holding value with profit amount format", (
     },
     {
       ticker: "XLV",
+      portfolioWeightPct: 10.51,
       currentValue: 1735.48,
       costValue: 1819.31,
       gainLossAmount: -83.83,
@@ -186,6 +189,7 @@ test("extractDimeHoldings reads Dime rows when OCR keeps each holding on one lin
   assert.deepEqual(extractDimeHoldings(ocrText), [
     {
       ticker: "VOO",
+      portfolioWeightPct: 49.91,
       currentValue: 8244.27,
       costValue: 7455.56,
       gainLossAmount: 788.71,
@@ -193,6 +197,7 @@ test("extractDimeHoldings reads Dime rows when OCR keeps each holding on one lin
     },
     {
       ticker: "GOOGL",
+      portfolioWeightPct: 15.69,
       currentValue: 2591.97,
       costValue: 2145.69,
       gainLossAmount: 446.28,
@@ -200,6 +205,7 @@ test("extractDimeHoldings reads Dime rows when OCR keeps each holding on one lin
     },
     {
       ticker: "VXUS",
+      portfolioWeightPct: 12.38,
       currentValue: 2045.53,
       costValue: 2006.74,
       gainLossAmount: 38.79,
@@ -207,6 +213,7 @@ test("extractDimeHoldings reads Dime rows when OCR keeps each holding on one lin
     },
     {
       ticker: "XLV",
+      portfolioWeightPct: 10.51,
       currentValue: 1735.48,
       costValue: 1819.31,
       gainLossAmount: -83.83,
@@ -214,6 +221,7 @@ test("extractDimeHoldings reads Dime rows when OCR keeps each holding on one lin
     },
     {
       ticker: "MSFT",
+      portfolioWeightPct: 9.47,
       currentValue: 1564.31,
       costValue: 1502.38,
       gainLossAmount: 61.93,
@@ -221,6 +229,7 @@ test("extractDimeHoldings reads Dime rows when OCR keeps each holding on one lin
     },
     {
       ticker: "PLTR",
+      portfolioWeightPct: 2.05,
       currentValue: 338.19,
       costValue: 328.01,
       gainLossAmount: 10.18,
