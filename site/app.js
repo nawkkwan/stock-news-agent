@@ -6,6 +6,12 @@ const moneyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
 });
+const DIME_SAMPLE_TEXT = `VOO 49.91% 8,244.27 253.36 USD 10.58% (+788.71 THB)
+GOOGL 15.69% 2,591.97 79.65 USD 20.80% (+446.28 THB)
+VXUS 12.38% 2,045.53 62.86 USD 1.93% (+38.79 THB)
+XLV 10.51% 1,735.48 53.33 USD -4.61% (-83.83 THB)
+MSFT 9.47% 1,564.31 48.07 USD 4.12% (+61.93 THB)
+PLTR 2.05% 338.19 10.39 USD 3.10% (+10.18 THB)`;
 let latestStocks = [];
 let dimeHoldingsByTicker = new Map();
 
@@ -79,6 +85,13 @@ function setText(id, value) {
 
 function setDimeStatus(value) {
   setText("dimeStatus", value);
+}
+
+function showParsedText(value) {
+  const debug = document.getElementById("dimeParsedText");
+  const cleaned = String(value || "").trim();
+  debug.hidden = cleaned.length === 0;
+  debug.textContent = cleaned.length > 800 ? `${cleaned.slice(0, 800)}...` : cleaned;
 }
 
 function createCell(content) {
@@ -351,6 +364,14 @@ function applyDimeHoldings(holdings) {
 }
 
 function parseDimeText(value) {
+  const cleaned = String(value || "").trim();
+  showParsedText(cleaned);
+  if (!cleaned) {
+    applyDimeHoldings([]);
+    setDimeStatus("No text to parse yet. Upload an image, paste text, or click Try sample.");
+    return;
+  }
+  setDimeStatus("Parsing pasted/OCR text...");
   const holdings = extractDimeHoldings(value);
   applyDimeHoldings(holdings);
   setDimeStatus(
@@ -400,6 +421,11 @@ function setupDimeUpload() {
 
   document.getElementById("parseDimeText").addEventListener("click", () => {
     parseDimeText(document.getElementById("dimeTextInput").value);
+  });
+
+  document.getElementById("fillDimeSample").addEventListener("click", () => {
+    document.getElementById("dimeTextInput").value = DIME_SAMPLE_TEXT;
+    parseDimeText(DIME_SAMPLE_TEXT);
   });
 
   document.getElementById("dimeImageInput").addEventListener("change", async (event) => {

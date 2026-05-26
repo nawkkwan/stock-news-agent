@@ -334,6 +334,25 @@ main {
   font: inherit;
 }
 
+.import-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ocr-debug {
+  max-height: 140px;
+  overflow: auto;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f8fafb;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
 .import-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));

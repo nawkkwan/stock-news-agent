@@ -144,7 +144,11 @@
         </label>
         <img id="dimeImagePreview" class="upload-preview" alt="" hidden>
         <textarea id="dimeTextInput" rows="4" placeholder="Paste OCR text here if the image reader needs help"></textarea>
-        <button id="parseDimeText" class="button secondary" type="button">Parse text</button>
+        <div class="import-actions">
+          <button id="parseDimeText" class="button secondary" type="button">Parse text</button>
+          <button id="fillDimeSample" class="button secondary" type="button">Try sample</button>
+        </div>
+        <pre id="dimeParsedText" class="ocr-debug" hidden></pre>
         <div id="dimeResult" class="dime-result" hidden>
           <div class="dime-summary">
             <div>
