@@ -334,18 +334,25 @@ function parseDimeText(value) {
   setDimeStatus(
     holdings.length > 0
       ? `Found ${holdings.length} holding(s). Review the numbers before using them.`
-      : "No holdings found. Paste OCR text or upload a clearer screenshot."
+      : `OCR text read ${String(value || "").trim().length} character(s), but no holdings were found. Paste clearer text or try a cropped screenshot.`
   );
 }
 
 async function readDimeImage(file) {
   setDimeStatus(`Image selected: ${file.name}. Reading screenshot...`);
   const { createWorker } = await import("https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js");
-  const worker = await createWorker("eng");
+  const worker = await createWorker("eng+tha", 1, {
+    logger: (message) => {
+      if (message.status && typeof message.progress === "number") {
+        setDimeStatus(`OCR ${message.status}: ${Math.round(message.progress * 100)}%`);
+      }
+    },
+  });
   try {
     const result = await worker.recognize(file);
     const ocrText = result.data?.text || "";
     document.getElementById("dimeTextInput").value = ocrText;
+    setDimeStatus(`OCR finished. Read ${ocrText.trim().length} character(s). Parsing holdings...`);
     parseDimeText(ocrText);
   } finally {
     await worker.terminate();
