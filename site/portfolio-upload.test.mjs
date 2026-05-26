@@ -122,3 +122,53 @@ test("extractDimeHoldings scores Thai Dime labels for current value and cost", (
     },
   ]);
 });
+
+test("extractDimeHoldings reads Dime holding value with profit amount format", () => {
+  const ocrText = `
+    6 assets Holding Value (THB) % Profit & Amount
+    VOO
+    49.91%
+    8,244.27
+    253.36 USD
+    10.58%
+    (+788.71 THB)
+
+    GOOGL
+    15.69%
+    2,591.97
+    79.65 USD
+    20.80%
+    (+446.28 THB)
+
+    XLV
+    10.51%
+    1,735.48
+    53.33 USD
+    -4.61%
+    (-83.83 THB)
+  `;
+
+  assert.deepEqual(extractDimeHoldings(ocrText), [
+    {
+      ticker: "VOO",
+      currentValue: 8244.27,
+      costValue: 7455.56,
+      gainLossAmount: 788.71,
+      gainLossPct: 10.58,
+    },
+    {
+      ticker: "GOOGL",
+      currentValue: 2591.97,
+      costValue: 2145.69,
+      gainLossAmount: 446.28,
+      gainLossPct: 20.8,
+    },
+    {
+      ticker: "XLV",
+      currentValue: 1735.48,
+      costValue: 1819.31,
+      gainLossAmount: -83.83,
+      gainLossPct: -4.61,
+    },
+  ]);
+});

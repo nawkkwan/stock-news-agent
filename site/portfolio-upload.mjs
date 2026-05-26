@@ -1,4 +1,4 @@
-const MONEY_PATTERN = /-?\s*\d[\d,]*(?:\.\d+)?/g;
+const MONEY_PATTERN = /[+-]?\s*\d[\d,]*(?:\.\d+)?/g;
 const TICKER_PATTERN = /\b[A-Z]{1,5}\b/g;
 const IGNORED_TOKENS = new Set(["THB", "ETF", "USD", "NYSE", "NASDAQ"]);
 
@@ -61,6 +61,62 @@ function readAmounts(lines) {
     .filter((value) => value !== null);
 }
 
+function readPercent(line) {
+  const match = String(line).match(/[+-]?\s*\d[\d,]*(?:\.\d+)?\s*%/);
+  return match ? parseMoney(match[0]) : null;
+}
+
+function readThbAmount(line) {
+  if (!/THB|\u0e1a\u0e32\u0e17/i.test(line)) {
+    return null;
+  }
+  return parseMoney(line);
+}
+
+function pickDimeTableValues(lines) {
+  const valueCandidates = [];
+  const profitAmounts = [];
+  const profitPercents = [];
+
+  lines.slice(1).forEach((line) => {
+    const percent = readPercent(line);
+    const thbAmount = readThbAmount(line);
+    const amounts = readAmounts([line]);
+    const hasUsd = /USD/i.test(line);
+
+    if (thbAmount !== null && /[+-]/.test(line)) {
+      profitAmounts.push(thbAmount);
+      return;
+    }
+    if (percent !== null) {
+      profitPercents.push(percent);
+      return;
+    }
+    if (!hasUsd) {
+      amounts.forEach((amount) => {
+        if (Math.abs(amount) >= 100) {
+          valueCandidates.push(amount);
+        }
+      });
+    }
+  });
+
+  const currentValue = valueCandidates[0] ?? null;
+  const profitAmount = profitAmounts[0] ?? null;
+  const gainLossPct = profitPercents.length > 0 ? profitPercents[profitPercents.length - 1] : null;
+
+  if (currentValue === null || profitAmount === null) {
+    return null;
+  }
+
+  return {
+    currentValue,
+    costValue: roundMoney(currentValue - profitAmount),
+    gainLossAmount: roundMoney(profitAmount),
+    gainLossPct,
+  };
+}
+
 function scoreLine(line, type) {
   const normalized = line.toLowerCase();
   if (type === "current") {
@@ -110,6 +166,16 @@ export function extractDimeHoldings(ocrText, tickers = null) {
     );
     const endIndex = nextTickerIndex === -1 ? tickerIndex + 6 : Math.min(nextTickerIndex, tickerIndex + 6);
     const block = lines.slice(tickerIndex, endIndex);
+    const dimeTableValues = pickDimeTableValues(block);
+    if (dimeTableValues) {
+      return [
+        {
+          ticker,
+          ...dimeTableValues,
+        },
+      ];
+    }
+
     const currentValue = pickAmount(block, "current", 0);
     const costValue = pickAmount(block, "cost", 1);
     const gainLoss = calculateGainLoss(currentValue, costValue);
