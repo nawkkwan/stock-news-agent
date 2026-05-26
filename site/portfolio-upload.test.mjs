@@ -172,3 +172,59 @@ test("extractDimeHoldings reads Dime holding value with profit amount format", (
     },
   ]);
 });
+
+test("extractDimeHoldings reads Dime rows when OCR keeps each holding on one line", () => {
+  const ocrText = `
+    VOO 49.91% 8,244.27 253.36 USD 10.58% (+788.71 THB)
+    GOOGL 15.69% 2,591.97 79.65 USD 20.80% (+446.28 THB)
+    VXUS 12.38% 2,045.53 62.86 USD 1.93% (+38.79 THB)
+    XLV 10.51% 1,735.48 53.33 USD -4.61% (-83.83 THB)
+    MSFT 9.47% 1,564.31 48.07 USD 4.12% (+61.93 THB)
+    PLTR 2.05% 338.19 10.39 USD 3.10% (+10.18 THB)
+  `;
+
+  assert.deepEqual(extractDimeHoldings(ocrText), [
+    {
+      ticker: "VOO",
+      currentValue: 8244.27,
+      costValue: 7455.56,
+      gainLossAmount: 788.71,
+      gainLossPct: 10.58,
+    },
+    {
+      ticker: "GOOGL",
+      currentValue: 2591.97,
+      costValue: 2145.69,
+      gainLossAmount: 446.28,
+      gainLossPct: 20.8,
+    },
+    {
+      ticker: "VXUS",
+      currentValue: 2045.53,
+      costValue: 2006.74,
+      gainLossAmount: 38.79,
+      gainLossPct: 1.93,
+    },
+    {
+      ticker: "XLV",
+      currentValue: 1735.48,
+      costValue: 1819.31,
+      gainLossAmount: -83.83,
+      gainLossPct: -4.61,
+    },
+    {
+      ticker: "MSFT",
+      currentValue: 1564.31,
+      costValue: 1502.38,
+      gainLossAmount: 61.93,
+      gainLossPct: 4.12,
+    },
+    {
+      ticker: "PLTR",
+      currentValue: 338.19,
+      costValue: 328.01,
+      gainLossAmount: 10.18,
+      gainLossPct: 3.1,
+    },
+  ]);
+});

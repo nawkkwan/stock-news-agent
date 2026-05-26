@@ -66,11 +66,22 @@ function readPercent(line) {
   return match ? parseMoney(match[0]) : null;
 }
 
+function readPercents(line) {
+  return Array.from(String(line).matchAll(/[+-]?\s*\d[\d,]*(?:\.\d+)?\s*%/g), (match) => parseMoney(match[0]))
+    .filter((value) => value !== null);
+}
+
 function readThbAmount(line) {
-  if (!/THB|\u0e1a\u0e32\u0e17/i.test(line)) {
-    return null;
-  }
-  return parseMoney(line);
+  const match = String(line).match(/[([+\-\s]*\d[\d,]*(?:\.\d+)?\s*(?:THB|\u0e1a\u0e32\u0e17)/i);
+  return match ? parseMoney(match[0]) : null;
+}
+
+function readHoldingValueAmounts(line) {
+  const cleaned = String(line)
+    .replace(/[+-]?\s*\d[\d,]*(?:\.\d+)?\s*%/g, " ")
+    .replace(/[([+\-\s]*\d[\d,]*(?:\.\d+)?\s*(?:THB|\u0e1a\u0e32\u0e17)/gi, " ")
+    .replace(/[≈~]?\s*\d[\d,]*(?:\.\d+)?\s*USD/gi, " ");
+  return readAmounts([cleaned]).filter((amount) => Math.abs(amount) >= 100);
 }
 
 function pickDimeTableValues(lines) {
@@ -78,27 +89,18 @@ function pickDimeTableValues(lines) {
   const profitAmounts = [];
   const profitPercents = [];
 
-  lines.slice(1).forEach((line) => {
-    const percent = readPercent(line);
+  lines.forEach((line) => {
+    const percents = readPercents(line);
     const thbAmount = readThbAmount(line);
-    const amounts = readAmounts([line]);
-    const hasUsd = /USD/i.test(line);
 
     if (thbAmount !== null && /[+-]/.test(line)) {
       profitAmounts.push(thbAmount);
-      return;
     }
-    if (percent !== null) {
-      profitPercents.push(percent);
-      return;
+    if (percents.length > 0) {
+      profitPercents.push(...percents);
     }
-    if (!hasUsd) {
-      amounts.forEach((amount) => {
-        if (Math.abs(amount) >= 100) {
-          valueCandidates.push(amount);
-        }
-      });
-    }
+    readHoldingValueAmounts(line)
+      .forEach((amount) => valueCandidates.push(amount));
   });
 
   const currentValue = valueCandidates[0] ?? null;
