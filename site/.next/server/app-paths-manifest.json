@@ -1,0 +1,11 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/daily/page": "app/daily/page.js",
+  "/page": "app/page.js",
+  "/login/page": "app/login/page.js",
+  "/investing/companies/[ticker]/page": "app/investing/companies/[ticker]/page.js",
+  "/investing/watchlist/page": "app/investing/watchlist/page.js",
+  "/investing/journal/page": "app/investing/journal/page.js",
+  "/investing/page": "app/investing/page.js",
+  "/investing/journey/page": "app/investing/journey/page.js"
+}

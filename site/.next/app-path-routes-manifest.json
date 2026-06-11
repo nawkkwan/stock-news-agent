@@ -1,0 +1,11 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/daily/page": "/daily",
+  "/page": "/",
+  "/login/page": "/login",
+  "/investing/companies/[ticker]/page": "/investing/companies/[ticker]",
+  "/investing/watchlist/page": "/investing/watchlist",
+  "/investing/journal/page": "/investing/journal",
+  "/investing/page": "/investing",
+  "/investing/journey/page": "/investing/journey"
+}
