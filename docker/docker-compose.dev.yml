@@ -1,0 +1,28 @@
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    env_file:
+      - ../.env
+    ports:
+      - "${API_PORT:-8000}:8000"
+    command: uvicorn apps.api.app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ../apps/api:/app/apps/api
+
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+    env_file:
+      - ../.env
+    profiles:
+      - worker
+    command: python apps/worker/jobs/deploy_daily_report.py
+    volumes:
+      - ../apps/worker:/app/apps/worker
+      - ../data:/app/data
+      - ../prompts:/app/prompts
+      - ../reports:/app/reports
+      - ../apps/web/data:/app/apps/web/data

@@ -1,383 +1,181 @@
-# stock-news-agent
+# Portfolio Investment OS
 
-A small, safe Python project that creates a portfolio-focused stock news report from RSS sources and can optionally publish the same report text to Google Docs.
+Portfolio Investment OS is Kwan's private workspace for portfolio tracking, investment journaling, thesis notes, watchlists, and daily portfolio news analysis.
 
-The first version:
+The project is decision support only. It does not place trades, give financial advice, issue price targets, or implement real trading.
 
-- Reads holdings from `data/portfolio.json`
-- Supports US tickers and Thai tickers ending in `.BK`
-- Fetches free Google News RSS results for ticker and company-name searches
-- Deduplicates repeated articles by normalized title and URL
-- Saves raw news JSON
-- Generates a Markdown portfolio news report
-- Uses the OpenAI API when `OPENAI_API_KEY` exists
-- Falls back to a basic non-AI Markdown report when no API key is configured
-- Optionally publishes the Markdown report content to a Google Doc
-- Adds macro news context for Fed, inflation, yields, labor data, market sentiment, and the US dollar
-- Adds daily technical snapshots with EMA, RSI, MACD, support, and resistance context
-
-This project does not place trades, give financial advice, or tell you to buy or sell anything.
-
-## Project Structure
+## Structure
 
 ```text
-stock-news-agent/
-├─ data/
-│  └─ portfolio.json
-├─ scripts/
-│  ├─ fetch_news.py
-│  ├─ deduplicate_news.py
-│  ├─ summarize_portfolio.py
-│  ├─ publish_google_doc.py
-│  └─ run_daily_report.py
-├─ prompts/
-│  └─ portfolio_news_prompt.md
-├─ reports/
-│  └─ .gitkeep
-├─ .env.example
-├─ .gitignore
-├─ requirements.txt
-└─ README.md
+portfolio-investment-os/
+├── CODEX.md
+├── docs/
+├── knowledge/
+├── apps/
+│   ├── web/
+│   └── worker/
+├── packages/
+├── supabase/
+├── .github/
+├── docker/
+├── legacy/
+├── data/
+├── prompts/
+└── reports/
 ```
 
-## Setup On Windows PowerShell
+## Apps
 
-From the folder that contains `stock-news-agent`, run:
+- `apps/web`: Next.js App Router app backed by Supabase Auth and Supabase Postgres.
+- `apps/api`: FastAPI foundation service for research API readiness.
+- `apps/worker`: Python daily news/report worker.
+- `legacy/mongo-journal-api`: archived MongoDB journal API kept for reference only.
+- `legacy/static-site`: archived static site assets kept for reference only.
 
-```powershell
-cd .\stock-news-agent
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+## Supabase
 
-If PowerShell blocks activation scripts, run this once for your current user:
-
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-```
-
-Then activate the virtual environment again:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-## Add API Keys
-
-OpenAI is optional. Without an API key, the project still creates a basic report.
-
-To use AI summaries:
-
-```powershell
-Copy-Item .env.example .env
-notepad .env
-```
-
-Set:
+The active database source of truth is:
 
 ```text
-OPENAI_API_KEY=your_api_key_here
-OPENAI_MODEL=gpt-4o-mini
+supabase/schema.sql
 ```
 
-## Google Docs Publishing Setup
-
-Google Docs publishing is optional. If credentials are missing, the daily workflow keeps running and prints:
+The active journal table is:
 
 ```text
-Google Docs publishing skipped because credentials are missing.
+investment_journal
 ```
 
-To enable publishing:
-
-1. Go to Google Cloud Console.
-2. Create a Google Cloud project.
-3. Enable the Google Docs API.
-4. Enable the Google Drive API.
-5. Configure the OAuth consent screen.
-6. Create OAuth Client ID credentials.
-7. Choose Desktop app as the application type.
-8. Download the OAuth JSON file.
-9. Create a local `credentials` folder in this project.
-10. Save the downloaded file as `credentials/credentials.json`.
-11. Run the publisher once manually to authorize Google access:
-
-```powershell
-python .\scripts\publish_google_doc.py
-```
-
-During the first run, Google opens an authorization page. After approval, the project saves `token.json` locally so future runs can publish without repeating the browser login.
-
-Both `credentials/` and `token.json` are ignored by Git.
-
-## Edit Your Portfolio
-
-Edit `data/portfolio.json`.
-
-Example:
-
-```json
-[
-  {
-    "ticker": "AAPL",
-    "company": "Apple Inc.",
-    "exchange": "NASDAQ"
-  },
-  {
-    "ticker": "CPALL.BK",
-    "company": "CP All Public Company Limited",
-    "exchange": "SET"
-  }
-]
-```
-
-Use `.BK` for Thai tickers, such as `CPALL.BK` or `ADVANC.BK`.
-
-## Run The Daily Report
-
-Run the complete workflow:
-
-```powershell
-python .\scripts\run_daily_report.py
-```
-
-The script creates:
+The migration that preserves existing journal rows is:
 
 ```text
-reports/YYYY-MM-DD-raw-news.json
-reports/YYYY-MM-DD-deduped-news.json
-reports/YYYY-MM-DD-portfolio-news-report.md
+supabase/migrations/202606170002_rename_decision_journal_to_investment_journal.sql
 ```
 
-If Google credentials are configured, it also creates a Google Doc named:
+The migration that enables separate portfolios is:
 
 ```text
-Portfolio News Report - YYYY-MM-DD
+supabase/migrations/202606250001_multi_portfolio_foundation.sql
 ```
 
-Then it saves the Google Doc URL to:
+Core Investment OS tables:
 
-```text
-reports/YYYY-MM-DD-google-doc-url.txt
-```
+- `portfolios`
+- `companies`
+- `holdings`
+- `portfolio_transactions`
+- `watchlist`
+- `thesis_notes`
+- `investment_journal`
+- `news_items`
 
-You can also run each step separately:
-
-```powershell
-python .\scripts\fetch_news.py
-python .\scripts\deduplicate_news.py
-python .\scripts\summarize_portfolio.py
-python .\scripts\publish_google_doc.py
-```
-
-To generate files for a specific date:
-
-```powershell
-python .\scripts\run_daily_report.py --date 2026-04-26
-```
-
-To publish a specific existing Markdown report:
-
-```powershell
-python .\scripts\publish_google_doc.py --date 2026-04-26
-```
-
-## Website On Vercel
-
-This project includes a small static website in `site/`.
-
-The website reads:
-
-```text
-site/data/latest-report.json
-```
-
-It shows:
-
-- Report date
-- Stock and article counts
-- Portfolio impact table
-- Stock-by-stock source links
-- Buttons for Google Docs and NotebookLM
-
-To preview it locally, open:
-
-```text
-site/index.html
-```
-
-To deploy it on Vercel:
-
-1. Push this project to GitHub.
-2. Go to Vercel.
-3. Import the GitHub repository.
-4. Set the project root or output directory to `site`.
-5. Use no build command.
-6. Deploy.
-
-## Personal Journal Backend
-
-The live Vercel site can run the personal investment journal through Serverless Functions in `site/api/`. It is intentionally not a full login system. Public reads are allowed, while create/update/delete requests require an `ADMIN_TOKEN`.
-
-For Vercel, keep the project root set to:
-
-```text
-site
-```
-
-Then add these Environment Variables in the Vercel project:
-
-```text
-MONGODB_URI=mongodb+srv://...
-MONGODB_DB=stock_news_agent
-ADMIN_TOKEN=use-a-long-random-token
-```
-
-If `MONGODB_URI` is not set, the main website still loads and the journal section shows an empty disconnected state.
-
-Local Express backend is also available in `server/` for development.
-
-Install Node dependencies:
-
-```powershell
-npm install
-```
+## Environment
 
 Copy `.env.example` to `.env` and set:
 
 ```text
-MONGODB_URI=mongodb://127.0.0.1:27017
-MONGODB_DB=stock_news_agent
-ADMIN_TOKEN=use-a-long-random-token
-PORT=4174
+APP_ENV=local
+API_PORT=8000
+WEB_PORT=3000
+OPENAI_API_KEY=optional
+OPENAI_MODEL=gpt-4o-mini
+GEMINI_API_KEY=optional
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+SUPABASE_SERVICE_ROLE_KEY=backend-only-service-role-key
+TIDB_HOST=your-tidb-host
+TIDB_PORT=4000
+TIDB_USER=your-tidb-user
+TIDB_PASSWORD=your-tidb-password
+TIDB_DATABASE=investment_research
 ```
 
-Start the backend and static site together:
+## Web App
+
+Install and build:
 
 ```powershell
-npm run server
+npm --prefix apps/web install
+npm --prefix apps/web run build
 ```
 
-Open:
+Run locally:
+
+```powershell
+npm --prefix apps/web run dev
+```
+
+For Vercel, set the project root to:
 
 ```text
-http://127.0.0.1:4174/
+apps/web
 ```
 
-Journal API:
+## Daily News Worker
+
+Run the full daily report:
+
+```powershell
+python apps/worker/jobs/run_daily_report.py
+```
+
+Run and commit deployable web data:
+
+```powershell
+python apps/worker/jobs/deploy_daily_report.py
+```
+
+The worker reads:
 
 ```text
-GET    /api/journal
-POST   /api/journal       x-admin-token: ADMIN_TOKEN
-PATCH  /api/journal/:id   x-admin-token: ADMIN_TOKEN
-DELETE /api/journal/:id   x-admin-token: ADMIN_TOKEN
+data/portfolio.json
+prompts/portfolio_news_prompt.md
 ```
 
-Example journal entry:
-
-```json
-{
-  "date": "2026-05-26",
-  "ticker": "VOO",
-  "action": "buy",
-  "amount_thb": 3000,
-  "reason": "DCA into my S&P 500 core holding",
-  "thesis": "Long-term broad US equity exposure",
-  "mood": "Adding while staying within target allocation"
-}
-```
-
-## Daily GitHub Automation
-
-The workflow file is:
+It writes generated report artifacts to `reports/` and deployable web JSON to:
 
 ```text
-.github/workflows/daily-report.yml
+apps/web/data/latest-report.json
+apps/web/data/reports/YYYY-MM-DD.json
 ```
 
-It runs every day at:
+## FastAPI Foundation
+
+Run locally:
+
+```powershell
+python -m uvicorn apps.api.app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Check imports:
+
+```powershell
+python apps/api/check_api.py
+```
+
+Docker:
+
+```powershell
+docker compose -f docker/docker-compose.dev.yml up api
+```
+
+## Automation
+
+GitHub Actions daily news workflow:
 
 ```text
-08:00 Asia/Bangkok
+.github/workflows/daily-news.yml
 ```
 
-The workflow:
+It runs the Python worker and commits updated web data when the generated report is valid.
 
-1. Installs Python dependencies.
-2. Runs `scripts/run_daily_report.py`.
-3. Updates `site/data/latest-report.json`.
-4. Saves an archive JSON under `site/data/reports/`.
-5. Validates that the report contains real articles before deploy.
-6. Optionally publishes a Google Doc when credentials are available.
-7. Commits the updated site data back to GitHub.
-8. Lets Vercel auto-deploy from the new commit.
+## Project Rules
 
-GitHub secrets you can add:
+Start with `CODEX.md`, then read:
 
-```text
-OPENAI_API_KEY
-GEMINI_API_KEY
-GOOGLE_CREDENTIALS_JSON
-GOOGLE_TOKEN_JSON
-```
+1. `docs/project-overview.md`
+2. `docs/architecture.md`
+3. `docs/current-state.md`
+4. `docs/todo.md`
 
-`OPENAI_API_KEY` is optional. Without it, the workflow still creates a basic non-AI report.
-
-`GEMINI_API_KEY` is optional. If `OPENAI_API_KEY` is not set and `GEMINI_API_KEY` is set, the workflow uses Gemini for structured dashboard analysis.
-
-When `OPENAI_API_KEY` is present, the workflow sends a small capped set of RSS items per stock to OpenAI and creates structured dashboard fields:
-
-- Key takeaway
-- Possible impact
-- Bullish points
-- Bearish points
-- Valuation context
-- What to monitor next
-- Risk level
-- Confidence
-
-The analysis is decision support only. It does not recommend buying, selling, holding, or trading.
-
-`GOOGLE_CREDENTIALS_JSON` and `GOOGLE_TOKEN_JSON` are optional. Without both of them, Google Docs publishing is skipped, but the website still updates.
-
-To add Google secrets:
-
-1. Open the local `credentials/credentials.json` file.
-2. Copy the full JSON text into a GitHub repository secret named `GOOGLE_CREDENTIALS_JSON`.
-3. Open the local `token.json` file after you have authorized Google once.
-4. Copy the full JSON text into a GitHub repository secret named `GOOGLE_TOKEN_JSON`.
-
-## What Each File Does
-
-- `data/portfolio.json`: Your editable list of holdings.
-- `scripts/fetch_news.py`: Loads the portfolio and fetches Google News RSS articles for each ticker and company.
-- `scripts/deduplicate_news.py`: Removes repeated articles using normalized titles and URLs.
-- `scripts/summarize_portfolio.py`: Creates the final Markdown report with OpenAI, or a basic fallback when no API key exists.
-- `scripts/publish_google_doc.py`: Publishes a Markdown report to Google Docs as plain text and saves the Doc URL.
-- `scripts/analyze_technicals.py`: Fetches daily price data and calculates technical context. This is not trading advice.
-- `scripts/export_site_data.py`: Exports report data for the static website.
-- `scripts/run_daily_report.py`: Runs fetch, deduplicate, summarize, and export in one command.
-- `scripts/deploy_daily_report.py`: Runs the daily report, validates the site payload, optionally publishes Google Docs, and commits site data when the report is healthy.
-- `site/`: Static Vercel website.
-- `prompts/portfolio_news_prompt.md`: The AI prompt that enforces the safe, news-only report format.
-- `reports/.gitkeep`: Keeps the reports folder in Git.
-- `.env.example`: Template for optional environment variables.
-- `.gitignore`: Keeps secrets, virtual environments, caches, and generated reports out of Git.
-- `requirements.txt`: Python dependencies.
-
-## Future Codex Automations
-
-Later, you can connect this to Codex Automations so the report runs on a schedule.
-
-Suggested future flow:
-
-1. Keep this project folder on your machine.
-2. Confirm `python .\scripts\run_daily_report.py` works manually.
-3. Ask Codex to create a recurring automation that runs the command every market day.
-4. Optionally ask Codex to monitor the newest Markdown report and notify you when it is ready.
-
-TODO: Add a richer Google Drive folder organization step after the basic Google Doc publishing flow is stable.
-
-TODO: Add NotebookLM handoff after deciding whether reports should be exported as Markdown, PDF, Google Doc, or another source format.
+Before changing architecture, deleting tables, or implementing any real trading behavior, update `docs/decisions.md`.

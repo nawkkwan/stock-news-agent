@@ -1,12 +1,19 @@
 {
-  "name": "stock-news-agent",
+  "name": "portfolio-investment-os",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "server": "node server/src/index.js",
-    "test": "node --test site/portfolio-upload.test.mjs server/test/*.test.mjs",
-    "check": "node --check site/app.js && node --check site/portfolio-upload.mjs && node --check server/src/index.js"
+    "api:dev": "python -m uvicorn apps.api.app.main:app --reload --host 127.0.0.1 --port 8000",
+    "api:check": "python apps/api/check_api.py",
+    "web:build": "npm --prefix apps/web run build",
+    "web:typecheck": "npm --prefix apps/web run typecheck",
+    "worker:daily": "python apps/worker/jobs/run_daily_report.py",
+    "worker:deploy": "python apps/worker/jobs/deploy_daily_report.py",
+    "worker:check": "python -m py_compile apps/worker/jobs/deploy_daily_report.py apps/worker/jobs/run_daily_report.py",
+    "legacy:server": "node legacy/mongo-journal-api/server/src/index.js",
+    "test": "node --test legacy/static-site/portfolio-upload.test.mjs legacy/mongo-journal-api/server/test/*.test.mjs",
+    "check": "node --check legacy/static-site/app.js && node --check legacy/static-site/portfolio-upload.mjs && node --check legacy/mongo-journal-api/server/src/index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
