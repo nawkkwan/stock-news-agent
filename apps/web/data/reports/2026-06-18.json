@@ -1,0 +1,729 @@
+{
+  "date": "2026-06-18",
+  "generated_at": "2026-06-18T12:30:10+07:00",
+  "status": "ok",
+  "notebooklm_url": "https://notebooklm.google.com/",
+  "markdown_report": "# Portfolio News Report - 2026-06-18\n\n## 1. Executive Summary\n\nThe Federal Reserve's hawkish pause on interest rates, coupled with persistent inflation, sets a cautious tone for the broader market. While AI continues to drive sentiment for tech giants like Alphabet, Microsoft faces challenges with Azure growth and high expectations. Palantir's valuation remains a key discussion point ahead of earnings, while ETFs like VOO and VXUS reflect broader market and international trends, respectively.\n\n### Daily Briefing\n\nToday's market narrative is heavily influenced by the Federal Reserve's decision to hold interest rates steady, a move accompanied by a hawkish tone as inflation hits a three-year high and more officials signal potential future hikes. This macro backdrop creates a mixed environment for the portfolio. In the tech sector, Alphabet continues to garner attention for its AI initiatives and institutional interest, despite a key Gemini co-lead departure. Microsoft, however, experienced a notable dip due to Azure growth falling short of expectations and a failed Oracle deal, highlighting the impact of high market expectations. Palantir's valuation and upcoming earnings are central to its current discussion. Meanwhile, broad market ETFs like VOO are seeing discussions around underlying value and potential new constituents like SpaceX, while international ETF VXUS highlights global flows and distributions amidst a competitive landscape.\n\n### Cross-Portfolio Themes\n\n- Impact of Federal Reserve policy on market sentiment.\n- Ongoing focus on AI innovation and its valuation implications.\n- ETF flows and performance in both domestic and international markets.\n- Importance of earnings and guidance in shaping investor expectations.\n\n## 2. Portfolio Impact Table\n\n| Ticker | Company | Key News | Impact | Time Horizon | Confidence |\n|---|---|---|---|---|---|\n| VOO | Vanguard S&P 500 ETF | Discussions center on the intrinsic value of the S&P 500's constituents and the potential inclusion of high-profile IPOs like SpaceX, alongside broader market performance comparisons. | The potential inclusion of a large new company like SpaceX could slightly alter the ETF's composition and market cap weighting. Broader market sentiment, influenced by macro factors and tech sector performance, will continue to be a primary driver. | Mixed | High |\n| GOOGL | Alphabet Inc. | Alphabet remains a prominent AI player, attracting institutional interest, but faces scrutiny over governance and a notable talent departure from its Gemini AI team. | Continued focus on AI development could drive future growth, but talent retention challenges and investor concerns regarding governance and ESG could introduce volatility. Institutional accumulation by funds like ARK Invest signals confidence ahead of earnings. | Mixed | High |\n| XLV | Health Care Select Sector SPDR Fund | The healthcare sector shows mixed performance, with some small-cap stocks offering attractive valuations and growth, while larger constituents like Waters Corp and Cigna are noted for underperforming the sector. | The ETF's performance will be influenced by the balance of growth in smaller companies and the drag from underperforming larger constituents. Structured products tied to XLV indicate ongoing market interest in the sector's volatility and potential for specific strategies. | Medium term | Medium |\n| VXUS | Vanguard Total International Stock ETF | VXUS is part of a broader ETF market that has crossed a significant $1 trillion milestone in flows for 2026, and it has declared its quarterly distribution. However, a covered call ETF focused on international stocks is noted for outperforming it. | Positive ETF flows generally indicate investor interest, but underperformance relative to certain active or strategy-based international ETFs could lead to questions about its passive approach. Regular distributions are a consistent feature. | Long term | Medium |\n| PLTR | Palantir Technologies Inc. | Palantir's valuation remains a central theme, with some analysts noting its high price relative to its 'not normal' growth. The stock saw premarket activity ahead of quarterly results, and its CFO joined another company's board. | High valuation combined with upcoming earnings creates potential for significant price movements. Strong growth could justify the valuation, but any miss could lead to a sharp correction. The CFO's board appointment is a minor governance note. | Short term | High |\n| MSFT | Microsoft Corporation | Microsoft's stock slumped after Azure cloud growth fell short of market expectations, highlighting that high expectations are a significant risk. The company also walked away from a potential $3 billion deal with Oracle. | Underperformance in a key growth segment like Azure can lead to negative sentiment and price corrections. The failed Oracle deal, while not massive, adds to a narrative of missed opportunities or strategic shifts. High expectations will continue to pressure future performance. | Short term | High |\n\n## 3. Stock-by-Stock News\n\n### VOO - Vanguard S&P 500 ETF\n\n**News Summary:**\nDiscussions center on the intrinsic value of the S&P 500's constituents and the potential inclusion of high-profile IPOs like SpaceX, alongside broader market performance comparisons.\n\n**Possible Impact:**\nThe potential inclusion of a large new company like SpaceX could slightly alter the ETF's composition and market cap weighting. Broader market sentiment, influenced by macro factors and tech sector performance, will continue to be a primary driver.\n\n**Good Points:**\n- JP Morgan's David Kelly views the current economy as 'great for stocks' amid an AI-led bull market.\n- Potential for new, high-growth companies like SpaceX to be included in the S&P 500 over time.\n\n**Bad Points:**\n- Trefis questions if the underlying value of VOO's components justifies its current price.\n- Fidelity's Tech ETF is reported to be significantly outperforming the broad market, suggesting potential concentration risk or underperformance in non-tech sectors within VOO.\n\n**Valuation Context:**\nThe Trefis article directly questions the 'worth the price on the label' for VOO, implying a potential overvaluation based on its constituent companies. The comparison to Fidelity's Tech ETF suggests that while the broad market has performed, the tech sector has driven a disproportionate amount of recent gains.\n\n**Technical Context:**\nVOO's last close was 681.41, slightly below its 20-day EMA of 682.85, indicating short-term weakness. The RSI at 50.9 is neutral. MACD (3.74) is below its signal line (5.48), suggesting weakening positive momentum. Support is noted around 678.04-678.67, with resistance near 681.95-682.84. The trend is constructive, but momentum indicators show caution.\n\n**Relevance:**\nHigh - News directly addresses the valuation and composition of the S&P 500 ETF, a core portfolio holding, and its market context.\n\n**Alert Tags:**\n- Valuation\n- IPO\n- Macro\n- Fund flows\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nWatch for further analysis on S&P 500 constituent valuations, any updates on SpaceX's IPO timeline and potential S&P 500 inclusion, and the performance of the broader market relative to concentrated tech funds.\n\n**Sources:**\n- [Is What’s Inside VOO Worth The Price On The Label? - Trefis](https://news.google.com/rss/articles/CBMirAFBVV95cUxNQmRPeHZTbHJhd21vUWNDQm1RdUREazJBNGQ5NHc1Y2YzV3U3TURSSXFscG82TWFGS1pjTXdCb2hsd3hSZVJua0pwUnhOMEdianNtZlRkWTR4Y2VnN01WRllqU2RGLUFyanJyMHBwbll6RFdkUFZpd050ak1Cb0NhTDNTT3RrS09aSF9ueVd4WjhjNWpWQ3djLVl1Rm9Ma3l6ejBMSEVYa1pDdWh0?oc=5)\n- [$Vanguard S&P 500 ETF (VOO.US)$ My favorite moomoo ETF feature - Moomoo](https://news.google.com/rss/articles/CBMiogFBVV95cUxOcXNfWWJYSDcxb3NZQUF5NzRLWXkydmJSQUsyRGwxOGgza0lHUVAtVEdlRXppaWtqTGZ3cXRnQVRwUWZ2VEZoT0NLaDZoWXdKUlF2aXh6VXF4VlUyTk5sY05PeDVUQlRnc1QzcDJEbjRxek5FQmZFNGZmcGZlVks5LTV0cmo3NHRhUVoxU0t3OGJ6aG0zZks5dXVvbEhGWnlFOFE?oc=5)\n- [The SpaceX IPO Is Finally Here: This Is When It Might Be Coming to Your S&P 500 ETF - The Globe and Mail](https://news.google.com/rss/articles/CBMi-wFBVV95cUxNMzVvckZfZENVbXVCaUVKZldXVElSd2tmYkNUYk5qS1hvVWsxcUp3VnU5eC0tSGNuWFJGZmI1bjJKTkVMREszanlpcGc2c3JMbGs5WXZYQlhxNF9rV3BRVHRySjVhdjZ5YjZYWUp1Yk11SDlwNDhWUlRka3lVTmF3TFZnY1FsY3VUS0lyQl9mTDlma3Y4Y3ZWSW9ySndBR3NqaHBBRXdobFhaQm85bTFlZUdrX3ZVd1RiU2pTLTRVZFFGLXYxa0ZQWmcyUnpCaFJleEFWSmNtbDRDRmhuWUFzU0tXeFhGd19SVldVNFkwVEVkZFlUUTM1aW1scw?oc=5)\n- [Forget VOO: Fidelity’s Tech ETF Is Up 29% While the Broad Market Lags - AOL.com](https://news.google.com/rss/articles/CBMifEFVX3lxTE1XZnNKS0VkUkFUX25LUDNyOHJCVUhrZDI1VnpCZHVfRmN0cjYtRnZ1U0prb3VUeWgzTVBwQ29hVUJ0UTRxZ0s2dU8ta3FZQWZha1VTYW9MTXpmd1FFYkVyQkxZemd6RE9YMG94Rk5UcEplUlNZRkE5Qm5mUVk?oc=5)\n- [JP Morgan's David Kelly Says It's 'A Great Economy For Stocks' Amid AI-Led Bull Market Despite Inflation Risks - Benzinga](https://news.google.com/rss/articles/CBMi9gFBVV95cUxNVDdMWlRJLUZkLTBWdlBjWUx6VW5hbk1ZbXJzR2RzbTJXVk5qTGExa0F2TEJBX2ZBWllTWmI1d1lNeU5HZXZ6ZDQ3TzZ6UHhFQ2M4RnFCZmh0Uy1JblpPMUtCNTNGSHppOVVwWkNqM3F3S2kwWEp5Y19GRmNlSWpTLS14WTg0bEJqdU8zQ2NwTFFuWFRxNzBZWjFnQ0NPSzZLNnNWQWxTcDBQc1Q0aGNMTHNNTDQwbmRLcDBibi1zbmR4ZTNsaEVES0pVT2YtaVV3aWtoTmV1X3lvS2lKOVNqS2tiODN6U2w0YW9SOUhTZHVBSk1KZHc?oc=5)\n- [Coherent’s Good News Gets A Cold Shoulder - Trefis](https://news.google.com/rss/articles/CBMiowFBVV95cUxQRkhaRkczZDZLbEEyd2syOE5TTUxzaUdhV0ZGb0ZMV21kN1BxNDMybnZzZ296UkYwbENSWWZ0eVROeHRtVHEzdi10N3pCZVk5aDFwYXFRU2VJdWpWRjYxaXNkYWU0cWFPOUQxX1hyN05pc1kxV1dBYV80eXdOSXYweE1SRmVZaGdCX2ZiQnlCWHoydV9LZkFhUmtzcDlBc0hvaHA0?oc=5)\n- [VOO ETF — Vanguard S&P 500 Fund Holds ~$691 Near Its $699 High Into the Fed; 0.03% Fee, ~$1T AUM, Index Targets Above 8,000 - TradingNEWS](https://news.google.com/rss/articles/CBMinAFBVV95cUxQSnRHS1RGWHB1NXM3TGY2Mk1la2h4aGY3bXViVmlHQTBNU3VUSDlpWnRuX1diWkRfRnFJZ0ZrcExTQ1RNa0ViUzBRVmdNMXFoWnNMUjFrQmNmQVBUenBVOVB6ZktBSGJ6YXdqMk5CNGs1TlZOQ1pjZGc5UHZKRDFhUHFvZ1pUMWZYWXVNU2xNOU1vOU54YUtOLWVxVUM?oc=5)\n- [3 Best Vanguard ETFs for Growth Without the Stress - TipRanks](https://news.google.com/rss/articles/CBMihwFBVV95cUxNS3JPVk5WXzVqM1hfLXJmdlpYUWdMSTViendNajN6bXRXYi0wUncteE55UWlEZ1VZMTVyZ2h6QTNZcTRNLXdhVjlLZTZhSFFQZGxHQ013SWhVd1FUQWl6UWFieUZtdmhSNnIwV0c0ajd6Tk9yN3hjN25URVBzUWZ0UUR3ek1NclE?oc=5)\n\n### GOOGL - Alphabet Inc.\n\n**News Summary:**\nAlphabet remains a prominent AI player, attracting institutional interest, but faces scrutiny over governance and a notable talent departure from its Gemini AI team.\n\n**Possible Impact:**\nContinued focus on AI development could drive future growth, but talent retention challenges and investor concerns regarding governance and ESG could introduce volatility. Institutional accumulation by funds like ARK Invest signals confidence ahead of earnings.\n\n**Good Points:**\n- Considered a top AI stock in billionaire Dan Loeb's portfolio, indicating strong institutional confidence.\n- ARK Invest is reportedly increasing its holdings ahead of 'Mega Tech Earnings Day,' suggesting positive expectations.\n- Jim Cramer discusses Alphabet's AI chips, highlighting ongoing innovation in a key growth area.\n\n**Bad Points:**\n- Google Gemini co-lead Noam Shazeer departed for OpenAI, raising concerns about talent retention in the competitive AI space.\n- Investors may respond negatively to Alphabet backing AI spend while rejecting governance and ESG proposals, potentially impacting sentiment.\n\n**Valuation Context:**\nThe news highlights GOOGL's position as a leading AI stock, which often commands higher valuations. Institutional buying suggests a belief in its growth prospects, but concerns around governance and talent could temper enthusiasm if not addressed.\n\n**Technical Context:**\nGOOGL closed at 363.79, below its 20-day EMA of 369.6, indicating short-term bearishness. The RSI is neutral at 46.18. MACD (-1.98) is below its signal line (-0.41), suggesting weakening momentum. Support levels are around 357.77-361.63, with resistance at 364.26-369.35. The trend is constructive, but recent momentum is negative.\n\n**Relevance:**\nHigh - News covers key strategic areas (AI, talent, governance) and institutional activity, directly impacting Alphabet's outlook.\n\n**Alert Tags:**\n- AI\n- Earnings\n- Governance\n- Fund flows\n- Talent\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nUpcoming 'Mega Tech Earnings Day' for Alphabet's performance, further developments in its AI initiatives, any statements regarding governance and ESG, and talent movements within its AI divisions.\n\n**Sources:**\n- [Is Alphabet (GOOGL) The Best AI Stock in Billionaire Dan Loeb’s Portfolio? - Yahoo Finance](https://news.google.com/rss/articles/CBMilwFBVV95cUxOdDhGWlkyVzJUZUl3WFpWa29qQk1DMEthWmFGaEZtYVZCMEZKRkhMOU9lU2EwQXJjRWNFbVpTQVhMdWJzeVpsN0ZyREowbHA2UjhxZVpzSEExMjZ4a0FpVFRFSjZGTUtjSDdZZVpjM0JUc3l5NmRvQ2ZIWC0wTmZLRk8zY2p4ZHJmcmYxVEJRUTByYWRsRFpB?oc=5)\n- [Cathie Wood’s ARK Invest Loads Up On CRWV, GOOGL Stocks Before Mega Tech Earnings Day - Stocktwits](https://news.google.com/rss/articles/CBMi4gFBVV95cUxORFlYU3Q3eFBnYVhkbU9UcnF1NENHU3FfLVczXzZ4Vm1SUzRERlFyaTcyOU1ZaUl2QnRMM1pfam5RaHQzSXAwOGpuV0dySDA3MVNRR3hBM0NNQ0xiUnVGMW1sM1ppOWE2d2MzSllmckFLSGVESHJtQldiSEVobnNQbUdoZGRXTjFMQXMway1aZ2R5OVUwaDBjYTh5SmRGa0p4UXo3QkdnRU54azkxSmZBUTBsYk1ZYVhIanVaSzRRaUM0eFVzSktiRXZ5WlRWYnplSl8td3hhYThSODJIcjg1dWpB?oc=5)\n- [How Investors May Respond To Alphabet (GOOGL) Backing AI Spend While Rejecting Governance And ESG Proposals - simplywall.st](https://news.google.com/rss/articles/CBMiwwFBVV95cUxNQVM5aF9qVlR5ak1DWnRSa3pPNHRVVGdtSjdxemJlVE52LXNHNUtveEJEN2R3WGE2cU01MVR5OVRnb3ljUWs3eHhNSk9sSXhaa3NTbnA5eWY5cWt2cGFOdTlpcFNqbkZKa1ByYXlRNWUtREZocGNpbDR3T19CZFRUc2ZDRU9aalJRSnYxc0FTTndkcEJzZkVZR1BUTUdYUEx5Y0JoUW1UTkJleFVNb1FHNHBaend1WTVER2FWYlZLSFR6YXPSAcgBQVVfeXFMT0pmdVkwRVdCZGJJRUNaWmEwMEk0YU1wYnVtMl9qZ01vUmdaV09OUXEzSHlJYkRwdjVFbFF0U2h2V3pvN3hBRWRCRWtEMXhlVkZuZ1RjdkJqNm85TGZnUWF5dF93QXdmd2k5RGNaLWlfLXBxb2pEVUtyVmJaY29TVlVJX0NHc3pTRE10MlVndjA4RjM5NU9tRXMwNllLYW9KQUE1TzJhaXBsLW9kTG9mTlQ3TkNQUHNsQXdXSEVPckhyRlpyU1dzcU0?oc=5)\n- [Google Gemini co-lead Noam Shazeer departs for OpenAI (GOOG:NASDAQ) - Seeking Alpha](https://news.google.com/rss/articles/CBMilgFBVV95cUxPY0xjckVNbmRILU1lbkFDTFRaOXVIRG1WcUY3UC05VHZBYVgwcW1abHVBYk1FTGxVT05IQU4xNUFOWlAwMkI4RmFsSFROZ0RwM0IyZnhFZ1g3NGo4aWNrb2ZreU1Cd2RvY2szZUhXYWowVzlmTjVnd2N1d3VxbVphdXAwaUlZMTljNlAxVGF3YVZJYVd0N2c?oc=5)\n- [Futures Mixed, Oil Rises On Trump's New Iran Threat - Investor's Business Daily](https://news.google.com/rss/articles/CBMirgFBVV95cUxQQUYtVzRsaWU2bjBTWUo2MVdUTU1ZaVdIYUo1MVlvYnF2OUZQOVR1b1lFTG9nWEg2OXMzRzRmNmZ4N0lBd3l3cTRDaU9WRmFScEU4SVRaSGx5dFQ2UTZ4ZU40R3I1ak5wSFlGUmw1dUU3QU94ZEpRV1BZejZQSTh5aTNTUnNEa2Z5UEZoay1LX293REdzZWNWeklpWUViVUZ2c0l4VUtJZElweDJyNWc?oc=5)\n- [Jim Cramer Discusses Alphabet Inc. (GOOGL)’s AI Chips - Yahoo Finance](https://news.google.com/rss/articles/CBMingFBVV95cUxNQ3BwMGZ3OTFvU2Y1emZiZGM4NE1pMHlKQzFYS3FFczQ5MlhpallqUnJ1M2E1YmtERy1RSU9xc2NtNkp1MXR1cU9VdHBtLUZNZDJzOHhpdUdoVHV4YVV4WnBCNkVHSTVwMU5nVlZDWUZVa3ZGZjh3QVpOdGV3OGxHZnhLQzJQSkRvY1FIQldmd0pIanV5YllCMkhONkhMUQ?oc=5)\n- [Why GOOGL stock may have more room to run even after a 100% rally - MSN](https://news.google.com/rss/articles/CBMi0AJBVV95cUxQTVBkQ1hSYWx0UXdvdlQ1ckctQnl1NUdsbXhScG5tSDJvWnRaaDRTVDRVY1FmelBoM3VQclRZbk5HeWVia0o4Y29TbXdPSGYwMWdhQ1BLbDdNNm41UzFobWRuMDhzYXdSbkxNekpYRnBMa3U4aVZ1MDdSbXA1Q3VVUlZvcE1CU1NHY1AwWUFiaV8zUlFHVDlWN0dQeUxlS1FyOHJNVXJ2cU9SX0dES2tLaTN0ektIbkNNZ25pUEVfYnppcXpYU2ZKZHJtMzl0bUR5VE5rWDhrSGxfMk93QUJNSDQzLVFVQXA1OWR5am5OSFdzYkVvQ2xvQ2xKZUdCaHBzaF9TZzdUWXFBQ2ltLU11bi1YX3pFVkkyZ0V1cThvbDJwMUYwa0U1azRjVmo4ZHJibzRtNWRMLUYzYUREcEVVZGhZYlNXQk9PcWlsZklzZnI?oc=5)\n- [Citigroup (NYSE: C) sells autocallable notes linked to GOOGL, MU, NVDA - Stock Titan](https://news.google.com/rss/articles/CBMiogFBVV95cUxNYWR6MkdLME9oQW11VVA5eXhOcTJfODR1NkphYUdNT1hjZzVJRXA4alk5M3VyRG00OGg1TDdiVjlVanhBdTVlTmcwVXJTczUyZGlyM0JPc1B3T1pXZTFwWWtQTlZhUHB5c0hnZmVxRlo4STc0dlByM3piRHBVdzJtQm1KWWJVN0FBVFl4NXRlWm5UMFpvWEdQdi03OFpIY3RrS2c?oc=5)\n\n### XLV - Health Care Select Sector SPDR Fund\n\n**News Summary:**\nThe healthcare sector shows mixed performance, with some small-cap stocks offering attractive valuations and growth, while larger constituents like Waters Corp and Cigna are noted for underperforming the sector.\n\n**Possible Impact:**\nThe ETF's performance will be influenced by the balance of growth in smaller companies and the drag from underperforming larger constituents. Structured products tied to XLV indicate ongoing market interest in the sector's volatility and potential for specific strategies.\n\n**Good Points:**\n- Some small-cap healthcare stocks are identified as having revenue growth and attractive valuations.\n- Intuitive Surgical (ISRG) is highlighted as a growth story, potentially contributing positively to the sector.\n\n**Bad Points:**\n- Waters Corporation (WAT) is reported to be underperforming the Health Care Sector.\n- Cigna (CI) is also noted for underperforming the healthcare sector.\n\n**Valuation Context:**\nThe mention of 'attractive valuations' for small-cap healthcare stocks suggests potential pockets of value within the sector. However, underperformance by larger components like WAT and CI could weigh on the overall sector's valuation perception.\n\n**Technical Context:**\nXLV closed at 150.71, slightly below its 20-day EMA of 150.85. The RSI is neutral at 51.56. MACD (1.56) is just above its signal line (1.54), indicating slightly positive momentum. Support is found around 149.03-149.55, with resistance at 150.88-152.22. The trend is constructive, with positive but weak momentum.\n\n**Relevance:**\nMedium - News provides insights into sector dynamics and performance of underlying constituents, which directly affect the ETF.\n\n**Alert Tags:**\n- Sector\n- Valuation\n- Earnings\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nPerformance of key large-cap healthcare companies, growth trends in small-cap healthcare, and any sector-specific regulatory or innovation news.\n\n**Sources:**\n- [Health Care Select Sector SPDR (XLV) Key Pivot Points Analysis - GuruFocus](https://news.google.com/rss/articles/CBMisAFBVV95cUxPOEh4dkhQR29vMVdLeUFLVDQ3VjlzSEs2NXJaMWtROGZ3WGJLOE1VTF9tQ2t2ak1wX2RuY3J6Z3NLZjQwUVdoUTYwMi1nbGtGNG1HTGxsT3U1LWdvbmJYNEJjSWhacTh0UEF2S2syRzh0blJ6anRXM2tZa0ZCRDFuc1Y3MFBCaThPQXJKenlrMjRGcnBidHEzTFVxOTlYdWdCSU55YVVsZm1oX3BvYVRZOQ?oc=5)\n- [These small-cap healthcare stocks pair revenue growth with attractive valuations (XLV:NYSEARCA) - Seeking Alpha](https://news.google.com/rss/articles/CBMiugFBVV95cUxQS3lqcjVrX3BXRTA1RUxDanQ5bEpjanJwaVluZmhQZ2NiTFlMTHRETkhTeWxoWFVJd3NLLUdfV3VXZXM0TDk1bEs5S0w4clNsVjlzRjc3NHV2LXRURDhLQ0c3X0tvNzRXUllGd3hNWVg1dFBrcW8xVGdTTjVuaHpUWFBMUk9pWDNpS2dQcUIzdTdNb0JFWGRVTmxDc19OdHFfZ1dwZDd6TTJoSXFkNXFXLUxCLU1FUkREQ0E?oc=5)\n- [UBS (AMUB) offers $1,000 Trigger Callable Notes tied to XLE, XLU, XLV - Stock Titan](https://news.google.com/rss/articles/CBMinAFBVV95cUxOSnlWSTg4UlN4TEJEcC1qaF91TUtHYW4tc1pIeW9uOU5xaG4zdDJvMFQxV3V1RVdLR1N4a2p5SWt1cUh1SmlaaGk5VmNpRWZRVkloX1VpTXNSSEc5SXRsbW1sM2FzRmt3Y1FnWVZWUWczUXZoaUZBaDdmYmFnR2tPQmRaa1NOeGN3dy1JX0phdFN4WXN6Tkw0NUxycG4?oc=5)\n- [Intuitive Surgical: A Growth Story You Should Have On Your Radar (NASDAQ:ISRG) - Seeking Alpha](https://news.google.com/rss/articles/CBMipwFBVV95cUxPUUxreW5zUmlTNHQxV2J5VlRLWk1sUW1CeXZSZTYtQlV2TXhvTHVuU0djdkwxS3pEVWl2YjBRLTRTdk53UllNLUZMY3piUWRycUpERzJBeVFOVG1tRnpHQmJscEN3SHpIR0g0cy16TG5JSlp2VVZrZXQ0dUdhVXlLR1prUFZFejNDQmVTOW1Nclc1cEMxSUhfOTI5NnVNbGJrTVhaTy1wQQ?oc=5)\n- [Waters Corporation Stock: Is WAT Underperforming the Health Care Sector? - Barchart.com](https://news.google.com/rss/articles/CBMitAFBVV95cUxOSXg2ZzV5bm5xWFB0UjU2VzVYQjdPY3MzbnRqTDd6djBBbGduQ19WYktxNTItUjVBWUJRQnZUV0lUSnFzeHdPRWx0S0FUNnk0UFpBNU9rQ0ZLMFRNeUhIaFd4Nk5SSUN6dnV6WlNWNGtTTFgtU2JOYXZ0Z01ZZUstQW5xX1ZBTDFzWFYtS1hMNlNWeWRWYXpnUXo4b3RSdjVTSFpxckZ5OXFCVDVGUGxibl9qZUg?oc=5)\n- [Cigna stock: Is CI underperforming the healthcare sector? - MSN](https://news.google.com/rss/articles/CBMixgJBVV95cUxPcHBXRHU0ekxRUVBnblJNQkItbW9udWdXN2llajE1cXQ0ZE1hQ0N2Sm41R0VGXzE4RURVMHFqd1FOOUh0YkFYVEJTYnRaaW1DOTNIRl8tQjNWMDZ0UV9WYWJ6anMxaE04SGFObklwaTBmUVpTR0FpNmpWTWpRS1dZUlA1bUFKUUF5Yzkwa0Nkc3VxUjN6dGNTdFFLcG5PZHpKS2lFQnk1d1h4RS1ldV9PQThnbVJCZXZYbEZVWXZjdExUU0o4X2VBNHhYQ1R4bTJWWEpiQnYyWkt5UjF2M1FpV216MVdHRS1idGx0QU8xNl9pOFd1ZDc4NE9WdHpHYjZxVkE1T2JsQlRFYnYybTF1WC1qbkdWcmRZdlBFNG8tb2lZeDNTQVFoTzRQTTFONkp0ejVEZzlLTUZnYWY3S05UUEhPRERkdw?oc=5)\n\n### VXUS - Vanguard Total International Stock ETF\n\n**News Summary:**\nVXUS is part of a broader ETF market that has crossed a significant $1 trillion milestone in flows for 2026, and it has declared its quarterly distribution. However, a covered call ETF focused on international stocks is noted for outperforming it.\n\n**Possible Impact:**\nPositive ETF flows generally indicate investor interest, but underperformance relative to certain active or strategy-based international ETFs could lead to questions about its passive approach. Regular distributions are a consistent feature.\n\n**Good Points:**\n- 2026 ETF flows crossing the $1 trillion milestone indicates strong overall investor interest in ETFs, including international ones.\n- Vanguard ESG International Stock ETF and Vanguard Total World Stock ETF declared quarterly distributions, reflecting consistent income generation.\n\n**Bad Points:**\n- A covered call ETF focused on international stocks is reported to be outperforming Vanguard's biggest international ETF (VXUS), suggesting potential for alternative strategies to yield better returns in the current environment.\n\n**Valuation Context:**\nThe news does not directly discuss VXUS's valuation but rather its performance relative to other international strategies and its distribution schedule. The broader ETF flow milestone suggests continued capital allocation to diversified funds.\n\n**Technical Context:**\nVXUS closed at 86.15, above its 20-day EMA of 85.15, indicating short-term strength. The RSI is neutral at 55.83. MACD (0.59) is above its signal line (0.55), suggesting positive momentum. Support is around 85.85-86.06, with resistance at 86.25-86.96. The trend is an uptrend, supported by positive momentum.\n\n**Relevance:**\nMedium - News covers ETF flows, distributions, and comparative performance, all relevant to an international ETF holding.\n\n**Alert Tags:**\n- Fund flows\n- Distributions\n- Macro\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nGlobal economic indicators, currency fluctuations, and performance of international markets. Also, observe flows into various international ETF strategies.\n\n**Sources:**\n- [A Covered Call ETF That Pays 6% Is Beating Vanguard’s Biggest International ETF Right Now - AOL.com](https://news.google.com/rss/articles/CBMidkFVX3lxTE1hVEp2QUZrVEkzLXpaU2NKYmVkY2JueV8xQjlaZXV6amtYSi1DTjRFQWYzN01fdHZNOXdxRXBtLVRBSExRd2lfdHI3LUR3Zlh4N2tjVnJuYzFhLWl6WmNWZ255MHU5MXVaNm1hclBsanE0YXhLSWc?oc=5)\n- [AG Stock To $30? First Majestic Silver May Extend Hot Rally After Hitting Record High On Blowout Q4 - Stocktwits](https://news.google.com/rss/articles/CBMivgFBVV95cUxPTi1pSDh2WGxUeGFfTTF5TXBOWHVsU1EzRTJsNVQxalN3R0hhbTFPbmppMEpWYk51QUNhWW82ek5GZWlhdE1XSzZRYTIxa1U0QjlYaDQ5dWFyNHo2NzNVc2MyOS1IZ0Fndkk4VnNqbzdxWnMyMXZUSjBGdmwxaHVtTVBHcHJFNDlRSDJjUDFVUmNSSzFaVG5ZVVpUa0d4UGNabGI0Z0tHUnBacmlLZG85X01aUkVrVTFZemIxbmdB?oc=5)\n- [2026 ETF Flows Cross $1 Trillion Milestone Before Summer - ETF Database](https://news.google.com/rss/articles/CBMilgFBVV95cUxNUTJFZWxuNFQyQ0d3S0FPRE1fQUdZVVZqTkE3U1hFMG4tMHJYS3lIdlQyYjk1T1V6V2dYcllPYnM0b1VpLVZlZlJLZmNrMi1RM05HdXlUT2IxTUFwZW5wLVZDcTJtUW5rVXNCVU5JM2MzS2xVWjA3dndTWEdrSi1aemM2RnJtaUZ0RzJ3NTRKM2E4REtmbnc?oc=5)\n- [Vanguard ESG International Stock ETF declares quarterly distribution of $0.6820 - MSN](https://news.google.com/rss/articles/CBMizAFBVV95cUxQOWdIY09QQ2wzbEs5MC1RUGRLZXEwTzdoNmktS2U0WTU2ZF94OExBT283Z2M1VVVsNU5ia2twLXJoM0dRWENkQ0RXY25oWmNIYTBuQ1d1UDAwejFpckdsREl2SVRvdG9lSndmVTlSNHB0dDRRbldaRE50eTFwT2dSUkszcXFQZEg2dnZsTUI4Sm10TWNzSXJkWHl2YnBJU2ViSGZWYzJLazhJRUcyMEhoSG54ZHVFZ2h1N3Ffdk15Tl91SlBCSDZHdE82WWk?oc=5)\n- [Vanguard Total World Stock ETF declares quarterly distribution of $0.5627 - MSN](https://news.google.com/rss/articles/CBMi5wJBVV95cUxNSExoTFJjTE5WUTJPaWpOY2lUcWFYMV9DX3FhQmlmQldaODhYNkswMGVOYksxTElQYUkyU3NfbnNkc25iVHM4RVA5czdpRnVNUm5QU2JiVDJvaFc4UFczaENpdWJfdjlHQWtxOUxkbWRKNUMtYnVrVV9oc2VoNTdoSW1OcjRnS1dsM0wzTGJVZnpjcm04T3lLRzlOV29vOW92ejczeGVxLUliR1hKbVVjbllfUDVWU205N1ZSOXA1RGc5UFduQThiOVlkUVZmZl9TeTFoVUJ6VC0tVXdPVFA4dERWc2hkNGNHV2t2cEVXLUdtN21kVERUWFljemJ3WDloREUxX1Jtb2lFODRiZUJ1M1pkem44X2t2STU3NGM2Z2VBM2VGdWl3Zmlob3RKV2pOT3hwZzhrQWp3QU1UclJOaWFXdUw2RDJqRWF4TUFrMjVCMHZSenNENjE5RVpsOEt2X0JGc3ZRNA?oc=5)\n\n### PLTR - Palantir Technologies Inc.\n\n**News Summary:**\nPalantir's valuation remains a central theme, with some analysts noting its high price relative to its 'not normal' growth. The stock saw premarket activity ahead of quarterly results, and its CFO joined another company's board.\n\n**Possible Impact:**\nHigh valuation combined with upcoming earnings creates potential for significant price movements. Strong growth could justify the valuation, but any miss could lead to a sharp correction. The CFO's board appointment is a minor governance note.\n\n**Good Points:**\n- The company's growth is described as 'not normal,' suggesting strong underlying business momentum.\n- Premarket rise noted, indicating some positive sentiment ahead of quarterly results.\n\n**Bad Points:**\n- Valuation is consistently described as 'expensive,' raising concerns about its current price point.\n- Mixed retail investor views and a 'dull setup' ahead of earnings suggest uncertainty and potential for volatility.\n\n**Valuation Context:**\nMultiple articles emphasize Palantir's high valuation, with phrases like 'expensive' and questioning what its valuation 'implies.' This suggests that the current price already discounts significant future growth, making it sensitive to earnings and guidance.\n\n**Technical Context:**\nPLTR closed at 130.63, significantly below its 20-day EMA of 136.31, indicating strong short-term bearishness. The RSI is neutral at 43.11. MACD (-2.41) is below its signal line (-1.39), suggesting weakening momentum. Support levels are around 130.21-130.60, with resistance at 134.71-135.26. The trend is a downtrend, with negative momentum.\n\n**Relevance:**\nHigh - News directly addresses valuation, upcoming earnings, and growth prospects, which are critical for PLTR.\n\n**Alert Tags:**\n- Earnings\n- Valuation\n- AI\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nPalantir's quarterly earnings results today, particularly growth metrics and future guidance. Also, watch for any further commentary on its valuation and market reception to its AI offerings.\n\n**Sources:**\n- [PLTR Stock: What Does Its Valuation Imply? - Yahoo Finance](https://news.google.com/rss/articles/CBMinAFBVV95cUxPUkNjVWVPY1RLRS15X21XVWNxRWZsekNDOWxlOHRDS1paRnp2dVk4Z3N4WUNsazRQUERyRVpjUUFGU2kyZHJWd1psd2tDYU5Uc3FlV0FOeGd4cWpiN0l4VjR3T1I3Zk9FQ3JUdFBtWDB4R1hNV2w1SjRUUW9BVUt1bWN0cnp2Q1g1YkkzOC1HTTR0c3RSM1dmZTBzb3A?oc=5)\n- [Palantir: The Stock Is Expensive, But The Growth Is Not Normal (NASDAQ:PLTR) - Seeking Alpha](https://news.google.com/rss/articles/CBMiowFBVV95cUxPYk9fNDFyMUp4S0dNR0dBV2hnV3U5SmdUd1ZMamJ5U05kTExpZmYwTFNFTU0teHlDODlMNnhrajRnSVphalZwQ1BUajZlTEFUblF4OXpBN1N4dHFhSDFXRzcyeWUxdzhYZTEtSlYzeEFDTk5yaUpYYTFvZ3NrenRHVzFhMzMyWGxWU1RCSUw1d3hUZm9PRE9FRXZKUENmc3NabFpB?oc=5)\n- [PLTR Rises Premarket: Rangebound Stock, Mixed Retail View Signal Dull Setup Ahead Of Quartely Results Today - Stocktwits](https://news.google.com/rss/articles/CBMi_gFBVV95cUxNSjg3RzBnbVpHZERWQm16VDduamg5MUlIYjdqeUZrWmZDN1VseUkwaFd2WnhXaXI0R3pkWG9FTjdnU3BqOC1UWGpkckFGODBhcmM2MndMQnp4ZWg0blRzQWdzNE1WaXVoVDRaNzE2US0yakppMVdoZEN1T08zd2pQZXQxamUzRnFQMUZlT09TbHB6VC1vZ0FMTWpVYmRKTDdQaEtPMGZ4M1B5UEV6NjBpYmpBZTgzMFg0Ql9SN3VSdmdTRWROOVZYaHozeWVtV3lMa2hCLTgtR2NUREo1M1JQWEhJd2pOZ0F6WjZQeXdueEtUVVNpOG1jS2dCMl9vdw?oc=5)\n- [Playlist taps Palantir CFO David Glazer as board director - Stock Titan](https://news.google.com/rss/articles/CBMivgFBVV95cUxOdzdqUDI4Mnp1OUVEQnJxMnNlVTRGT080UU5RVHluRFFVY19QWFBxSll1ZU5xV1AxdGtvUTZyTkhIdTJDWVE4eGxFcmxuYVVJbzNuZkNScVVlekVNWmd3Mkp1U2tLaWprdURfbDFFbTE2UzVHRnJibERKc2p4QXV3S2R3a29NUlFqUVhnX2RIclljeS1JaG5XMWtqaldTZUhNVE1TTWVVRUVsbi02Y0FxdFlTUXdXcFlfVmtJNWpR?oc=5)\n- [PALANTIR GOOGLE TAKEOVER!! $1 TRILLION PLTR STOCK POWERHOUSE CONFIRMED?! - PALANTIR STOCK NEWS TODAY Ice Crackdown Foreign Student Opt (gYGtLqFIct) - Fathom Journal](https://news.google.com/rss/articles/CBMiZEFVX3lxTE1vOFhyTDRPb1BvWkx2eHVQbThRZUdIcm43MFAwNUlhZTlraUV1WjgzaDVWTjFRYnU1am5BRll5cVFGaGoyMEkxS2RZTkV5T1VWNlBrVFhPRUVZNEowc0hKdWJvSlY?oc=5)\n- [One Big Stock Market Sunday | AI Boom, Big Tech Earnings (AMD, PLTR) & Market Outlook Nick Foligno (9TTeXyMuXY) - Mshale](https://news.google.com/rss/articles/CBMiYEFVX3lxTFBKbzhQWTdNSktBb3J0eFZpeEJxa2l5X0l2c1dnS3NCR2VVUTZ3dDJnRE5EZlRQVEN2ZWJ3X3FYNVpfLXZHYzRua0RGdUd2SS1sYTJXTGt6YUQwZ0xYcWZPdQ?oc=5)\n- [Palantir Grew Revenue 85% and Raised Full-Year Guidance by 10 Points — So Why Is PLTR Down 26% YTD? - TradingKey](https://news.google.com/rss/articles/CBMiiwJBVV95cUxQNmM2SURNRGVLR0RMNmJYbUJidUVteEZBTkRuejNZX2JTMHo4SG5jVnhlbFBrd0FsUFpSTmg3ZGp6RlpzalpSNTlNVElFRGVJRVdQWjJQb2N4WndtWXpHNFZMQVNlLUJrNEpRMDd1X3kyUHk3cWtIeFBLNGpOOEF1MVc0cXBkUlZHcVhjenM2MDhmQ1NRbGk5TFVPV0xTbGNxRHQ2YlRMcnNINVhrOG9aUUZWQl9wa3BWRTItVmpMcHhVNUNoZXZuLTN4dUJ0Nm5HLWp4MTEtUFo0eFQ0RWYxa1VvVkZZR1JPdVh4XzhMdFBmNGY5MUY5a3NMVmxLSjBTWjlFOHBXb01mSkk?oc=5)\n- [Michael Burry Fires Back At Elon Musk In AI Warfare Debate — Says Palantir Is ‘Overpromising,’ Not Anthropic - Stocktwits](https://news.google.com/rss/articles/CBMi1AFBVV95cUxOcTNjQ0JZWnhlZWh4b25aLW9zc2Flci1kUWJfNEY1cUxOUkJja0ctc0pnYkF3MEw5Uk1xZ0F5VmRjOTBSX1JJM3ZZTi1ETlN3bVRYN1RvM2FjV3lJamJkcEFIZ0FseVBtYk9VOHBYQlVJcXB0UFRYVFhxV2h4NTU4Yml4RUxpTm1TQW8zYnNoWnN6c2NUSlpNYlBreXpRamxIckpVeTQzY0dZaFkySE12UzNPODBjT0QtcjhoeTJBREpSUWI4WmtlQVJ1MDV4T2NncmRtMw?oc=5)\n\n### MSFT - Microsoft Corporation\n\n**News Summary:**\nMicrosoft's stock slumped after Azure cloud growth fell short of market expectations, highlighting that high expectations are a significant risk. The company also walked away from a potential $3 billion deal with Oracle.\n\n**Possible Impact:**\nUnderperformance in a key growth segment like Azure can lead to negative sentiment and price corrections. The failed Oracle deal, while not massive, adds to a narrative of missed opportunities or strategic shifts. High expectations will continue to pressure future performance.\n\n**Good Points:**\n- No explicit bullish points from today's news, as the focus is on recent underperformance and risks.\n\n**Bad Points:**\n- Azure growth fell short of expectations, leading to a stock slump.\n- Microsoft's stock moved down by 3.13% on June 17.\n- The Motley Fool attributes the slump to high expectations, which Seeking Alpha also identifies as the 'biggest risk.'\n- Microsoft walked away from a potential $3 billion deal with Oracle, indicating a missed M&A opportunity or strategic disagreement.\n\n**Valuation Context:**\nThe news suggests that Microsoft's valuation incorporates high growth expectations, particularly for Azure. When these expectations are not met, even slightly, it can lead to a significant re-evaluation by the market. The stock's dip reflects this sensitivity.\n\n**Technical Context:**\nMSFT closed at 378.91, significantly below its 20-day EMA of 407.65, indicating strong short-term bearishness. The RSI is at 34.66, nearing oversold territory. MACD (-7.12) is well below its signal line (-2.09), suggesting strong negative momentum. Support levels are around 370.24-371.93, with resistance at 382.17-388.18. The trend is a downtrend, with clear negative momentum.\n\n**Relevance:**\nHigh - News directly addresses a significant stock price movement, a key business segment's performance, and strategic decisions.\n\n**Alert Tags:**\n- Earnings\n- Guidance\n- M&A\n- Cloud\n- Expectations\n\n**Why It Matters:**\nPortfolio holdings can move when company-specific or fund-specific headlines affect expectations for growth, valuation, sector sentiment, regulation, liquidity, or macro exposure.\n\n**What To Monitor Next:**\nFuture Azure growth reports, any strategic announcements regarding cloud computing, and how the company manages market expectations for its various segments.\n\n**Sources:**\n- [Microsoft Corporation (MSFT) Fell as Azure Growth Fell Short of Expectations - Yahoo Finance](https://news.google.com/rss/articles/CBMipAFBVV95cUxOY1ZhemZTOVJQQVhjaGl1b1ctSVBJekJkVkI2VHFzeGQ2TGpsbW1uLUFjajNpdGJEWWpGaV9VSGRTRVZ1Y0NjTnVFeExHMWJBQU1QX2FQVEFWS3Z2RWR1TkRMRHV5RnI1cFlJeGpQS1ZSS1BCc1NDVXA4M0syX0s5YU9xTlRhZVpNTWNTTlNudF9ManducnpuWTBldzZ2MnhtTnM2VA?oc=5)\n- [Why Microsoft Stock Slumped Today - The Motley Fool](https://news.google.com/rss/articles/CBMiggFBVV95cUxNSlQ5Tk5rQUM4LTUzY2VodlN4bldrbXB6Wi1DWW1vTXh1eUVCdEFla2NkWlhzakRJN1dyNmtYLTd2RzM1WVF1djVjRE5xa3pjNFFnd2dmQ2o5a0w5V2puc2dkTVFLYW1oQ21zZHUxa3EyVHVBMU1reXltWWE0OEVqTmd3?oc=5)\n- [Microsoft Corp Stock (MSFT) Moved Down by 3.13% on Jun 17: Drivers Behind the Movement - TradingKey](https://news.google.com/rss/articles/CBMiiwFBVV95cUxNeVZUUXp0OC03RjJ4TnUyTmNpQ01meTBqbmxqWHJWR2VkM0lGWUlqd0x0TDRzQUJzUmlzZkktbG9iWUNKZi1vdGVIdklLd3lpU1JweVZNM1ZHQjdRUlFFOUl5aERhT1RZOHZYYk1OeXBUYmk3ZGFpeTRsZjlVVC0zMnBZYkF0VHlaek5r?oc=5)\n- [Microsoft's Biggest Risk Isn't Competition - It's Expectations - Seeking Alpha](https://news.google.com/rss/articles/CBMinwFBVV95cUxOc0hqR0lIeEZFY0plRHVyUmxUVG9jUjhiTlJNQnFsY1hrdHpxUHpIaUZ5a0UwbkJlU0pEd1kzdlkwaHNoN0ozX1dNVG1fajBPQkdxNktJeXI5aHh3Wk5Qd0M5bnJkcl9XMjhFMGp6MWUzT1E1SVkwR2g5MWNxcTMyaXVhNVktNWVzTnBHbWExM3R5bzBDM2lZT3BQcndXUTA?oc=5)\n- [Tech stocks face mixed fortunes: Broadcom surges while Microsoft tumbles - investingLive](https://news.google.com/rss/articles/CBMixgFBVV95cUxOSHlvX3NyVWgwdjVVSUpQWXU0WThoTWk5VGFvRUV4YVh0NV9KclNYeXJEeW9jcGF2TkZRdkF3UnFNMzd5d2JrekpyMV8yNXVQZHhYSkRBb2RXWC1kYkZ5UmVtd0ZvRVpqMGlIRFdjTGFJeEFkcFpVWnU5azFtU2tKb3M5NkktYXl0RHFQUXlmT2wwSV92ZlNoMllTTng3Ui1jN0Y1SXNHU0NxcHZhamoxczA3SG1HSTkwZzhaMTUwVDdUQVpTQVE?oc=5)\n- [Microsoft Walks Away From Potential $3 Billion Oracle Deal, Stock Dips - TradingView](https://news.google.com/rss/articles/CBMixwFBVV95cUxPdmFkQktnYy11QVp0blhDYWY4N3ppQW1tbTlwXzZzdDZ6NDNCcTRNZ0hhazBiQTdZckFmU3U2WktCUHFNTW9fZmtPOFNvMVdtdWE4OVR5eS1WVjdTZ2NwQnpoN29NdWkwNEZOWFRPWGhhTzNSdzB3bHVLWlZYaVk0Z05VQ2h0U0V6RW96VXU5WThDMFJveEFNYnhoQkZsYW9GZUIwbTVUel8tS21QcjQ2dmZWNHZxZHFLTVdhYk5JY2k4S3h4VFQ4?oc=5)\n- [MSFT Stock Tests the Last Support Slipping Toward $445, as Legal Challenges and Competition Pressure Shares - FXLeaders](https://news.google.com/rss/articles/CBMi4gFBVV95cUxNQWNLTFViWjY5SHhxei1sSURsbW1FSWJRc0pGWjFMT0lNRm5fWVUwZ0ZUcnZzYzh3UGNIdHZmTEJnMEM4TENmTl9mS0Fsc3JpMjdSajZmMmdYenYxbWZMWEdGN1JyODBhMW9RVGZjZmNLTlhzanlEWlR1QUppZmhZcXFHTVpWVEI2WTFmajdpVHFxdjZHY1RHRlJ0Qk1nZU1oQV9Ob094SDJodG1kTmFvZGpFRVZnTW5LSFlMcERGRkFNN2xGTy11bE01NmQ1YVQxanVNc0tOSUhremZlc1FMbVB3?oc=5)\n- [Why Is Microsoft Stock Down? A Look at the Recent Pullback in MSFT - EBC Financial Group](https://news.google.com/rss/articles/CBMilgFBVV95cUxOMHU1MHpiNEJoZmllNkdiYVRHYXV6cFJwU2FqTm5XNl82aGpmR2pJODFUcF9GYUNFeThXdHFLN1doVEpkOXZ3d2gzOHJzWFNnNDBRMjZBNGhNbS1HYVBwNlRjYzcydG9oMkFhRHdUelhLRVhNRjFfTzY3dXladkwwNVAtS3V2YWJzSmlOY1REVkx5TWRIX1E?oc=5)\n\n\n## 4. Macro & Market Overview\n\nThe Federal Reserve maintained interest rates, but a hawkish stance emerged as inflation reached a three-year high, with more officials anticipating future rate hikes. The new Fed chair, Kevin Warsh, initiated a review, and the statement removed any bias towards rate cuts.\n\n### Market Context\n\n- Federal Reserve's hawkish pause on interest rates.\n- Inflation reaching a three-year high, increasing pressure for future rate hikes.\n- Continued strong interest in AI-driven companies, despite broader market concerns.\n- High expectations for cloud growth impacting tech valuations.\n\n## 5. Risk Alerts\n\n- Potential for future Fed rate hikes due to persistent inflation.\n- High market expectations for tech sector growth, leading to volatility on any miss.\n- Talent retention challenges in competitive AI landscape.\n- This is decision support, not financial advice.\n- The report does not recommend buying, selling, holding, or trading.\n\n## 6. Read More\n\n- [VOO - Is What’s Inside VOO Worth The Price On The Label? - Trefis](https://news.google.com/rss/articles/CBMirAFBVV95cUxNQmRPeHZTbHJhd21vUWNDQm1RdUREazJBNGQ5NHc1Y2YzV3U3TURSSXFscG82TWFGS1pjTXdCb2hsd3hSZVJua0pwUnhOMEdianNtZlRkWTR4Y2VnN01WRllqU2RGLUFyanJyMHBwbll6RFdkUFZpd050ak1Cb0NhTDNTT3RrS09aSF9ueVd4WjhjNWpWQ3djLVl1Rm9Ma3l6ejBMSEVYa1pDdWh0?oc=5) | Trefis | Provides an analysis of the underlying value of the S&P 500 ETF, relevant for broad market understanding.\n- [GOOGL - Google Gemini co-lead Noam Shazeer departs for OpenAI (GOOG:NASDAQ) - Seeking Alpha](https://news.google.com/rss/articles/CBMilgFBVV95cUxPY0xjckVNbmRILU1lbkFDTFRaOXVIRG1WcUY3UC05VHZBYVgwcW1abHVBYk1FTGxVT05IQU4xNUFOWlAwMkI4RmFsSFROZ0RwM0IyZnhFZ1g3NGo4aWNrb2ZreU1Cd2RvY2szZUhXYWowVzlmTjVnd2N1d3VxbVphdXAwaUlZMTljNlAxVGF3YVZJYVd0N2c?oc=5) | Seeking Alpha | Highlights a significant talent movement in the critical AI sector, impacting Alphabet's AI development.\n- [PLTR - Palantir: The Stock Is Expensive, But The Growth Is Not Normal (NASDAQ:PLTR) - Seeking Alpha](https://news.google.com/rss/articles/CBMiowFBVV95cUxPYk9fNDFyMUp4S0dNR0dBV2hnV3U5SmdUd1ZMamJ5U05kTExpZmYwTFNFTU0teHlDODlMNnhrajRnSVphalZwQ1BUajZlTEFUblF4OXpBN1N4dHFhSDFXRzcyeWUxdzhYZTEtSlYzeEFDTk5yaUpYYTFvZ3NrenRHVzFhMzMyWGxWU1RCSUw1d3hUZm9PRE9FRXZKUENmc3NabFpB?oc=5) | Seeking Alpha | Offers a detailed perspective on Palantir's valuation in the context of its growth trajectory.\n- [MSFT - Microsoft Corporation (MSFT) Fell as Azure Growth Fell Short of Expectations - Yahoo Finance](https://news.google.com/rss/articles/CBMipAFBVV95cUxOY1ZhemZTOVJQQVhjaGl1b1ctSVBJekJkVkI2VHFzeGQ2TGpsbW1uLUFjajNpdGJEWWpGaV9VSGRTRVZ1Y0NjTnVFeExHMWJBQU1QX2FQVEFWS3Z2RWR1TkRMRHV5RnI1cFlJeGpQS1ZSS1BCc1NDVXA4M0syX0s5YU9xTlRhZVpNTWNTTlNudF9ManducnpuWTBldzZ2MnhtTnM2VA?oc=5) | Yahoo Finance | Explains the primary driver behind Microsoft's recent stock decline, focusing on cloud performance.\n- [MSFT - Microsoft's Biggest Risk Isn't Competition - It's Expectations - Seeking Alpha](https://news.google.com/rss/articles/CBMinwFBVV95cUxOc0hqR0lIeEZFY0plRHVyUmxUVG9jUjhiTlJNQnFsY1hrdHpxUHpIaUZ5a0UwbkJlU0pEd1kzdlkwaHNoN0ozX1dNVG1fajBPQkdxNktJeXI5aHh3Wk5Qd0M5bnJkcl9XMjhFMGp6MWUzT1E1SVkwR2g5MWNxcTMyaXVhNVktNWVzTnBHbWExM3R5bzBDM2lZT3BQcndXUTA?oc=5) | Seeking Alpha | Provides a qualitative analysis of the underlying challenges Microsoft faces beyond direct competition.\n- [XLV - These small-cap healthcare stocks pair revenue growth with attractive valuations (XLV:NYSEARCA) - Seeking Alpha](https://news.google.com/rss/articles/CBMiugFBVV95cUxQS3lqcjVrX3BXRTA1RUxDanQ5bEpjanJwaVluZmhQZ2NiTFlMTHRETkhTeWxoWFVJd3NLLVdfV3VXZXM0TDk1bEs5S0w4clNsVjlzRjc3NHV2LXRURDhLQ0c3X0tvNzRXUllGd3hNWVg1dFBrcW8xVGdTTjVuaHpUWFBMUk9pWDNpS2dQcUIzdTdNb0JFWGRVTmxDc19OdHFfZ1dwZDd6TTJoSXFkNXFXLUxCLU1FUkREQ0E?oc=5) | Seeking Alpha | Offers insights into specific sub-sectors within healthcare that may present opportunities, relevant for XLV's composition.\n\n## 7. Stocks With No Important News Today\n\n- Every configured stock had at least one matching RSS headline.\n\n## 8. Notes / Errors\n\n- None.",
+  "summary": {
+    "mode": "gemini",
+    "portfolio_summary": "The Federal Reserve's hawkish pause on interest rates, coupled with persistent inflation, sets a cautious tone for the broader market. While AI continues to drive sentiment for tech giants like Alphabet, Microsoft faces challenges with Azure growth and high expectations. Palantir's valuation remains a key discussion point ahead of earnings, while ETFs like VOO and VXUS reflect broader market and international trends, respectively.",
+    "daily_briefing": "Today's market narrative is heavily influenced by the Federal Reserve's decision to hold interest rates steady, a move accompanied by a hawkish tone as inflation hits a three-year high and more officials signal potential future hikes. This macro backdrop creates a mixed environment for the portfolio. In the tech sector, Alphabet continues to garner attention for its AI initiatives and institutional interest, despite a key Gemini co-lead departure. Microsoft, however, experienced a notable dip due to Azure growth falling short of expectations and a failed Oracle deal, highlighting the impact of high market expectations. Palantir's valuation and upcoming earnings are central to its current discussion. Meanwhile, broad market ETFs like VOO are seeing discussions around underlying value and potential new constituents like SpaceX, while international ETF VXUS highlights global flows and distributions amidst a competitive landscape.",
+    "macro_overview": "The Federal Reserve maintained interest rates, but a hawkish stance emerged as inflation reached a three-year high, with more officials anticipating future rate hikes. The new Fed chair, Kevin Warsh, initiated a review, and the statement removed any bias towards rate cuts.",
+    "market_context": [
+      "Federal Reserve's hawkish pause on interest rates.",
+      "Inflation reaching a three-year high, increasing pressure for future rate hikes.",
+      "Continued strong interest in AI-driven companies, despite broader market concerns.",
+      "High expectations for cloud growth impacting tech valuations."
+    ],
+    "cross_portfolio_themes": [
+      "Impact of Federal Reserve policy on market sentiment.",
+      "Ongoing focus on AI innovation and its valuation implications.",
+      "ETF flows and performance in both domestic and international markets.",
+      "Importance of earnings and guidance in shaping investor expectations."
+    ],
+    "risk_alerts": [
+      "Potential for future Fed rate hikes due to persistent inflation.",
+      "High market expectations for tech sector growth, leading to volatility on any miss.",
+      "Talent retention challenges in competitive AI landscape."
+    ],
+    "read_more": [
+      {
+        "ticker": "VOO",
+        "title": "Is What’s Inside VOO Worth The Price On The Label? - Trefis",
+        "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNQmRPeHZTbHJhd21vUWNDQm1RdUREazJBNGQ5NHc1Y2YzV3U3TURSSXFscG82TWFGS1pjTXdCb2hsd3hSZVJua0pwUnhOMEdianNtZlRkWTR4Y2VnN01WRllqU2RGLUFyanJyMHBwbll6RFdkUFZpd050ak1Cb0NhTDNTT3RrS09aSF9ueVd4WjhjNWpWQ3djLVl1Rm9Ma3l6ejBMSEVYa1pDdWh0?oc=5",
+        "source": "Trefis",
+        "why_read": "Provides an analysis of the underlying value of the S&P 500 ETF, relevant for broad market understanding."
+      },
+      {
+        "ticker": "GOOGL",
+        "title": "Google Gemini co-lead Noam Shazeer departs for OpenAI (GOOG:NASDAQ) - Seeking Alpha",
+        "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPY0xjckVNbmRILU1lbkFDTFRaOXVIRG1WcUY3UC05VHZBYVgwcW1abHVBYk1FTGxVT05IQU4xNUFOWlAwMkI4RmFsSFROZ0RwM0IyZnhFZ1g3NGo4aWNrb2ZreU1Cd2RvY2szZUhXYWowVzlmTjVnd2N1d3VxbVphdXAwaUlZMTljNlAxVGF3YVZJYVd0N2c?oc=5",
+        "source": "Seeking Alpha",
+        "why_read": "Highlights a significant talent movement in the critical AI sector, impacting Alphabet's AI development."
+      },
+      {
+        "ticker": "PLTR",
+        "title": "Palantir: The Stock Is Expensive, But The Growth Is Not Normal (NASDAQ:PLTR) - Seeking Alpha",
+        "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPYk9fNDFyMUp4S0dNR0dBV2hnV3U5SmdUd1ZMamJ5U05kTExpZmYwTFNFTU0teHlDODlMNnhrajRnSVphalZwQ1BUajZlTEFUblF4OXpBN1N4dHFhSDFXRzcyeWUxdzhYZTEtSlYzeEFDTk5yaUpYYTFvZ3NrenRHVzFhMzMyWGxWU1RCSUw1d3hUZm9PRE9FRXZKUENmc3NabFpB?oc=5",
+        "source": "Seeking Alpha",
+        "why_read": "Offers a detailed perspective on Palantir's valuation in the context of its growth trajectory."
+      },
+      {
+        "ticker": "MSFT",
+        "title": "Microsoft Corporation (MSFT) Fell as Azure Growth Fell Short of Expectations - Yahoo Finance",
+        "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOY1ZhemZTOVJQQVhjaGl1b1ctSVBJekJkVkI2VHFzeGQ2TGpsbW1uLUFjajNpdGJEWWpGaV9VSGRTRVZ1Y0NjTnVFeExHMWJBQU1QX2FQVEFWS3Z2RWR1TkRMRHV5RnI1cFlJeGpQS1ZSS1BCc1NDVXA4M0syX0s5YU9xTlRhZVpNTWNTTlNudF9ManducnpuWTBldzZ2MnhtTnM2VA?oc=5",
+        "source": "Yahoo Finance",
+        "why_read": "Explains the primary driver behind Microsoft's recent stock decline, focusing on cloud performance."
+      },
+      {
+        "ticker": "MSFT",
+        "title": "Microsoft's Biggest Risk Isn't Competition - It's Expectations - Seeking Alpha",
+        "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOc0hqR0lIeEZFY0plRHVyUmxUVG9jUjhiTlJNQnFsY1hrdHpxUHpIaUZ5a0UwbkJlU0pEd1kzdlkwaHNoN0ozX1dNVG1fajBPQkdxNktJeXI5aHh3Wk5Qd0M5bnJkcl9XMjhFMGp6MWUzT1E1SVkwR2g5MWNxcTMyaXVhNVktNWVzTnBHbWExM3R5bzBDM2lZT3BQcndXUTA?oc=5",
+        "source": "Seeking Alpha",
+        "why_read": "Provides a qualitative analysis of the underlying challenges Microsoft faces beyond direct competition."
+      },
+      {
+        "ticker": "XLV",
+        "title": "These small-cap healthcare stocks pair revenue growth with attractive valuations (XLV:NYSEARCA) - Seeking Alpha",
+        "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQS3lqcjVrX3BXRTA1RUxDanQ5bEpjanJwaVluZmhQZ2NiTFlMTHRETkhTeWxoWFVJd3NLLVdfV3VXZXM0TDk1bEs5S0w4clNsVjlzRjc3NHV2LXRURDhLQ0c3X0tvNzRXUllGd3hNWVg1dFBrcW8xVGdTTjVuaHpUWFBMUk9pWDNpS2dQcUIzdTdNb0JFWGRVTmxDc19OdHFfZ1dwZDd6TTJoSXFkNXFXLUxCLU1FUkREQ0E?oc=5",
+        "source": "Seeking Alpha",
+        "why_read": "Offers insights into specific sub-sectors within healthcare that may present opportunities, relevant for XLV's composition."
+      }
+    ],
+    "stock_count": 6,
+    "total_articles": 143,
+    "total_portfolio_value_thb": 15970.82,
+    "errors": [],
+    "technical_errors": []
+  },
+  "stocks": [
+    {
+      "ticker": "VOO",
+      "company": "Vanguard S&P 500 ETF",
+      "exchange": "NYSE Arca",
+      "holding_value_thb": 7896.41,
+      "portfolio_weight_pct": 49.44,
+      "target_weight_pct": 45.0,
+      "weight_gap_pct": -4.44,
+      "allocation_status": "Over target",
+      "article_count": 12,
+      "key_news": "Discussions center on the intrinsic value of the S&P 500's constituents and the potential inclusion of high-profile IPOs like SpaceX, alongside broader market performance comparisons.",
+      "key_takeaway": "Discussions center on the intrinsic value of the S&P 500's constituents and the potential inclusion of high-profile IPOs like SpaceX, alongside broader market performance comparisons.",
+      "impact": "The potential inclusion of a large new company like SpaceX could slightly alter the ETF's composition and market cap weighting. Broader market sentiment, influenced by macro factors and tech sector performance, will continue to be a primary driver.",
+      "possible_impact": "The potential inclusion of a large new company like SpaceX could slightly alter the ETF's composition and market cap weighting. Broader market sentiment, influenced by macro factors and tech sector performance, will continue to be a primary driver.",
+      "bullish_points": [
+        "JP Morgan's David Kelly views the current economy as 'great for stocks' amid an AI-led bull market.",
+        "Potential for new, high-growth companies like SpaceX to be included in the S&P 500 over time."
+      ],
+      "bearish_points": [
+        "Trefis questions if the underlying value of VOO's components justifies its current price.",
+        "Fidelity's Tech ETF is reported to be significantly outperforming the broad market, suggesting potential concentration risk or underperformance in non-tech sectors within VOO."
+      ],
+      "valuation_context": "The Trefis article directly questions the 'worth the price on the label' for VOO, implying a potential overvaluation based on its constituent companies. The comparison to Fidelity's Tech ETF suggests that while the broad market has performed, the tech sector has driven a disproportionate amount of recent gains.",
+      "technical_summary": "VOO's last close was 681.41, slightly below its 20-day EMA of 682.85, indicating short-term weakness. The RSI at 50.9 is neutral. MACD (3.74) is below its signal line (5.48), suggesting weakening positive momentum. Support is noted around 678.04-678.67, with resistance near 681.95-682.84. The trend is constructive, but momentum indicators show caution.",
+      "technical": {
+        "ticker": "VOO",
+        "company": "Vanguard S&P 500 ETF",
+        "last_close": 681.41,
+        "last_date": "2026-06-17",
+        "ema20": 682.85,
+        "ema50": 669.29,
+        "ema200": 630.9,
+        "rsi14": 50.9,
+        "macd": 3.74,
+        "macd_signal": 5.48,
+        "trend": "Constructive",
+        "support_zones": [
+          678.67,
+          678.23,
+          678.04
+        ],
+        "resistance_zones": [
+          681.95,
+          682.41,
+          682.84
+        ],
+        "volume_latest": 15002400,
+        "technical_note": "RSI is in a neutral range. MACD is below signal, suggesting weaker momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
+      },
+      "what_to_monitor": "Watch for further analysis on S&P 500 constituent valuations, any updates on SpaceX's IPO timeline and potential S&P 500 inclusion, and the performance of the broader market relative to concentrated tech funds.",
+      "risk_level": "Medium",
+      "relevance_score": "High",
+      "relevance_reason": "News directly addresses the valuation and composition of the S&P 500 ETF, a core portfolio holding, and its market context.",
+      "alert_tags": [
+        "Valuation",
+        "IPO",
+        "Macro",
+        "Fund flows"
+      ],
+      "time_horizon": "Mixed",
+      "confidence": "High",
+      "articles": [
+        {
+          "title": "Is What’s Inside VOO Worth The Price On The Label? - Trefis",
+          "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNQmRPeHZTbHJhd21vUWNDQm1RdUREazJBNGQ5NHc1Y2YzV3U3TURSSXFscG82TWFGS1pjTXdCb2hsd3hSZVJua0pwUnhOMEdianNtZlRkWTR4Y2VnN01WRllqU2RGLUFyanJyMHBwbll6RFdkUFZpd050ak1Cb0NhTDNTT3RrS09aSF9ueVd4WjhjNWpWQ3djLVl1Rm9Ma3l6ejBMSEVYa1pDdWh0?oc=5",
+          "source": "Trefis",
+          "published": "Thu, 18 Jun 2026 00:48:57 GMT"
+        },
+        {
+          "title": "$Vanguard S&P 500 ETF (VOO.US)$ My favorite moomoo ETF feature - Moomoo",
+          "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOcXNfWWJYSDcxb3NZQUF5NzRLWXkydmJSQUsyRGwxOGgza0lHUVAtVEdlRXppaWtqTGZ3cXRnQVRwUWZ2VEZoT0NLaDZoWXdKUlF2aXh6VXF4VlUyTk5sY05PeDVUQlRnc1QzcDJEbjRxek5FQmZFNGZmcGZlVks5LTV0cmo3NHRhUVoxU0t3OGJ6aG0zZks5dXVvbEhGWnlFOFE?oc=5",
+          "source": "Moomoo",
+          "published": "Wed, 17 Jun 2026 16:12:29 GMT"
+        },
+        {
+          "title": "The SpaceX IPO Is Finally Here: This Is When It Might Be Coming to Your S&P 500 ETF - The Globe and Mail",
+          "url": "https://news.google.com/rss/articles/CBMi-wFBVV95cUxNMzVvckZfZENVbXVCaUVKZldXVElSd2tmYkNUYk5qS1hvVWsxcUp3VnU5eC0tSGNuWFJGZmI1bjJKTkVMREszanlpcGc2c3JMbGs5WXZYQlhxNF9rV3BRVHRySjVhdjZ5YjZYWUp1Yk11SDlwNDhWUlRka3lVTmF3TFZnY1FsY3VUS0lyQl9mTDlma3Y4Y3ZWSW9ySndBR3NqaHBBRXdobFhaQm85bTFlZUdrX3ZVd1RiU2pTLTRVZFFGLXYxa0ZQWmcyUnpCaFJleEFWSmNtbDRDRmhuWUFzU0tXeFhGd19SVldVNFkwVEVkZFlUUTM1aW1scw?oc=5",
+          "source": "The Globe and Mail",
+          "published": "Wed, 17 Jun 2026 21:39:33 GMT"
+        },
+        {
+          "title": "Forget VOO: Fidelity’s Tech ETF Is Up 29% While the Broad Market Lags - AOL.com",
+          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1XZnNKS0VkUkFUX25LUDNyOHJCVUhrZDI1VnpCZHVfRmN0cjYtRnZ1U0prb3VUeWgzTVBwQ29hVUJ0UTRxZ0s2dU8ta3FZQWZha1VTYW9MTXpmd1FFYkVyQkxZemd6RE9YMG94Rk5UcEplUlNZRkE5Qm5mUVk?oc=5",
+          "source": "AOL.com",
+          "published": "Thu, 18 Jun 2026 00:45:28 GMT"
+        },
+        {
+          "title": "JP Morgan's David Kelly Says It's 'A Great Economy For Stocks' Amid AI-Led Bull Market Despite Inflation Risks - Benzinga",
+          "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxNVDdMWlRJLUZkLTBWdlBjWUx6VW5hbk1ZbXJzR2RzbTJXVk5qTGExa0F2TEJBX2ZBWllTWmI1d1lNeU5HZXZ6ZDQ3TzZ6UHhFQ2M4RnFCZmh0Uy1JblpPMUtCNTNGSHppOVVwWkNqM3F3S2kwWEp5Y19GRmNlSWpTLS14WTg0bEJqdU8zQ2NwTFFuWFRxNzBZWjFnQ0NPSzZLNnNWQWxTcDBQc1Q0aGNMTHNNTDQwbmRLcDBibi1zbmR4ZTNsaEVES0pVT2YtaVV3aWtoTmV1X3lvS2lKOVNqS2tiODN6U2w0YW9SOUhTZHVBSk1KZHc?oc=5",
+          "source": "Benzinga",
+          "published": "Wed, 17 Jun 2026 15:28:16 GMT"
+        },
+        {
+          "title": "Coherent’s Good News Gets A Cold Shoulder - Trefis",
+          "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQRkhaRkczZDZLbEEyd2syOE5TTUxzaUdhV0ZGb0ZMV21kN1BxNDMybnZzZ296UkYwbENSWWZ0eVROeHRtVHEzdi10N3pCZVk5aDFwYXFRU2VJdWpWRjYxaXNkYWU0cWFPOUQxX1hyN05pc1kxV1dBYV80eXdOSXYweE1SRmVZaGdCX2ZiQnlCWHoydV9LZkFhUmtzcDlBc0hvaHA0?oc=5",
+          "source": "Trefis",
+          "published": "Thu, 18 Jun 2026 01:00:36 GMT"
+        },
+        {
+          "title": "VOO ETF — Vanguard S&P 500 Fund Holds ~$691 Near Its $699 High Into the Fed; 0.03% Fee, ~$1T AUM, Index Targets Above 8,000 - TradingNEWS",
+          "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQSnRHS1RGWHB1NXM3TGY2Mk1la2h4aGY3bXViVmlHQTBNU3VUSDlpWnRuX1diWkRfRnFJZ0ZrcExTQ1RNa0ViUzBRVmdNMXFoWnNMUjFrQmNmQVBUenBVOVB6ZktBSGJ6YXdqMk5CNGs1TlZOQ1pjZGc5UHZKRDFhUHFvZ1pUMWZYWXVNU2xNOU1vOU54YUtOLWVxVUM?oc=5",
+          "source": "TradingNEWS",
+          "published": "Wed, 17 Jun 2026 20:49:48 GMT"
+        },
+        {
+          "title": "3 Best Vanguard ETFs for Growth Without the Stress - TipRanks",
+          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNS3JPVk5WXzVqM1hfLXJmdlpYUWdMSTViendNajN6bXRXYi0wUncteE55UWlEZ1VZMTVyZ2h6QTNZcTRNLXdhVjlLZTZhSFFQZGxHQ013SWhVd1FUQWl6UWFieUZtdmhSNnIwV0c0ajd6Tk9yN3hjN25URVBzUWZ0UUR3ek1NclE?oc=5",
+          "source": "TipRanks",
+          "published": "Wed, 17 Jun 2026 15:21:30 GMT"
+        }
+      ]
+    },
+    {
+      "ticker": "GOOGL",
+      "company": "Alphabet Inc.",
+      "exchange": "NASDAQ",
+      "holding_value_thb": 2546.17,
+      "portfolio_weight_pct": 15.94,
+      "target_weight_pct": 15.0,
+      "weight_gap_pct": -0.94,
+      "allocation_status": "Near target",
+      "article_count": 56,
+      "key_news": "Alphabet remains a prominent AI player, attracting institutional interest, but faces scrutiny over governance and a notable talent departure from its Gemini AI team.",
+      "key_takeaway": "Alphabet remains a prominent AI player, attracting institutional interest, but faces scrutiny over governance and a notable talent departure from its Gemini AI team.",
+      "impact": "Continued focus on AI development could drive future growth, but talent retention challenges and investor concerns regarding governance and ESG could introduce volatility. Institutional accumulation by funds like ARK Invest signals confidence ahead of earnings.",
+      "possible_impact": "Continued focus on AI development could drive future growth, but talent retention challenges and investor concerns regarding governance and ESG could introduce volatility. Institutional accumulation by funds like ARK Invest signals confidence ahead of earnings.",
+      "bullish_points": [
+        "Considered a top AI stock in billionaire Dan Loeb's portfolio, indicating strong institutional confidence.",
+        "ARK Invest is reportedly increasing its holdings ahead of 'Mega Tech Earnings Day,' suggesting positive expectations.",
+        "Jim Cramer discusses Alphabet's AI chips, highlighting ongoing innovation in a key growth area."
+      ],
+      "bearish_points": [
+        "Google Gemini co-lead Noam Shazeer departed for OpenAI, raising concerns about talent retention in the competitive AI space.",
+        "Investors may respond negatively to Alphabet backing AI spend while rejecting governance and ESG proposals, potentially impacting sentiment."
+      ],
+      "valuation_context": "The news highlights GOOGL's position as a leading AI stock, which often commands higher valuations. Institutional buying suggests a belief in its growth prospects, but concerns around governance and talent could temper enthusiasm if not addressed.",
+      "technical_summary": "GOOGL closed at 363.79, below its 20-day EMA of 369.6, indicating short-term bearishness. The RSI is neutral at 46.18. MACD (-1.98) is below its signal line (-0.41), suggesting weakening momentum. Support levels are around 357.77-361.63, with resistance at 364.26-369.35. The trend is constructive, but recent momentum is negative.",
+      "technical": {
+        "ticker": "GOOGL",
+        "company": "Alphabet Inc.",
+        "last_close": 363.79,
+        "last_date": "2026-06-17",
+        "ema20": 369.6,
+        "ema50": 361.72,
+        "ema200": 310.31,
+        "rsi14": 46.18,
+        "macd": -1.98,
+        "macd_signal": -0.41,
+        "trend": "Constructive",
+        "support_zones": [
+          361.63,
+          358.78,
+          357.77
+        ],
+        "resistance_zones": [
+          364.26,
+          368.31,
+          369.35
+        ],
+        "volume_latest": 24496700,
+        "technical_note": "RSI is in a neutral range. MACD is below signal, suggesting weaker momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
+      },
+      "what_to_monitor": "Upcoming 'Mega Tech Earnings Day' for Alphabet's performance, further developments in its AI initiatives, any statements regarding governance and ESG, and talent movements within its AI divisions.",
+      "risk_level": "Medium",
+      "relevance_score": "High",
+      "relevance_reason": "News covers key strategic areas (AI, talent, governance) and institutional activity, directly impacting Alphabet's outlook.",
+      "alert_tags": [
+        "AI",
+        "Earnings",
+        "Governance",
+        "Fund flows",
+        "Talent"
+      ],
+      "time_horizon": "Mixed",
+      "confidence": "High",
+      "articles": [
+        {
+          "title": "Is Alphabet (GOOGL) The Best AI Stock in Billionaire Dan Loeb’s Portfolio? - Yahoo Finance",
+          "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOdDhGWlkyVzJUZUl3WFpWa29qQk1DMEthWmFGaEZtYVZCMEZKRkhMOU9lU2EwQXJjRWNFbVpTQVhMdWJzeVpsN0ZyREowbHA2UjhxZVpzSEExMjZ4a0FpVFRFSjZGTUtjSDdZZVpjM0JUc3l5NmRvQ2ZIWC0wTmZLRk8zY2p4ZHJmcmYxVEJRUTByYWRsRFpB?oc=5",
+          "source": "Yahoo Finance",
+          "published": "Wed, 17 Jun 2026 13:26:59 GMT"
+        },
+        {
+          "title": "Cathie Wood’s ARK Invest Loads Up On CRWV, GOOGL Stocks Before Mega Tech Earnings Day - Stocktwits",
+          "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxORFlYU3Q3eFBnYVhkbU9UcnF1NENHU3FfLVczXzZ4Vm1SUzRERlFyaTcyOU1ZaUl2QnRMM1pfam5RaHQzSXAwOGpuV0dySDA3MVNRR3hBM0NNQ0xiUnVGMW1sM1ppOWE2d2MzSllmckFLSGVESHJtQldiSEVobnNQbUdoZGRXTjFMQXMway1aZ2R5OVUwaDBjYTh5SmRGa0p4UXo3QkdnRU54azkxSmZBUTBsYk1ZYVhIanVaSzRRaUM0eFVzSktiRXZ5WlRWYnplSl8td3hhYThSODJIcjg1dWpB?oc=5",
+          "source": "Stocktwits",
+          "published": "Wed, 17 Jun 2026 12:12:22 GMT"
+        },
+        {
+          "title": "How Investors May Respond To Alphabet (GOOGL) Backing AI Spend While Rejecting Governance And ESG Proposals - simplywall.st",
+          "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNQVM5aF9qVlR5ak1DWnRSa3pPNHRVVGdtSjdxemJlVE52LXNHNUtveEJEN2R3WGE2cU01MVR5OVRnb3ljUWs3eHhNSk9sSXhaa3NTbnA5eWY5cWt2cGFOdTlpcFNqbkZKa1ByYXlRNWUtREZocGNpbDR3T19CZFRUc2ZDRU9aalJRSnYxc0FTTndkcEJzZkVZR1BUTUdYUEx5Y0JoUW1UTkJleFVNb1FHNHBaend1WTVER2FWYlZLSFR6YXPSAcgBQVVfeXFMT0pmdVkwRVdCZGJJRUNaWmEwMEk0YU1wYnVtMl9qZ01vUmdaV09OUXEzSHlJYkRwdjVFbFF0U2h2V3pvN3hBRWRCRWtEMXhlVkZuZ1RjdkJqNm85TGZnUWF5dF93QXdmd2k5RGNaLWlfLXBxb2pEVUtyVmJaY29TVlVJX0NHc3pTRE10MlVndjA4RjM5NU9tRXMwNllLYW9KQUE1TzJhaXBsLW9kTG9mTlQ3TkNQUHNsQXdXSEVPckhyRlpyU1dzcU0?oc=5",
+          "source": "simplywall.st",
+          "published": "Wed, 17 Jun 2026 18:58:12 GMT"
+        },
+        {
+          "title": "Google Gemini co-lead Noam Shazeer departs for OpenAI (GOOG:NASDAQ) - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPY0xjckVNbmRILU1lbkFDTFRaOXVIRG1WcUY3UC05VHZBYVgwcW1abHVBYk1FTGxVT05IQU4xNUFOWlAwMkI4RmFsSFROZ0RwM0IyZnhFZ1g3NGo4aWNrb2ZreU1Cd2RvY2szZUhXYWowVzlmTjVnd2N1d3VxbVphdXAwaUlZMTljNlAxVGF3YVZJYVd0N2c?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Thu, 18 Jun 2026 04:14:46 GMT"
+        },
+        {
+          "title": "Futures Mixed, Oil Rises On Trump's New Iran Threat - Investor's Business Daily",
+          "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQQUYtVzRsaWU2bjBTWUo2MVdUTU1ZaVdIYUo1MVlvYnF2OUZQOVR1b1lFTG9nWEg2OXMzRzRmNmZ4N0lBd3l3cTRDaU9WRmFScEU4SVRaSGx5dFQ2UTZ4ZU40R3I1ak5wSFlGUmw1dUU3QU94ZEpRV1BZejZQSTh5aTNTUnNEa2Z5UEZoay1LX293REdzZWNWeklpWUViVUZ2c0l4VUtJZElweDJyNWc?oc=5",
+          "source": "Investor's Business Daily",
+          "published": "Wed, 17 Jun 2026 12:18:00 GMT"
+        },
+        {
+          "title": "Jim Cramer Discusses Alphabet Inc. (GOOGL)’s AI Chips - Yahoo Finance",
+          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNQ3BwMGZ3OTFvU2Y1emZiZGM4NE1pMHlKQzFYS3FFczQ5MlhpallqUnJ1M2E1YmtERy1RSU9xc2NtNkp1MXR1cU9VdHBtLUZNZDJzOHhpdUdoVHV4YVV4WnBCNkVHSTVwMU5nVlZDWUZVa3ZGZjh3QVpOdGV3OGxHZnhLQzJQSkRvY1FIQldmd0pIanV5YllCMkhONkhMUQ?oc=5",
+          "source": "Yahoo Finance",
+          "published": "Wed, 17 Jun 2026 15:01:12 GMT"
+        },
+        {
+          "title": "Why GOOGL stock may have more room to run even after a 100% rally - MSN",
+          "url": "https://news.google.com/rss/articles/CBMi0AJBVV95cUxQTVBkQ1hSYWx0UXdvdlQ1ckctQnl1NUdsbXhScG5tSDJvWnRaaDRTVDRVY1FmelBoM3VQclRZbk5HeWVia0o4Y29TbXdPSGYwMWdhQ1BLbDdNNm41UzFobWRuMDhzYXdSbkxNekpYRnBMa3U4aVZ1MDdSbXA1Q3VVUlZvcE1CU1NHY1AwWUFiaV8zUlFHVDlWN0dQeUxlS1FyOHJNVXJ2cU9SX0dES2tLaTN0ektIbkNNZ25pUEVfYnppcXpYU2ZKZHJtMzl0bUR5VE5rWDhrSGxfMk93QUJNSDQzLVFVQXA1OWR5am5OSFdzYkVvQ2xvQ2xKZUdCaHBzaF9TZzdUWXFBQ2ltLU11bi1YX3pFVkkyZ0V1cThvbDJwMUYwa0U1azRjVmo4ZHJibzRtNWRMLUYzYUREcEVVZGhZYlNXQk9PcWlsZklzZnI?oc=5",
+          "source": "MSN",
+          "published": "Wed, 17 Jun 2026 23:56:07 GMT"
+        },
+        {
+          "title": "Citigroup (NYSE: C) sells autocallable notes linked to GOOGL, MU, NVDA - Stock Titan",
+          "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNYWR6MkdLME9oQW11VVA5eXhOcTJfODR1NkphYUdNT1hjZzVJRXA4alk5M3VyRG00OGg1TDdiVjlVanhBdTVlTmcwVXJTczUyZGlyM0JPc1B3T1pXZTFwWWtQTlZhUHB5c0hnZmVxRlo4STc0dlByM3piRHBVdzJtQm1KWWJVN0FBVFl4NXRlWm5UMFpvWEdQdi03OFpIY3RrS2c?oc=5",
+          "source": "Stock Titan",
+          "published": "Wed, 17 Jun 2026 14:19:28 GMT"
+        }
+      ]
+    },
+    {
+      "ticker": "VXUS",
+      "company": "Vanguard Total International Stock ETF",
+      "exchange": "NASDAQ",
+      "holding_value_thb": 2000.58,
+      "portfolio_weight_pct": 12.53,
+      "target_weight_pct": 15.0,
+      "weight_gap_pct": 2.47,
+      "allocation_status": "Under target",
+      "article_count": 5,
+      "key_news": "VXUS is part of a broader ETF market that has crossed a significant $1 trillion milestone in flows for 2026, and it has declared its quarterly distribution. However, a covered call ETF focused on international stocks is noted for outperforming it.",
+      "key_takeaway": "VXUS is part of a broader ETF market that has crossed a significant $1 trillion milestone in flows for 2026, and it has declared its quarterly distribution. However, a covered call ETF focused on international stocks is noted for outperforming it.",
+      "impact": "Positive ETF flows generally indicate investor interest, but underperformance relative to certain active or strategy-based international ETFs could lead to questions about its passive approach. Regular distributions are a consistent feature.",
+      "possible_impact": "Positive ETF flows generally indicate investor interest, but underperformance relative to certain active or strategy-based international ETFs could lead to questions about its passive approach. Regular distributions are a consistent feature.",
+      "bullish_points": [
+        "2026 ETF flows crossing the $1 trillion milestone indicates strong overall investor interest in ETFs, including international ones.",
+        "Vanguard ESG International Stock ETF and Vanguard Total World Stock ETF declared quarterly distributions, reflecting consistent income generation."
+      ],
+      "bearish_points": [
+        "A covered call ETF focused on international stocks is reported to be outperforming Vanguard's biggest international ETF (VXUS), suggesting potential for alternative strategies to yield better returns in the current environment."
+      ],
+      "valuation_context": "The news does not directly discuss VXUS's valuation but rather its performance relative to other international strategies and its distribution schedule. The broader ETF flow milestone suggests continued capital allocation to diversified funds.",
+      "technical_summary": "VXUS closed at 86.15, above its 20-day EMA of 85.15, indicating short-term strength. The RSI is neutral at 55.83. MACD (0.59) is above its signal line (0.55), suggesting positive momentum. Support is around 85.85-86.06, with resistance at 86.25-86.96. The trend is an uptrend, supported by positive momentum.",
+      "technical": {
+        "ticker": "VXUS",
+        "company": "Vanguard Total International Stock ETF",
+        "last_close": 86.15,
+        "last_date": "2026-06-17",
+        "ema20": 85.15,
+        "ema50": 83.75,
+        "ema200": 78.34,
+        "rsi14": 55.83,
+        "macd": 0.59,
+        "macd_signal": 0.55,
+        "trend": "Uptrend",
+        "support_zones": [
+          86.06,
+          85.99,
+          85.85
+        ],
+        "resistance_zones": [
+          86.25,
+          86.31,
+          86.96
+        ],
+        "volume_latest": 8608700,
+        "technical_note": "RSI is in a neutral range. MACD is above signal, suggesting positive momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
+      },
+      "what_to_monitor": "Global economic indicators, currency fluctuations, and performance of international markets. Also, observe flows into various international ETF strategies.",
+      "risk_level": "Low",
+      "relevance_score": "Medium",
+      "relevance_reason": "News covers ETF flows, distributions, and comparative performance, all relevant to an international ETF holding.",
+      "alert_tags": [
+        "Fund flows",
+        "Distributions",
+        "Macro"
+      ],
+      "time_horizon": "Long term",
+      "confidence": "Medium",
+      "articles": [
+        {
+          "title": "A Covered Call ETF That Pays 6% Is Beating Vanguard’s Biggest International ETF Right Now - AOL.com",
+          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1hVEp2QUZrVEkzLXpaU2NKYmVkY2JueV8xQjlaZXV6amtYSi1DTjRFQWYzN01fdHZNOXdxRXBtLVRBSExRd2lfdHI3LUR3Zlh4N2tjVnJuYzFhLWl6WmNWZ255MHU5MXVaNm1hclBsanE0YXhLSWc?oc=5",
+          "source": "AOL.com",
+          "published": "Wed, 17 Jun 2026 17:59:38 GMT"
+        },
+        {
+          "title": "AG Stock To $30? First Majestic Silver May Extend Hot Rally After Hitting Record High On Blowout Q4 - Stocktwits",
+          "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPTi1pSDh2WGxUeGFfTTF5TXBOWHVsU1EzRTJsNVQxalN3R0hhbTFPbmppMEpWYk51QUNhWW82ek5GZWlhdE1XSzZRYTIxa1U0QjlYaDQ5dWFyNHo2NzNVc2MyOS1IZ0Fndkk4VnNqbzdxWnMyMXZUSjBGdmwxaHVtTVBHcHJFNDlRSDJjUDFVUmNSSzFaVG5ZVVpUa0d4UGNabGI0Z0tHUnBacmlLZG85X01aUkVrVTFZemIxbmdB?oc=5",
+          "source": "Stocktwits",
+          "published": "Wed, 17 Jun 2026 15:16:31 GMT"
+        },
+        {
+          "title": "2026 ETF Flows Cross $1 Trillion Milestone Before Summer - ETF Database",
+          "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNUTJFZWxuNFQyQ0d3S0FPRE1fQUdZVVZqTkE3U1hFMG4tMHJYS3lIdlQyYjk1T1V6V2dYcllPYnM0b1VpLVZlZlJLZmNrMi1RM05HdXlUT2IxTUFwZW5wLVZDcTJtUW5rVXNCVU5JM2MzS2xVWjA3dndTWEdrSi1aemM2RnJtaUZ0RzJ3NTRKM2E4REtmbnc?oc=5",
+          "source": "ETF Database",
+          "published": "Wed, 17 Jun 2026 19:19:06 GMT"
+        },
+        {
+          "title": "Vanguard ESG International Stock ETF declares quarterly distribution of $0.6820 - MSN",
+          "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQOWdIY09QQ2wzbEs5MC1RUGRLZXEwTzdoNmktS2U0WTU2ZF94OExBT283Z2M1VVVsNU5ia2twLXJoM0dRWENkQ0RXY25oWmNIYTBuQ1d1UDAwejFpckdsREl2SVRvdG9lSndmVTlSNHB0dDRRbldaRE50eTFwT2dSUkszcXFQZEg2dnZsTUI4Sm10TWNzSXJkWHl2YnBJU2ViSGZWYzJLazhJRUcyMEhoSG54ZHVFZ2h1N3Ffdk15Tl91SlBCSDZHdE82WWk?oc=5",
+          "source": "MSN",
+          "published": "Wed, 17 Jun 2026 16:26:51 GMT"
+        },
+        {
+          "title": "Vanguard Total World Stock ETF declares quarterly distribution of $0.5627 - MSN",
+          "url": "https://news.google.com/rss/articles/CBMi5wJBVV95cUxNSExoTFJjTE5WUTJPaWpOY2lUcWFYMV9DX3FhQmlmQldaODhYNkswMGVOYksxTElQYUkyU3NfbnNkc25iVHM4RVA5czdpRnVNUm5QU2JiVDJvaFc4UFczaENpdWJfdjlHQWtxOUxkbWRKNUMtYnVrVV9oc2VoNTdoSW1OcjRnS1dsM0wzTGJVZnpjcm04T3lLRzlOV29vOW92ejczeGVxLUliR1hKbVVjbllfUDVWU205N1ZSOXA1RGc5UFduQThiOVlkUVZmZl9TeTFoVUJ6VC0tVXdPVFA4dERWc2hkNGNHV2t2cEVXLUdtN21kVERUWFljemJ3WDloREUxX1Jtb2lFODRiZUJ1M1pkem44X2t2STU3NGM2Z2VBM2VGdWl3Zmlob3RKV2pOT3hwZzhrQWp3QU1UclJOaWFXdUw2RDJqRWF4TUFrMjVCMHZSenNENjE5RVpsOEt2X0JGc3ZRNA?oc=5",
+          "source": "MSN",
+          "published": "Wed, 17 Jun 2026 14:49:55 GMT"
+        }
+      ]
+    },
+    {
+      "ticker": "XLV",
+      "company": "Health Care Select Sector SPDR Fund",
+      "exchange": "NYSE Arca",
+      "holding_value_thb": 1683.39,
+      "portfolio_weight_pct": 10.54,
+      "target_weight_pct": 10.0,
+      "weight_gap_pct": -0.54,
+      "allocation_status": "Near target",
+      "article_count": 6,
+      "key_news": "The healthcare sector shows mixed performance, with some small-cap stocks offering attractive valuations and growth, while larger constituents like Waters Corp and Cigna are noted for underperforming the sector.",
+      "key_takeaway": "The healthcare sector shows mixed performance, with some small-cap stocks offering attractive valuations and growth, while larger constituents like Waters Corp and Cigna are noted for underperforming the sector.",
+      "impact": "The ETF's performance will be influenced by the balance of growth in smaller companies and the drag from underperforming larger constituents. Structured products tied to XLV indicate ongoing market interest in the sector's volatility and potential for specific strategies.",
+      "possible_impact": "The ETF's performance will be influenced by the balance of growth in smaller companies and the drag from underperforming larger constituents. Structured products tied to XLV indicate ongoing market interest in the sector's volatility and potential for specific strategies.",
+      "bullish_points": [
+        "Some small-cap healthcare stocks are identified as having revenue growth and attractive valuations.",
+        "Intuitive Surgical (ISRG) is highlighted as a growth story, potentially contributing positively to the sector."
+      ],
+      "bearish_points": [
+        "Waters Corporation (WAT) is reported to be underperforming the Health Care Sector.",
+        "Cigna (CI) is also noted for underperforming the healthcare sector."
+      ],
+      "valuation_context": "The mention of 'attractive valuations' for small-cap healthcare stocks suggests potential pockets of value within the sector. However, underperformance by larger components like WAT and CI could weigh on the overall sector's valuation perception.",
+      "technical_summary": "XLV closed at 150.71, slightly below its 20-day EMA of 150.85. The RSI is neutral at 51.56. MACD (1.56) is just above its signal line (1.54), indicating slightly positive momentum. Support is found around 149.03-149.55, with resistance at 150.88-152.22. The trend is constructive, with positive but weak momentum.",
+      "technical": {
+        "ticker": "XLV",
+        "company": "Health Care Select Sector SPDR Fund",
+        "last_close": 150.71,
+        "last_date": "2026-06-17",
+        "ema20": 150.85,
+        "ema50": 149.36,
+        "ema200": 147.24,
+        "rsi14": 51.56,
+        "macd": 1.56,
+        "macd_signal": 1.54,
+        "trend": "Constructive",
+        "support_zones": [
+          149.55,
+          149.18,
+          149.03
+        ],
+        "resistance_zones": [
+          150.88,
+          152.08,
+          152.22
+        ],
+        "volume_latest": 10986300,
+        "technical_note": "RSI is in a neutral range. MACD is above signal, suggesting positive momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
+      },
+      "what_to_monitor": "Performance of key large-cap healthcare companies, growth trends in small-cap healthcare, and any sector-specific regulatory or innovation news.",
+      "risk_level": "Low",
+      "relevance_score": "Medium",
+      "relevance_reason": "News provides insights into sector dynamics and performance of underlying constituents, which directly affect the ETF.",
+      "alert_tags": [
+        "Sector",
+        "Valuation",
+        "Earnings"
+      ],
+      "time_horizon": "Medium term",
+      "confidence": "Medium",
+      "articles": [
+        {
+          "title": "Health Care Select Sector SPDR (XLV) Key Pivot Points Analysis - GuruFocus",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPOEh4dkhQR29vMVdLeUFLVDQ3VjlzSEs2NXJaMWtROGZ3WGJLOE1VTF9tQ2t2ak1wX2RuY3J6Z3NLZjQwUVdoUTYwMi1nbGtGNG1HTGxsT3U1LWdvbmJYNEJjSWhacTh0UEF2S2syRzh0blJ6anRXM2tZa0ZCRDFuc1Y3MFBCaThPQXJKenlrMjRGcnBidHEzTFVxOTlYdWdCSU55YVVsZm1oX3BvYVRZOQ?oc=5",
+          "source": "GuruFocus",
+          "published": "Wed, 17 Jun 2026 18:40:02 GMT"
+        },
+        {
+          "title": "These small-cap healthcare stocks pair revenue growth with attractive valuations (XLV:NYSEARCA) - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQS3lqcjVrX3BXRTA1RUxDanQ5bEpjanJwaVluZmhQZ2NiTFlMTHRETkhTeWxoWFVJd3NLLUdfV3VXZXM0TDk1bEs5S0w4clNsVjlzRjc3NHV2LXRURDhLQ0c3X0tvNzRXUllGd3hNWVg1dFBrcW8xVGdTTjVuaHpUWFBMUk9pWDNpS2dQcUIzdTdNb0JFWGRVTmxDc19OdHFfZ1dwZDd6TTJoSXFkNXFXLUxCLU1FUkREQ0E?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Wed, 17 Jun 2026 11:02:05 GMT"
+        },
+        {
+          "title": "UBS (AMUB) offers $1,000 Trigger Callable Notes tied to XLE, XLU, XLV - Stock Titan",
+          "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOSnlWSTg4UlN4TEJEcC1qaF91TUtHYW4tc1pIeW9uOU5xaG4zdDJvMFQxV3V1RVdLR1N4a2p5SWt1cUh1SmlaaGk5VmNpRWZRVkloX1VpTXNSSEc5SXRsbW1sM2FzRmt3Y1FnWVZWUWczUXZoaUZBaDdmYmFnR2tPQmRaa1NOeGN3dy1JX0phdFN4WXN6Tkw0NUxycG4?oc=5",
+          "source": "Stock Titan",
+          "published": "Wed, 17 Jun 2026 14:09:44 GMT"
+        },
+        {
+          "title": "Intuitive Surgical: A Growth Story You Should Have On Your Radar (NASDAQ:ISRG) - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPUUxreW5zUmlTNHQxV2J5VlRLWk1sUW1CeXZSZTYtQlV2TXhvTHVuU0djdkwxS3pEVWl2YjBRLTRTdk53UllNLUZMY3piUWRycUpERzJBeVFOVG1tRnpHQmJscEN3SHpIR0g0cy16TG5JSlp2VVZrZXQ0dUdhVXlLR1prUFZFejNDQmVTOW1Nclc1cEMxSUhfOTI5NnVNbGJrTVhaTy1wQQ?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Wed, 17 Jun 2026 17:46:18 GMT"
+        },
+        {
+          "title": "Waters Corporation Stock: Is WAT Underperforming the Health Care Sector? - Barchart.com",
+          "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOSXg2ZzV5bm5xWFB0UjU2VzVYQjdPY3MzbnRqTDd6djBBbGduQ19WYktxNTItUjVBWUJRQnZUV0lUSnFzeHdPRWx0S0FUNnk0UFpBNU9rQ0ZLMFRNeUhIaFd4Nk5SSUN6dnV6WlNWNGtTTFgtU2JOYXZ0Z01ZZUstQW5xX1ZBTDFzWFYtS1hMNlNWeWRWYXpnUXo4b3RSdjVTSFpxckZ5OXFCVDVGUGxibl9qZUg?oc=5",
+          "source": "Barchart.com",
+          "published": "Wed, 17 Jun 2026 12:59:22 GMT"
+        },
+        {
+          "title": "Cigna stock: Is CI underperforming the healthcare sector? - MSN",
+          "url": "https://news.google.com/rss/articles/CBMixgJBVV95cUxPcHBXRHU0ekxRUVBnblJNQkItbW9udWdXN2llajE1cXQ0ZE1hQ0N2Sm41R0VGXzE4RURVMHFqd1FOOUh0YkFYVEJTYnRaaW1DOTNIRl8tQjNWMDZ0UV9WYWJ6anMxaE04SGFObklwaTBmUVpTR0FpNmpWTWpRS1dZUlA1bUFKUUF5Yzkwa0Nkc3VxUjN6dGNTdFFLcG5PZHpKS2lFQnk1d1h4RS1ldV9PQThnbVJCZXZYbEZVWXZjdExUU0o4X2VBNHhYQ1R4bTJWWEpiQnYyWkt5UjF2M1FpV216MVdHRS1idGx0QU8xNl9pOFd1ZDc4NE9WdHpHYjZxVkE1T2JsQlRFYnYybTF1WC1qbkdWcmRZdlBFNG8tb2lZeDNTQVFoTzRQTTFONkp0ejVEZzlLTUZnYWY3S05UUEhPRERkdw?oc=5",
+          "source": "MSN",
+          "published": "Thu, 18 Jun 2026 01:47:19 GMT"
+        }
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "company": "Microsoft Corporation",
+      "exchange": "NASDAQ",
+      "holding_value_thb": 1500.0,
+      "portfolio_weight_pct": 9.39,
+      "target_weight_pct": 10.0,
+      "weight_gap_pct": 0.61,
+      "allocation_status": "Near target",
+      "article_count": 35,
+      "key_news": "Microsoft's stock slumped after Azure cloud growth fell short of market expectations, highlighting that high expectations are a significant risk. The company also walked away from a potential $3 billion deal with Oracle.",
+      "key_takeaway": "Microsoft's stock slumped after Azure cloud growth fell short of market expectations, highlighting that high expectations are a significant risk. The company also walked away from a potential $3 billion deal with Oracle.",
+      "impact": "Underperformance in a key growth segment like Azure can lead to negative sentiment and price corrections. The failed Oracle deal, while not massive, adds to a narrative of missed opportunities or strategic shifts. High expectations will continue to pressure future performance.",
+      "possible_impact": "Underperformance in a key growth segment like Azure can lead to negative sentiment and price corrections. The failed Oracle deal, while not massive, adds to a narrative of missed opportunities or strategic shifts. High expectations will continue to pressure future performance.",
+      "bullish_points": [
+        "No explicit bullish points from today's news, as the focus is on recent underperformance and risks."
+      ],
+      "bearish_points": [
+        "Azure growth fell short of expectations, leading to a stock slump.",
+        "Microsoft's stock moved down by 3.13% on June 17.",
+        "The Motley Fool attributes the slump to high expectations, which Seeking Alpha also identifies as the 'biggest risk.'",
+        "Microsoft walked away from a potential $3 billion deal with Oracle, indicating a missed M&A opportunity or strategic disagreement."
+      ],
+      "valuation_context": "The news suggests that Microsoft's valuation incorporates high growth expectations, particularly for Azure. When these expectations are not met, even slightly, it can lead to a significant re-evaluation by the market. The stock's dip reflects this sensitivity.",
+      "technical_summary": "MSFT closed at 378.91, significantly below its 20-day EMA of 407.65, indicating strong short-term bearishness. The RSI is at 34.66, nearing oversold territory. MACD (-7.12) is well below its signal line (-2.09), suggesting strong negative momentum. Support levels are around 370.24-371.93, with resistance at 382.17-388.18. The trend is a downtrend, with clear negative momentum.",
+      "technical": {
+        "ticker": "MSFT",
+        "company": "Microsoft Corporation",
+        "last_close": 378.91,
+        "last_date": "2026-06-17",
+        "ema20": 407.65,
+        "ema50": 410.64,
+        "ema200": 436.45,
+        "rsi14": 34.66,
+        "macd": -7.12,
+        "macd_signal": -2.09,
+        "trend": "Downtrend",
+        "support_zones": [
+          371.93,
+          371.49,
+          370.24
+        ],
+        "resistance_zones": [
+          382.17,
+          383.54,
+          388.18
+        ],
+        "volume_latest": 41835800,
+        "technical_note": "RSI is in a neutral range. MACD is below signal, suggesting weaker momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
+      },
+      "what_to_monitor": "Future Azure growth reports, any strategic announcements regarding cloud computing, and how the company manages market expectations for its various segments.",
+      "risk_level": "Medium",
+      "relevance_score": "High",
+      "relevance_reason": "News directly addresses a significant stock price movement, a key business segment's performance, and strategic decisions.",
+      "alert_tags": [
+        "Earnings",
+        "Guidance",
+        "M&A",
+        "Cloud",
+        "Expectations"
+      ],
+      "time_horizon": "Short term",
+      "confidence": "High",
+      "articles": [
+        {
+          "title": "Microsoft Corporation (MSFT) Fell as Azure Growth Fell Short of Expectations - Yahoo Finance",
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOY1ZhemZTOVJQQVhjaGl1b1ctSVBJekJkVkI2VHFzeGQ2TGpsbW1uLUFjajNpdGJEWWpGaV9VSGRTRVZ1Y0NjTnVFeExHMWJBQU1QX2FQVEFWS3Z2RWR1TkRMRHV5RnI1cFlJeGpQS1ZSS1BCc1NDVXA4M0syX0s5YU9xTlRhZVpNTWNTTlNudF9ManducnpuWTBldzZ2MnhtTnM2VA?oc=5",
+          "source": "Yahoo Finance",
+          "published": "Wed, 17 Jun 2026 14:05:50 GMT"
+        },
+        {
+          "title": "Why Microsoft Stock Slumped Today - The Motley Fool",
+          "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNSlQ5Tk5rQUM4LTUzY2VodlN4bldrbXB6Wi1DWW1vTXh1eUVCdEFla2NkWlhzakRJN1dyNmtYLTd2RzM1WVF1djVjRE5xa3pjNFFnd2dmQ2o5a0w5V2puc2dkTVFLYW1oQ21zZHUxa3EyVHVBMU1reXltWWE0OEVqTmd3?oc=5",
+          "source": "The Motley Fool",
+          "published": "Wed, 17 Jun 2026 22:42:00 GMT"
+        },
+        {
+          "title": "Microsoft Corp Stock (MSFT) Moved Down by 3.13% on Jun 17: Drivers Behind the Movement - TradingKey",
+          "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNeVZUUXp0OC03RjJ4TnUyTmNpQ01meTBqbmxqWHJWR2VkM0lGWUlqd0x0TDRzQUJzUmlzZkktbG9iWUNKZi1vdGVIdklLd3lpU1JweVZNM1ZHQjdRUlFFOUl5aERhT1RZOHZYYk1OeXBUYmk3ZGFpeTRsZjlVVC0zMnBZYkF0VHlaek5r?oc=5",
+          "source": "TradingKey",
+          "published": "Wed, 17 Jun 2026 19:15:35 GMT"
+        },
+        {
+          "title": "Microsoft's Biggest Risk Isn't Competition - It's Expectations - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOc0hqR0lIeEZFY0plRHVyUmxUVG9jUjhiTlJNQnFsY1hrdHpxUHpIaUZ5a0UwbkJlU0pEd1kzdlkwaHNoN0ozX1dNVG1fajBPQkdxNktJeXI5aHh3Wk5Qd0M5bnJkcl9XMjhFMGp6MWUzT1E1SVkwR2g5MWNxcTMyaXVhNVktNWVzTnBHbWExM3R5bzBDM2lZT3BQcndXUTA?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Thu, 18 Jun 2026 04:27:31 GMT"
+        },
+        {
+          "title": "Tech stocks face mixed fortunes: Broadcom surges while Microsoft tumbles - investingLive",
+          "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOSHlvX3NyVWgwdjVVSUpQWXU0WThoTWk5VGFvRUV4YVh0NV9KclNYeXJEeW9jcGF2TkZRdkF3UnFNMzd5d2JrekpyMV8yNXVQZHhYSkRBb2RXWC1kYkZ5UmVtd0ZvRVpqMGlIRFdjTGFJeEFkcFpVWnU5azFtU2tKb3M5NkktYXl0RHFQUXlmT2wwSV92ZlNoMllTTng3Ui1jN0Y1SXNHU0NxcHZhamoxczA3SG1HSTkwZzhaMTUwVDdUQVpTQVE?oc=5",
+          "source": "investingLive",
+          "published": "Wed, 17 Jun 2026 14:46:15 GMT"
+        },
+        {
+          "title": "Microsoft Walks Away From Potential $3 Billion Oracle Deal, Stock Dips - TradingView",
+          "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPdmFkQktnYy11QVp0blhDYWY4N3ppQW1tbTlwXzZzdDZ6NDNCcTRNZ0hhazBiQTdZckFmU3U2WktCUHFNTW9fZmtPOFNvMVdtdWE4OVR5eS1WVjdTZ2NwQnpoN29NdWkwNEZOWFRPWGhhTzNSdzB3bHVLWlZYaVk0Z05VQ2h0U0V6RW96VXU5WThDMFJveEFNYnhoQkZsYW9GZUIwbTVUel8tS21QcjQ2dmZWNHZxZHFLTVdhYk5JY2k4S3h4VFQ4?oc=5",
+          "source": "TradingView",
+          "published": "Wed, 17 Jun 2026 14:57:56 GMT"
+        },
+        {
+          "title": "MSFT Stock Tests the Last Support Slipping Toward $445, as Legal Challenges and Competition Pressure Shares - FXLeaders",
+          "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxNQWNLTFViWjY5SHhxei1sSURsbW1FSWJRc0pGWjFMT0lNRm5fWVUwZ0ZUcnZzYzh3UGNIdHZmTEJnMEM4TENmTl9mS0Fsc3JpMjdSajZmMmdYenYxbWZMWEdGN1JyODBhMW9RVGZjZmNLTlhzanlEWlR1QUppZmhZcXFHTVpWVEI2WTFmajdpVHFxdjZHY1RHRlJ0Qk1nZU1oQV9Ob094SDJodG1kTmFvZGpFRVZnTW5LSFlMcERGRkFNN2xGTy11bE01NmQ1YVQxanVNc0tOSUhremZlc1FMbVB3?oc=5",
+          "source": "FXLeaders",
+          "published": "Wed, 17 Jun 2026 22:31:20 GMT"
+        },
+        {
+          "title": "Why Is Microsoft Stock Down? A Look at the Recent Pullback in MSFT - EBC Financial Group",
+          "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOMHU1MHpiNEJoZmllNkdiYVRHYXV6cFJwU2FqTm5XNl82aGpmR2pJODFUcF9GYUNFeThXdHFLN1doVEpkOXZ3d2gzOHJzWFNnNDBRMjZBNGhNbS1HYVBwNlRjYzcydG9oMkFhRHdUelhLRVhNRjFfTzY3dXladkwwNVAtS3V2YWJzSmlOY1REVkx5TWRIX1E?oc=5",
+          "source": "EBC Financial Group",
+          "published": "Wed, 17 Jun 2026 09:22:00 GMT"
+        }
+      ]
+    },
+    {
+      "ticker": "PLTR",
+      "company": "Palantir Technologies Inc.",
+      "exchange": "NASDAQ",
+      "holding_value_thb": 344.27,
+      "portfolio_weight_pct": 2.16,
+      "target_weight_pct": 5.0,
+      "weight_gap_pct": 2.84,
+      "allocation_status": "Under target",
+      "article_count": 29,
+      "key_news": "Palantir's valuation remains a central theme, with some analysts noting its high price relative to its 'not normal' growth. The stock saw premarket activity ahead of quarterly results, and its CFO joined another company's board.",
+      "key_takeaway": "Palantir's valuation remains a central theme, with some analysts noting its high price relative to its 'not normal' growth. The stock saw premarket activity ahead of quarterly results, and its CFO joined another company's board.",
+      "impact": "High valuation combined with upcoming earnings creates potential for significant price movements. Strong growth could justify the valuation, but any miss could lead to a sharp correction. The CFO's board appointment is a minor governance note.",
+      "possible_impact": "High valuation combined with upcoming earnings creates potential for significant price movements. Strong growth could justify the valuation, but any miss could lead to a sharp correction. The CFO's board appointment is a minor governance note.",
+      "bullish_points": [
+        "The company's growth is described as 'not normal,' suggesting strong underlying business momentum.",
+        "Premarket rise noted, indicating some positive sentiment ahead of quarterly results."
+      ],
+      "bearish_points": [
+        "Valuation is consistently described as 'expensive,' raising concerns about its current price point.",
+        "Mixed retail investor views and a 'dull setup' ahead of earnings suggest uncertainty and potential for volatility."
+      ],
+      "valuation_context": "Multiple articles emphasize Palantir's high valuation, with phrases like 'expensive' and questioning what its valuation 'implies.' This suggests that the current price already discounts significant future growth, making it sensitive to earnings and guidance.",
+      "technical_summary": "PLTR closed at 130.63, significantly below its 20-day EMA of 136.31, indicating strong short-term bearishness. The RSI is neutral at 43.11. MACD (-2.41) is below its signal line (-1.39), suggesting weakening momentum. Support levels are around 130.21-130.60, with resistance at 134.71-135.26. The trend is a downtrend, with negative momentum.",
+      "technical": {
+        "ticker": "PLTR",
+        "company": "Palantir Technologies Inc.",
+        "last_close": 130.63,
+        "last_date": "2026-06-17",
+        "ema20": 136.31,
+        "ema50": 139.65,
+        "ema200": 150.5,
+        "rsi14": 43.11,
+        "macd": -2.41,
+        "macd_signal": -1.39,
+        "trend": "Downtrend",
+        "support_zones": [
+          130.6,
+          130.49,
+          130.21
+        ],
+        "resistance_zones": [
+          134.71,
+          135.24,
+          135.26
+        ],
+        "volume_latest": 32161500,
+        "technical_note": "RSI is in a neutral range. MACD is below signal, suggesting weaker momentum.",
+        "disclaimer": "Technical levels are context only, not buy or sell advice."
+      },
+      "what_to_monitor": "Palantir's quarterly earnings results today, particularly growth metrics and future guidance. Also, watch for any further commentary on its valuation and market reception to its AI offerings.",
+      "risk_level": "High",
+      "relevance_score": "High",
+      "relevance_reason": "News directly addresses valuation, upcoming earnings, and growth prospects, which are critical for PLTR.",
+      "alert_tags": [
+        "Earnings",
+        "Valuation",
+        "AI"
+      ],
+      "time_horizon": "Short term",
+      "confidence": "High",
+      "articles": [
+        {
+          "title": "PLTR Stock: What Does Its Valuation Imply? - Yahoo Finance",
+          "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPUkNjVWVPY1RLRS15X21XVWNxRWZsekNDOWxlOHRDS1paRnp2dVk4Z3N4WUNsazRQUERyRVpjUUFGU2kyZHJWd1psd2tDYU5Uc3FlV0FOeGd4cWpiN0l4VjR3T1I3Zk9FQ3JUdFBtWDB4R1hNV2w1SjRUUW9BVUt1bWN0cnp2Q1g1YkkzOC1HTTR0c3RSM1dmZTBzb3A?oc=5",
+          "source": "Yahoo Finance",
+          "published": "Wed, 17 Jun 2026 19:38:32 GMT"
+        },
+        {
+          "title": "Palantir: The Stock Is Expensive, But The Growth Is Not Normal (NASDAQ:PLTR) - Seeking Alpha",
+          "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPYk9fNDFyMUp4S0dNR0dBV2hnV3U5SmdUd1ZMamJ5U05kTExpZmYwTFNFTU0teHlDODlMNnhrajRnSVphalZwQ1BUajZlTEFUblF4OXpBN1N4dHFhSDFXRzcyeWUxdzhYZTEtSlYzeEFDTk5yaUpYYTFvZ3NrenRHVzFhMzMyWGxWU1RCSUw1d3hUZm9PRE9FRXZKUENmc3NabFpB?oc=5",
+          "source": "Seeking Alpha",
+          "published": "Wed, 17 Jun 2026 19:37:53 GMT"
+        },
+        {
+          "title": "PLTR Rises Premarket: Rangebound Stock, Mixed Retail View Signal Dull Setup Ahead Of Quartely Results Today - Stocktwits",
+          "url": "https://news.google.com/rss/articles/CBMi_gFBVV95cUxNSjg3RzBnbVpHZERWQm16VDduamg5MUlIYjdqeUZrWmZDN1VseUkwaFd2WnhXaXI0R3pkWG9FTjdnU3BqOC1UWGpkckFGODBhcmM2MndMQnp4ZWg0blRzQWdzNE1WaXVoVDRaNzE2US0yakppMVdoZEN1T08zd2pQZXQxamUzRnFQMUZlT09TbHB6VC1vZ0FMTWpVYmRKTDdQaEtPMGZ4M1B5UEV6NjBpYmpBZTgzMFg0Ql9SN3VSdmdTRWROOVZYaHozeWVtV3lMa2hCLTgtR2NUREo1M1JQWEhJd2pOZ0F6WjZQeXdueEtUVVNpOG1jS2dCMl9vdw?oc=5",
+          "source": "Stocktwits",
+          "published": "Wed, 17 Jun 2026 15:56:14 GMT"
+        },
+        {
+          "title": "Playlist taps Palantir CFO David Glazer as board director - Stock Titan",
+          "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOdzdqUDI4Mnp1OUVEQnJxMnNlVTRGT080UU5RVHluRFFVY19QWFBxSll1ZU5xV1AxdGtvUTZyTkhIdTJDWVE4eGxFcmxuYVVJbzNuZkNScVVlekVNWmd3Mkp1U2tLaWprdURfbDFFbTE2UzVHRnJibERKc2p4QXV3S2R3a29NUlFqUVhnX2RIclljeS1JaG5XMWtqaldTZUhNVE1TTWVVRUVsbi02Y0FxdFlTUXdXcFlfVmtJNWpR?oc=5",
+          "source": "Stock Titan",
+          "published": "Wed, 17 Jun 2026 14:00:00 GMT"
+        },
+        {
+          "title": "PALANTIR GOOGLE TAKEOVER!! $1 TRILLION PLTR STOCK POWERHOUSE CONFIRMED?! - PALANTIR STOCK NEWS TODAY Ice Crackdown Foreign Student Opt (gYGtLqFIct) - Fathom Journal",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1vOFhyTDRPb1BvWkx2eHVQbThRZUdIcm43MFAwNUlhZTlraUV1WjgzaDVWTjFRYnU1am5BRll5cVFGaGoyMEkxS2RZTkV5T1VWNlBrVFhPRUVZNEowc0hKdWJvSlY?oc=5",
+          "source": "Fathom Journal",
+          "published": "Thu, 18 Jun 2026 00:32:56 GMT"
+        },
+        {
+          "title": "One Big Stock Market Sunday | AI Boom, Big Tech Earnings (AMD, PLTR) & Market Outlook Nick Foligno (9TTeXyMuXY) - Mshale",
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBKbzhQWTdNSktBb3J0eFZpeEJxa2l5X0l2c1dnS3NCR2VVUTZ3dDJnRE5EZlRQVEN2ZWJ3X3FYNVpfLXZHYzRua0RGdUd2SS1sYTJXTGt6YUQwZ0xYcWZPdQ?oc=5",
+          "source": "Mshale",
+          "published": "Wed, 17 Jun 2026 16:24:30 GMT"
+        },
+        {
+          "title": "Palantir Grew Revenue 85% and Raised Full-Year Guidance by 10 Points — So Why Is PLTR Down 26% YTD? - TradingKey",
+          "url": "https://news.google.com/rss/articles/CBMiiwJBVV95cUxQNmM2SURNRGVLR0RMNmJYbUJidUVteEZBTkRuejNZX2JTMHo4SG5jVnhlbFBrd0FsUFpSTmg3ZGp6RlpzalpSNTlNVElFRGVJRVdQWjJQb2N4WndtWXpHNFZMQVNlLUJrNEpRMDd1X3kyUHk3cWtIeFBLNGpOOEF1MVc0cXBkUlZHcVhjenM2MDhmQ1NRbGk5TFVPV0xTbGNxRHQ2YlRMcnNINVhrOG9aUUZWQl9wa3BWRTItVmpMcHhVNUNoZXZuLTN4dUJ0Nm5HLWp4MTEtUFo0eFQ0RWYxa1VvVkZZR1JPdVh4XzhMdFBmNGY5MUY5a3NMVmxLSjBTWjlFOHBXb01mSkk?oc=5",
+          "source": "TradingKey",
+          "published": "Wed, 17 Jun 2026 06:53:24 GMT"
+        },
+        {
+          "title": "Michael Burry Fires Back At Elon Musk In AI Warfare Debate — Says Palantir Is ‘Overpromising,’ Not Anthropic - Stocktwits",
+          "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOcTNjQ0JZWnhlZWh4b25aLW9zc2Flci1kUWJfNEY1cUxOUkJja0ctc0pnYkF3MEw5Uk1xZ0F5VmRjOTBSX1JJM3ZZTi1ETlN3bVRYN1RvM2FjV3lJamJkcEFIZ0FseVBtYk9VOHBYQlVJcXB0UFRYVFhxV2h4NTU4Yml4RUxpTm1TQW8zYnNoWnN6c2NUSlpNYlBreXpRamxIckpVeTQzY0dZaFkySE12UzNPODBjT0QtcjhoeTJBREpSUWI4WmtlQVJ1MDV4T2NncmRtMw?oc=5",
+          "source": "Stocktwits",
+          "published": "Wed, 17 Jun 2026 07:40:51 GMT"
+        }
+      ]
+    }
+  ]
+}
