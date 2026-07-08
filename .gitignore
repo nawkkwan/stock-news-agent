@@ -1,4 +1,9 @@
 .env
+.env.local
+.env.*.local
+apps/web/.env
+apps/web/.env.local
+apps/web/.env.*.local
 .venv/
 .tmp/
 logs/
