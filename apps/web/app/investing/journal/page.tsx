@@ -27,13 +27,13 @@ export default async function JournalPage({
     <main className="page-shell">
       <ConfigNotice configured={data.configured} error={data.error} />
       <section className="panel">
-        <h2>Add journal entry</h2>
+        <h2>Add note</h2>
         <InvestmentJournalForm ticker={ticker} />
       </section>
 
       <section className="panel">
         <div className="section-head">
-          <h2>Investment Journal</h2>
+          <h2>Investment notes</h2>
           <form className="filter-row">
             <input name="ticker" placeholder="Ticker" defaultValue={ticker} />
             <select name="action" defaultValue={action || ""}>

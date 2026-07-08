@@ -1,5 +1,7 @@
 "use server";
 
+import fs from "node:fs/promises";
+import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "../../lib/supabase-server";
 import {
@@ -15,6 +17,17 @@ import {
   type WatchlistStatus,
 } from "../../lib/investment-types";
 import { normalizeTicker, nullableNumber, nullableText } from "../../lib/investment-data";
+
+type LatestReportStock = {
+  ticker?: string;
+  company?: string;
+  holding_value_thb?: number;
+  portfolio_weight_pct?: number;
+};
+
+type LatestReport = {
+  stocks?: LatestReportStock[];
+};
 
 function oneOf<T extends string>(value: FormDataEntryValue | null, allowed: T[], fallback: T) {
   const candidate = String(value || "") as T;
@@ -99,8 +112,8 @@ async function ensurePortfolio(portfolioId?: string | null) {
   const { data, error } = await supabase
     .from("portfolios")
     .insert({
-      name: "Main Portfolio",
-      description: "Default portfolio for existing holdings and transactions.",
+      name: "My Ports",
+      description: "Default portfolio for current holdings and transactions.",
       base_currency: "USD",
       target_weight: 100,
       user_id: user.id,
@@ -206,13 +219,15 @@ export async function upsertHolding(formData: FormData) {
   }
 
   const { supabase, user } = await requireUser();
-  const company = await ensureCompany(ticker);
+  const company = await ensureCompany(ticker, nullableText(formData.get("company_name")));
   const portfolio = await ensurePortfolio(nullableText(formData.get("portfolio_id")));
   const id = nullableText(formData.get("id"));
   const payload = {
     company_id: company.id,
     portfolio_id: portfolio.id,
     ticker,
+    shares: nullableNumber(formData.get("shares")),
+    avg_cost: nullableNumber(formData.get("avg_cost")),
     current_value: nullableNumber(formData.get("current_value")),
     latest_price: nullableNumber(formData.get("latest_price")),
     target_weight: nullableNumber(formData.get("target_weight")),
@@ -233,6 +248,93 @@ export async function upsertHolding(formData: FormData) {
   revalidatePath("/investing");
   revalidatePath(`/investing?portfolio=${portfolio.id}`);
   revalidatePath(`/investing/companies/${ticker}`);
+}
+
+async function readLatestReport(): Promise<LatestReport | null> {
+  try {
+    const file = await fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8");
+    return JSON.parse(file) as LatestReport;
+  } catch {
+    return null;
+  }
+}
+
+export async function importDailyReportPortfolio(formData: FormData) {
+  const report = await readLatestReport();
+  const stocks = (report?.stocks || []).filter(
+    (stock) => normalizeTicker(stock.ticker) && Number(stock.holding_value_thb) > 0
+  );
+
+  if (stocks.length === 0) {
+    return;
+  }
+
+  const { supabase, user } = await requireUser();
+  const selectedPortfolioId = nullableText(formData.get("portfolio_id"));
+  let portfolio = selectedPortfolioId ? await ensurePortfolio(selectedPortfolioId) : null;
+
+  if (!portfolio) {
+    const { data: existing, error: selectError } = await supabase
+      .from("portfolios")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("name", "My Ports")
+      .maybeSingle();
+
+    if (selectError) {
+      throw selectError;
+    }
+
+    if (existing) {
+      portfolio = existing;
+    } else {
+      const { data, error } = await supabase
+        .from("portfolios")
+        .insert({
+          name: "My Ports",
+          description: "Imported from Daily notes holdings.",
+          base_currency: "THB",
+          target_weight: 100,
+          user_id: user.id,
+        })
+        .select("*")
+        .single();
+
+      if (error) {
+        throw error;
+      }
+      portfolio = data;
+    }
+  }
+
+  for (const stock of stocks) {
+    const ticker = normalizeTicker(stock.ticker);
+    const company = await ensureCompany(ticker, stock.company || ticker);
+    const payload = {
+      company_id: company.id,
+      portfolio_id: portfolio.id,
+      ticker,
+      shares: null,
+      avg_cost: null,
+      current_value: Number(stock.holding_value_thb),
+      latest_price: null,
+      target_weight: Number(stock.portfolio_weight_pct) || null,
+      notes: "Imported from Daily notes portfolio snapshot.",
+      user_id: user.id,
+    };
+    const existing = await findSingleUserRow("holdings", ticker, portfolio.id);
+    const query = existing
+      ? supabase.from("holdings").update(payload).eq("id", existing.id)
+      : supabase.from("holdings").insert(payload);
+    const { error } = await query;
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  revalidatePath("/investing");
+  revalidatePath(`/investing?portfolio=${portfolio.id}`);
 }
 
 export async function upsertWatchlistItem(formData: FormData) {

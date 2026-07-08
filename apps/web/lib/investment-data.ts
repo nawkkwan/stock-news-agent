@@ -150,12 +150,16 @@ export async function getInvestmentData(options: InvestmentDataOptions = {}): Pr
     const selectedPortfolio = pickSelectedPortfolio(portfolios, options.selectedPortfolioId);
     const holdings = (holdingsResult.data || []) as Holding[];
     const transactions = (transactionsResult.data || []) as PortfolioTransaction[];
+    const journalEntries = (journalResult.data || []) as InvestmentJournalEntry[];
     const selectedHoldings = selectedPortfolio
       ? holdings.filter((holding) => holding.portfolio_id === selectedPortfolio.id)
       : holdings;
     const selectedTransactions = selectedPortfolio
       ? transactions.filter((transaction) => transaction.portfolio_id === selectedPortfolio.id)
       : transactions;
+    const selectedJournalEntries = selectedPortfolio
+      ? journalEntries.filter((entry) => !entry.portfolio_id || entry.portfolio_id === selectedPortfolio.id)
+      : journalEntries;
     const portfolio = buildPortfolioHoldings(selectedHoldings, selectedTransactions);
 
     return {
@@ -169,7 +173,7 @@ export async function getInvestmentData(options: InvestmentDataOptions = {}): Pr
       ...portfolio,
       watchlist: (watchlistResult.data || []) as WatchlistItem[],
       thesisNotes: (thesisResult.data || []) as ThesisNote[],
-      journalEntries: (journalResult.data || []) as InvestmentJournalEntry[],
+      journalEntries: selectedJournalEntries,
       news: (newsResult.data || []) as NewsItem[],
     };
   } catch (error) {

@@ -80,9 +80,13 @@ WEB_PORT=3000
 OPENAI_API_KEY=optional
 OPENAI_MODEL=gpt-4o-mini
 GEMINI_API_KEY=optional
+EODHD_API_KEY=optional-for-global-symbol-search-and-latest-quotes
+ALPHA_VANTAGE_API_KEY=optional-for-global-symbol-search-and-latest-quotes
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 SUPABASE_SERVICE_ROLE_KEY=backend-only-service-role-key
+SUPABASE_USER_ID=auth-user-id-for-daily-worker
+SUPABASE_PORTFOLIO_NAME=My Ports
 TIDB_HOST=your-tidb-host
 TIDB_PORT=4000
 TIDB_USER=your-tidb-user
@@ -91,6 +95,17 @@ TIDB_DATABASE=investment_research
 ```
 
 ## Web App
+
+The Overview page is portfolio-first: select one portfolio, then assets, cash movements, transactions, and filtered news all belong to that portfolio.
+
+Global asset search and latest quote lookup use EODHD first, then Alpha Vantage fallback, when these server-side env vars are set:
+
+```text
+EODHD_API_KEY=your_eodhd_key
+ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
+```
+
+Without this key, the portfolio still works, but symbol search/quote lookup will show a configuration message.
 
 Install and build:
 
@@ -125,7 +140,15 @@ Run and commit deployable web data:
 python apps/worker/jobs/deploy_daily_report.py
 ```
 
-The worker reads:
+The worker reads Supabase holdings and portfolio transactions when these backend-only variables are set:
+
+```text
+SUPABASE_SERVICE_ROLE_KEY
+SUPABASE_USER_ID
+SUPABASE_PORTFOLIO_ID or SUPABASE_PORTFOLIO_NAME
+```
+
+If Supabase worker variables are not set, it falls back to:
 
 ```text
 data/portfolio.json

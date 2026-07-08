@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -10,11 +11,16 @@ from zoneinfo import ZoneInfo
 from path_utils import display_path
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
+WORKER_DIR = ROOT_DIR / "apps" / "worker"
 REPORTS_DIR = ROOT_DIR / "reports"
 SITE_DATA_DIR = ROOT_DIR / "apps" / "web" / "data"
 PORTFOLIO_PATH = ROOT_DIR / "data" / "portfolio.json"
 MAX_ARTICLES_PER_STOCK = 8
 REPORT_TIMEZONE = "Asia/Bangkok"
+
+sys.path.insert(0, str(WORKER_DIR / "news"))
+
+from fetch_news import load_portfolio
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -46,15 +52,8 @@ def to_float(value: Any) -> float | None:
 
 
 def load_portfolio_meta() -> dict[str, dict[str, Any]]:
-    if not PORTFOLIO_PATH.exists():
-        return {}
-
-    portfolio = load_json(PORTFOLIO_PATH)
-    if not isinstance(portfolio, list):
-        return {}
-
     metadata: dict[str, dict[str, Any]] = {}
-    for item in portfolio:
+    for item in load_portfolio(PORTFOLIO_PATH):
         ticker = str(item.get("ticker", "")).strip().upper()
         if not ticker:
             continue

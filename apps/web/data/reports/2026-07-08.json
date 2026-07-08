@@ -64,20 +64,21 @@
     ],
     "stock_count": 6,
     "total_articles": 151,
-    "total_portfolio_value_thb": 15970.82,
+    "total_portfolio_value_thb": 18571.04,
     "errors": [],
-    "technical_errors": []
+    "technical_errors": [],
+    "exchange_rate_usd_thb": 33.32
   },
   "stocks": [
     {
       "ticker": "VOO",
       "company": "Vanguard S&P 500 ETF",
       "exchange": "NYSE Arca",
-      "holding_value_thb": 7896.41,
-      "portfolio_weight_pct": 49.44,
-      "target_weight_pct": 45.0,
-      "weight_gap_pct": -4.44,
-      "allocation_status": "Over target",
+      "holding_value_thb": 8460.73,
+      "portfolio_weight_pct": 45.56,
+      "target_weight_pct": 45.56,
+      "weight_gap_pct": 0,
+      "allocation_status": "Current weight",
       "article_count": 13,
       "key_news": "VOO experienced a slight dip today, while analysts continue to debate its long-term upside potential and compare its fee structure to competitors like SPLG.",
       "key_takeaway": "VOO experienced a slight dip today, while analysts continue to debate its long-term upside potential and compare its fee structure to competitors like SPLG.",
@@ -179,17 +180,19 @@
           "source": "The Motley Fool",
           "published": "Wed, 08 Jul 2026 02:51:54 GMT"
         }
-      ]
+      ],
+      "unrealized_gain_thb": 826.45,
+      "unrealized_gain_pct": 10.83
     },
     {
       "ticker": "GOOGL",
       "company": "Alphabet Inc.",
       "exchange": "NASDAQ",
-      "holding_value_thb": 2546.17,
-      "portfolio_weight_pct": 15.94,
-      "target_weight_pct": 15.0,
-      "weight_gap_pct": -0.94,
-      "allocation_status": "Near target",
+      "holding_value_thb": 4233.47,
+      "portfolio_weight_pct": 22.8,
+      "target_weight_pct": 22.8,
+      "weight_gap_pct": 0,
+      "allocation_status": "Current weight",
       "article_count": 64,
       "key_news": "Alphabet is seen as potentially undervalued, driven by strong AI and Cloud growth, positioning it to outperform the market.",
       "key_takeaway": "Alphabet is seen as potentially undervalued, driven by strong AI and Cloud growth, positioning it to outperform the market.",
@@ -215,7 +218,7 @@
         "ema200": 315.74,
         "rsi14": 54.04,
         "macd": -2.18,
-        "macd_signal": -4.0,
+        "macd_signal": -4,
         "trend": "Uptrend",
         "support_zones": [
           361.63,
@@ -291,17 +294,19 @@
           "source": "Stocktwits",
           "published": "Tue, 07 Jul 2026 21:12:07 GMT"
         }
-      ]
+      ],
+      "unrealized_gain_thb": 369.68,
+      "unrealized_gain_pct": 9.57
     },
     {
       "ticker": "VXUS",
       "company": "Vanguard Total International Stock ETF",
       "exchange": "NASDAQ",
-      "holding_value_thb": 2000.58,
-      "portfolio_weight_pct": 12.53,
-      "target_weight_pct": 15.0,
-      "weight_gap_pct": 2.47,
-      "allocation_status": "Under target",
+      "holding_value_thb": 2099.28,
+      "portfolio_weight_pct": 11.3,
+      "target_weight_pct": 11.3,
+      "weight_gap_pct": 0,
+      "allocation_status": "Current weight",
       "article_count": 5,
       "key_news": "News for VXUS today primarily lists various international companies it invests in, without providing specific performance or outlook analysis for the ETF itself.",
       "key_takeaway": "News for VXUS today primarily lists various international companies it invests in, without providing specific performance or outlook analysis for the ETF itself.",
@@ -382,17 +387,19 @@
           "source": "TradingView",
           "published": "Tue, 07 Jul 2026 05:55:29 GMT"
         }
-      ]
+      ],
+      "unrealized_gain_thb": 44.43,
+      "unrealized_gain_pct": 2.16
     },
     {
       "ticker": "XLV",
       "company": "Health Care Select Sector SPDR Fund",
       "exchange": "NYSE Arca",
-      "holding_value_thb": 1683.39,
-      "portfolio_weight_pct": 10.54,
-      "target_weight_pct": 10.0,
-      "weight_gap_pct": -0.54,
-      "allocation_status": "Near target",
+      "holding_value_thb": 1949.59,
+      "portfolio_weight_pct": 10.5,
+      "target_weight_pct": 10.5,
+      "weight_gap_pct": 0,
+      "allocation_status": "Current weight",
       "article_count": 7,
       "key_news": "Goldman Sachs strategists are reportedly pivoting to healthcare assets, suggesting a potential shift in institutional focus towards the sector.",
       "key_takeaway": "Goldman Sachs strategists are reportedly pivoting to healthcare assets, suggesting a potential shift in institutional focus towards the sector.",
@@ -481,17 +488,19 @@
           "source": "scanx.trade",
           "published": "Tue, 07 Jul 2026 11:50:02 GMT"
         }
-      ]
+      ],
+      "unrealized_gain_thb": 86.67,
+      "unrealized_gain_pct": 4.65
     },
     {
       "ticker": "MSFT",
       "company": "Microsoft Corporation",
       "exchange": "NASDAQ",
-      "holding_value_thb": 1500.0,
-      "portfolio_weight_pct": 9.39,
-      "target_weight_pct": 10.0,
-      "weight_gap_pct": 0.61,
-      "allocation_status": "Near target",
+      "holding_value_thb": 1488.03,
+      "portfolio_weight_pct": 8.01,
+      "target_weight_pct": 8.01,
+      "weight_gap_pct": 0,
+      "allocation_status": "Current weight",
       "article_count": 41,
       "key_news": "Microsoft is undergoing significant layoffs in its Xbox division due to Game Pass underperformance, contrasting with strong analyst projections for its stock based on Azure cloud dominance and Q3 results.",
       "key_takeaway": "Microsoft is undergoing significant layoffs in its Xbox division due to Game Pass underperformance, contrasting with strong analyst projections for its stock based on Azure cloud dominance and Q3 results.",
@@ -596,17 +605,19 @@
           "source": "Stocktwits",
           "published": "Tue, 07 Jul 2026 09:21:39 GMT"
         }
-      ]
+      ],
+      "unrealized_gain_thb": -50.35,
+      "unrealized_gain_pct": -3.27
     },
     {
       "ticker": "PLTR",
       "company": "Palantir Technologies Inc.",
       "exchange": "NASDAQ",
-      "holding_value_thb": 344.27,
-      "portfolio_weight_pct": 2.16,
-      "target_weight_pct": 5.0,
-      "weight_gap_pct": 2.84,
-      "allocation_status": "Under target",
+      "holding_value_thb": 339.94,
+      "portfolio_weight_pct": 1.83,
+      "target_weight_pct": 1.83,
+      "weight_gap_pct": 0,
+      "allocation_status": "Current weight",
       "article_count": 21,
       "key_news": "Palantir has seen recent strong price performance, recognized as a top AI stock, but faces significant insider selling and critical commentary from Michael Burry regarding accounting and CEO expenses.",
       "key_takeaway": "Palantir has seen recent strong price performance, recognized as a top AI stock, but faces significant insider selling and critical commentary from Michael Burry regarding accounting and CEO expenses.",
@@ -711,7 +722,9 @@
           "source": "The Motley Fool",
           "published": "Tue, 07 Jul 2026 06:30:00 GMT"
         }
-      ]
+      ],
+      "unrealized_gain_thb": 4.08,
+      "unrealized_gain_pct": 1.21
     }
   ]
 }

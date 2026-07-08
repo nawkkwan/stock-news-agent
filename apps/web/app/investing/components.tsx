@@ -20,6 +20,7 @@ import { formatDate, formatNumber } from "../../lib/investment-data";
 import {
   upsertCompany,
   addTransaction,
+  importDailyReportPortfolio,
   upsertInvestmentJournalEntry,
   upsertHolding,
   upsertNewsItem,
@@ -137,6 +138,23 @@ export function PortfolioSummaryCards({ summaries }: { summaries: PortfolioSumma
   );
 }
 
+export function ImportDailyPortfolioButton({
+  disabled,
+  portfolioId,
+}: {
+  disabled?: boolean;
+  portfolioId?: string | null;
+}) {
+  return (
+    <form action={importDailyReportPortfolio}>
+      <input type="hidden" name="portfolio_id" value={portfolioId || ""} />
+      <button className="button secondary" disabled={disabled} type="submit">
+        Import Daily notes portfolio
+      </button>
+    </form>
+  );
+}
+
 function Field({
   label,
   name,
@@ -230,6 +248,8 @@ export function HoldingForm({
       <input type="hidden" name="id" value={holding?.id || ""} />
       <input type="hidden" name="portfolio_id" value={portfolioId || holding?.portfolio_id || ""} />
       <Field label="Ticker" name="ticker" defaultValue={holding?.ticker || ticker || ""} required />
+      <Field label="Shares" name="shares" type="number" defaultValue={holding?.shares} />
+      <Field label="Avg cost" name="avg_cost" type="number" defaultValue={holding?.avg_cost} />
       <Field label="Latest price" name="latest_price" type="number" defaultValue={holding?.latest_price} />
       <Field label="Fallback market value" name="current_value" type="number" defaultValue={holding?.current_value} />
       <Field label="Target weight %" name="target_weight" type="number" defaultValue={holding?.target_weight} />
@@ -245,7 +265,7 @@ export function TransactionForm({ ticker, portfolioId }: { ticker?: string; port
   return (
     <form action={addTransaction} className="form-grid">
       <input type="hidden" name="portfolio_id" value={portfolioId || ""} />
-      <SelectField label="Journey type" name="transaction_type" values={transactionTypes} defaultValue="buy" />
+      <SelectField label="Action type" name="transaction_type" values={transactionTypes} defaultValue="buy" />
       <Field label="Ticker" name="ticker" defaultValue={ticker || ""} />
       <Field label="Quantity" name="quantity" type="number" />
       <Field label="Price / cash amount" name="price_per_share" type="number" required />
@@ -255,7 +275,7 @@ export function TransactionForm({ ticker, portfolioId }: { ticker?: string; port
       <TextArea label="Reason" name="reason" />
       <TextArea label="Notes" name="notes" />
       <button className="button" type="submit">
-        Add to journey
+        Add activity
       </button>
     </form>
   );
@@ -312,7 +332,7 @@ export function InvestmentJournalForm({ entry, ticker }: { entry?: InvestmentJou
         defaultValue={entry?.what_would_make_this_wrong}
       />
       <button className="button" type="submit">
-        Save journal entry
+        Save note
       </button>
     </form>
   );
@@ -385,9 +405,382 @@ export function HoldingsTable({ holdings }: { holdings: PortfolioHolding[] }) {
   );
 }
 
+const allocationColors = ["#28d7a3", "#6ee7f9", "#a7f3d0", "#facc15", "#f59e0b", "#f472b6", "#818cf8", "#94a3b8"];
+
+type AllocationSlice = {
+  label: string;
+  value: number;
+  weight: number;
+  color: string;
+};
+
+export type DashboardHolding = {
+  id: string;
+  ticker: string;
+  company?: string | null;
+  shares?: number | null;
+  avg_cost?: number | null;
+  market_value: number;
+  portfolio_weight: number;
+  unrealized_gain?: number | null;
+  unrealized_gain_pct?: number | null;
+};
+
+export function PortfolioSnapshot({
+  portfolioName,
+  portfolioValue,
+  unrealizedGain,
+  cashBalance,
+  hasCashLedger,
+  holdingsCount,
+}: {
+  portfolioName?: string | null;
+  portfolioValue: number;
+  unrealizedGain: number;
+  cashBalance: number;
+  hasCashLedger: boolean;
+  holdingsCount: number;
+}) {
+  const gainClassName = unrealizedGain >= 0 ? "positive-text" : "negative-text";
+
+  return (
+    <section className="dashboard-hero">
+      <div>
+        <p className="eyebrow">My Portfolio</p>
+        <h2>{portfolioName || "Daily notes portfolio"}</h2>
+        <p className="muted">Simple view first: what you hold, how much it weighs, and what news matters today.</p>
+      </div>
+      <div className="metric-grid">
+        <div className="metric-card primary">
+          <span>Total value</span>
+          <strong>{formatNumber(portfolioValue)}</strong>
+        </div>
+        <div className="metric-card">
+          <span>Unrealized P/L</span>
+          <strong className={gainClassName}>{formatNumber(unrealizedGain)}</strong>
+        </div>
+        <div className="metric-card">
+          <span>Cash balance</span>
+          <strong>{hasCashLedger ? formatNumber(cashBalance) : "Not tracked"}</strong>
+        </div>
+        <div className="metric-card">
+          <span>Open holdings</span>
+          <strong>{holdingsCount}</strong>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function buildAllocationSlices({
+  holdings,
+  cashBalance,
+  hasCashLedger,
+}: {
+  holdings: DashboardHolding[];
+  cashBalance: number;
+  hasCashLedger: boolean;
+}) {
+  const holdingSlices = holdings
+    .filter((holding) => holding.market_value > 0)
+    .map((holding, index) => ({
+      label: holding.ticker,
+      value: holding.market_value,
+      color: allocationColors[index % allocationColors.length],
+    }));
+  const slices = hasCashLedger && cashBalance > 0
+    ? [
+        ...holdingSlices,
+        {
+          label: "Cash",
+          value: cashBalance,
+          color: "#64748b",
+        },
+      ]
+    : holdingSlices;
+  const total = slices.reduce((sum, slice) => sum + slice.value, 0);
+
+  return slices.map((slice) => ({
+    ...slice,
+    weight: total > 0 ? (slice.value / total) * 100 : 0,
+  }));
+}
+
+export function PortfolioAllocation({
+  holdings,
+  cashBalance,
+  hasCashLedger,
+}: {
+  holdings: DashboardHolding[];
+  cashBalance: number;
+  hasCashLedger: boolean;
+}) {
+  const slices = buildAllocationSlices({ holdings, cashBalance, hasCashLedger });
+  const totalValue = slices.reduce((sum, slice) => sum + slice.value, 0);
+
+  if (slices.length === 0) {
+    return (
+      <section className="panel dashboard-panel">
+        <div className="section-head">
+          <h2>My Portfolio Allocation</h2>
+        </div>
+        <EmptyState label="Add a buy transaction and latest prices to populate allocation." />
+      </section>
+    );
+  }
+
+  return (
+    <section className="panel dashboard-panel">
+      <div className="section-head">
+        <div>
+          <h2>Allocation</h2>
+          <p className="muted">Donut chart uses the same weights as the asset list.</p>
+        </div>
+        <strong>{formatNumber(totalValue)}</strong>
+      </div>
+      <div className="allocation-layout">
+        <DonutChart slices={slices} totalValue={totalValue} />
+        <div className="allocation-list">
+          {slices.map((slice) => (
+            <div className="allocation-row" key={slice.label}>
+              <span className="allocation-swatch" style={{ background: slice.color }} />
+              <div>
+                <strong>{slice.label}</strong>
+                <span>{formatNumber(slice.value)}</span>
+              </div>
+              <b>{formatNumber(slice.weight, "%")}</b>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DonutChart({ slices, totalValue }: { slices: AllocationSlice[]; totalValue: number }) {
+  const radius = 72;
+  const circumference = 2 * Math.PI * radius;
+  let offset = 0;
+
+  return (
+    <div className="donut-wrap" aria-label="Portfolio allocation chart">
+      <svg className="donut-chart" viewBox="0 0 180 180" role="img">
+        <circle className="donut-track" cx="90" cy="90" r={radius} />
+        {slices.map((slice) => {
+          const length = (slice.weight / 100) * circumference;
+          const strokeDasharray = `${length} ${circumference - length}`;
+          const strokeDashoffset = -offset;
+          offset += length;
+          return (
+            <circle
+              className="donut-slice"
+              cx="90"
+              cy="90"
+              key={slice.label}
+              r={radius}
+              stroke={slice.color}
+              strokeDasharray={strokeDasharray}
+              strokeDashoffset={strokeDashoffset}
+            />
+          );
+        })}
+      </svg>
+      <div className="donut-center">
+        <span>Total</span>
+        <strong>{formatNumber(totalValue)}</strong>
+      </div>
+    </div>
+  );
+}
+
+export function DashboardHoldingsTable({ holdings }: { holdings: DashboardHolding[] }) {
+  if (holdings.length === 0) {
+    return <EmptyState label="No assets in this portfolio yet. Add an asset, record a buy transaction, or import the Daily News snapshot." />;
+  }
+
+  return (
+    <div className="asset-list">
+      <div className="asset-list-head">
+        <span>{holdings.length} assets</span>
+        <span>Holding value</span>
+        <span>Weight / P&L</span>
+      </div>
+      {holdings.map((holding) => {
+        const hasGain = holding.unrealized_gain !== null && holding.unrealized_gain !== undefined;
+        const gainClass = (holding.unrealized_gain || 0) >= 0 ? "positive-text" : "negative-text";
+        return (
+          <article className="asset-row" key={holding.id}>
+            <div className="asset-main">
+              <div className="asset-logo">{holding.ticker.slice(0, 1)}</div>
+              <div>
+                <Link href={`/investing/companies/${holding.ticker}`}>{holding.ticker}</Link>
+                <span>{holding.company || "Portfolio holding"}</span>
+              </div>
+            </div>
+            <div className="asset-value">
+              <strong>{formatNumber(holding.market_value)}</strong>
+              {holding.shares ? <span>{formatNumber(holding.shares)} shares</span> : <span>Value-only holding</span>}
+            </div>
+            <div className="asset-profit">
+              <strong>{formatNumber(holding.portfolio_weight, "%")}</strong>
+              {hasGain ? (
+                <span className={gainClass}>
+                  {formatNumber(holding.unrealized_gain)} ({formatNumber(holding.unrealized_gain_pct, "%")})
+                </span>
+              ) : (
+                <span className="muted">P/L later</span>
+              )}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
+export type DailyReportStock = {
+  ticker?: string;
+  company?: string;
+  key_takeaway?: string;
+  key_news?: string;
+  possible_impact?: string;
+  impact?: string;
+  confidence?: string;
+  time_horizon?: string;
+  timeframe?: string;
+  holding_value_thb?: number;
+  portfolio_weight_pct?: number;
+  unrealized_gain_thb?: number;
+  unrealized_gain_pct?: number;
+};
+
+export function NewsByHolding({
+  reportDate,
+  stocks,
+}: {
+  reportDate?: string | null;
+  stocks: DailyReportStock[];
+}) {
+  if (stocks.length === 0) {
+    return <EmptyState label="No latest report items matched the selected holdings." />;
+  }
+
+  return (
+    <div className="news-card-grid compact-news">
+      {stocks.map((stock) => (
+        <article className="news-impact-card" key={stock.ticker}>
+          <div className="item-card-head">
+            <div>
+              <strong>{stock.ticker || "-"}</strong>
+              <span>{stock.company || "Portfolio holding"}</span>
+            </div>
+            <time>{reportDate || "Latest"}</time>
+          </div>
+          <p>{stock.key_takeaway || stock.key_news || "No takeaway included in the latest report."}</p>
+          <p className="muted">{stock.possible_impact || stock.impact || "No impact note included."}</p>
+          <div className="tag-row">
+            {stock.confidence ? <span>{stock.confidence}</span> : null}
+            {stock.time_horizon || stock.timeframe ? <span>{stock.time_horizon || stock.timeframe}</span> : null}
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+export function PortfolioActivityTimeline({
+  transactions,
+  journalEntries,
+}: {
+  transactions: PortfolioTransaction[];
+  journalEntries: InvestmentJournalEntry[];
+}) {
+  const activities = [
+    ...transactions.slice(0, 5).map((transaction) => ({
+      id: `transaction-${transaction.id}`,
+      date: transaction.transaction_date,
+      label: transaction.transaction_type.toUpperCase(),
+      ticker: transaction.ticker || "Cash",
+      primary: transaction.reason || transaction.notes || "Portfolio transaction",
+      secondary: `${formatNumber(transaction.quantity)} shares at ${formatNumber(transaction.price_per_share)}`,
+    })),
+    ...journalEntries.slice(0, 5).map((entry) => ({
+      id: `journal-${entry.id}`,
+      date: entry.date,
+      label: entry.action.toUpperCase(),
+      ticker: entry.ticker || "Portfolio",
+      primary: entry.reason || "Journal entry",
+      secondary: entry.risk || entry.what_would_make_this_wrong || "Investment journal",
+    })),
+  ]
+    .sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime())
+    .slice(0, 8);
+
+  if (activities.length === 0) {
+    return <EmptyState label="Add transactions or notes to build an activity timeline." />;
+  }
+
+  return (
+    <div className="timeline-list">
+      {activities.map((activity) => (
+        <article className="timeline-item" key={activity.id}>
+          <time>{formatDate(activity.date)}</time>
+          <div>
+            <strong>{activity.label} / {activity.ticker}</strong>
+            <p>{activity.primary}</p>
+            <span>{activity.secondary}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+export function TradingBotPlaceholder() {
+  const points = "0,80 48,68 96,72 144,44 192,52 240,24 288,34 336,18";
+
+  return (
+    <section className="panel agent-panel">
+      <div className="section-head">
+        <div>
+          <p className="eyebrow">Future AI Agent</p>
+          <h2>Trading Bot Lab</h2>
+          <p className="muted">Reserved for paper trading, risk rules, and strategy review. No live orders are connected.</p>
+        </div>
+        <span className="status-pill">Future phase</span>
+      </div>
+      <div className="agent-grid">
+        <div className="agent-chart" aria-label="Future simulated strategy chart">
+          <svg viewBox="0 0 336 96" preserveAspectRatio="none">
+            <polyline points={points} />
+          </svg>
+        </div>
+        <dl className="mini-grid">
+          <div>
+            <dt>Mode</dt>
+            <dd>Paper only</dd>
+          </div>
+          <div>
+            <dt>Broker</dt>
+            <dd>Not connected</dd>
+          </div>
+          <div>
+            <dt>Risk rules</dt>
+            <dd>Pending</dd>
+          </div>
+          <div>
+            <dt>Agent status</dt>
+            <dd>Design stage</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  );
+}
+
 export function JourneyList({ transactions }: { transactions: PortfolioTransaction[] }) {
   if (transactions.length === 0) {
-    return <EmptyState label="No journey entries yet. Add your first deposit or purchase." />;
+    return <EmptyState label="No activity yet. Add your first deposit or purchase." />;
   }
 
   return (
@@ -461,7 +854,7 @@ export function WatchlistTable({ items }: { items: WatchlistItem[] }) {
 
 export function InvestmentJournalList({ entries, editable = false }: { entries: InvestmentJournalEntry[]; editable?: boolean }) {
   if (entries.length === 0) {
-    return <EmptyState label="No investment journal entries recorded yet." />;
+    return <EmptyState label="No notes recorded yet." />;
   }
 
   return (

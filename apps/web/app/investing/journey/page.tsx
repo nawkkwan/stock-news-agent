@@ -11,7 +11,7 @@ export default async function JourneyPage() {
       <ConfigNotice configured={data.configured} error={data.error} />
       <section className="two-column align-start">
         <div className="panel">
-          <h2>Add journey entry</h2>
+          <h2>Add activity</h2>
           <TransactionForm />
         </div>
         <div className="panel">
@@ -30,7 +30,7 @@ export default async function JourneyPage() {
               <dd>{data.portfolioHoldings.length}</dd>
             </div>
             <div>
-              <dt>Journey entries</dt>
+              <dt>Activity entries</dt>
               <dd>{data.transactions.length}</dd>
             </div>
           </dl>
@@ -38,7 +38,7 @@ export default async function JourneyPage() {
       </section>
 
       <section className="panel">
-        <h2>Investment journey</h2>
+        <h2>Portfolio activity</h2>
         <JourneyList transactions={data.transactions} />
       </section>
     </main>

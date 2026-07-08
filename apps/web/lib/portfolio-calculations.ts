@@ -89,13 +89,43 @@ export function buildPortfolioHoldings(holdings: Holding[], transactions: Portfo
   const tickers = new Set([...holdingByTicker.keys(), ...positions.keys()]);
   const raw = [...tickers].flatMap((ticker) => {
     const position = positions.get(ticker);
-    if (!position || position.shares <= 0) {
+    const metadata = holdingByTicker.get(ticker);
+
+    if (position && position.shares <= 0) {
       return [];
     }
 
-    const metadata = holdingByTicker.get(ticker);
+    if (!position) {
+      const fallbackValue = number(metadata?.current_value);
+      const fallbackShares = number(metadata?.shares);
+      const fallbackAvgCost = number(metadata?.avg_cost);
+      const fallbackCost = fallbackShares > 0 && fallbackAvgCost > 0 ? fallbackShares * fallbackAvgCost : fallbackValue;
+      if (!metadata || fallbackValue <= 0) {
+        return [];
+      }
+
+      return [
+        {
+          ...metadata,
+          shares: fallbackShares,
+          avg_cost: fallbackAvgCost,
+          total_cost: fallbackCost,
+          market_value: fallbackValue,
+          unrealized_gain: fallbackCost > 0 ? fallbackValue - fallbackCost : 0,
+          unrealized_gain_pct:
+            fallbackCost > 0 ? ((fallbackValue - fallbackCost) / fallbackCost) * 100 : null,
+          portfolio_weight: 0,
+        } satisfies PortfolioHolding,
+      ];
+    }
+
     const latestPrice = number(metadata?.latest_price);
-    const marketValue = latestPrice > 0 ? position.shares * latestPrice : number(metadata?.current_value);
+    const fallbackValue = number(metadata?.current_value);
+    const marketValue = latestPrice > 0
+      ? position.shares * latestPrice
+      : fallbackValue > 0
+        ? fallbackValue
+        : position.totalCost;
     return [
       {
         ...(metadata || {

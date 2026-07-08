@@ -24,10 +24,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
           <nav aria-label="Primary navigation">
             <Link href="/investing">Overview</Link>
-            <Link href="/investing/journey">Journey</Link>
+            <Link href="/investing/journey">Activity</Link>
             <Link href="/investing/watchlist">Watchlist</Link>
-            <Link href="/investing/journal">Journal</Link>
-            <Link href="/daily">Daily notes</Link>
+            <Link href="/investing/journal">Notes</Link>
+            <Link href="/daily">Daily News</Link>
             {user ? (
               <form action={logout}>
                 <button className="nav-button" type="submit">
