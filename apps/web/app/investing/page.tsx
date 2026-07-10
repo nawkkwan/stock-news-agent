@@ -3,24 +3,16 @@ import path from "node:path";
 import Link from "next/link";
 import { getInvestmentData } from "../../lib/investment-data";
 import {
-  CompanyForm,
   ConfigNotice,
   DashboardHoldingsTable,
-  ImportDailyPortfolioButton,
   NewsByHolding,
-  PortfolioActivityTimeline,
   PortfolioAllocation,
-  PortfolioForm,
   PortfolioSelector,
   PortfolioSummaryCards,
   PortfolioSnapshot,
-  TradingBotPlaceholder,
-  TransactionForm,
-  WatchlistTable,
   type DashboardHolding,
   type DailyReportStock,
 } from "./components";
-import { PortfolioAssetSearch } from "./portfolio-asset-search";
 
 export const dynamic = "force-dynamic";
 
@@ -62,7 +54,6 @@ export default async function InvestingPage({
     getInvestmentData({ selectedPortfolioId: params.portfolio }),
     getLatestReport(),
   ]);
-  const selectedPortfolioId = data.selectedPortfolio?.id || null;
   const reportHoldings: DashboardHolding[] = (latestReport?.stocks || [])
     .filter((stock) => stock.ticker && Number(stock.holding_value_thb) > 0)
     .map((stock) => ({
@@ -94,12 +85,9 @@ export default async function InvestingPage({
         <div className="section-head">
           <div>
             <h2>Portfolio</h2>
-            <p className="muted">Select one portfolio first. Every asset, cash movement, and activity below belongs to that portfolio.</p>
+            <p className="muted">Select a portfolio to review its value, allocation, holdings, news, and technical context.</p>
           </div>
-          <ImportDailyPortfolioButton
-            disabled={reportHoldings.length === 0}
-            portfolioId={selectedPortfolioId}
-          />
+          <Link className="button secondary" href="/investing/settings">Manage portfolio</Link>
         </div>
         {data.portfolios.length > 0 ? (
           <PortfolioSelector portfolios={data.portfolios} selectedPortfolio={data.selectedPortfolio} />
@@ -168,41 +156,6 @@ export default async function InvestingPage({
         </div>
       </section>
 
-      <section className="two-column align-start">
-        <div className="panel dashboard-panel">
-          <div className="section-head">
-            <div>
-              <h2>Add asset to this portfolio</h2>
-              <p className="muted">Search global symbols, fetch a latest quote, then save the asset into the selected portfolio.</p>
-            </div>
-          </div>
-          <PortfolioAssetSearch portfolioId={selectedPortfolioId} />
-        </div>
-        <div className="panel dashboard-panel">
-          <div className="section-head">
-            <div>
-              <h2>Cash and activity</h2>
-              <p className="muted">Deposit cash, buy/sell assets, withdraw cash, or record dividends for this portfolio.</p>
-            </div>
-          </div>
-          <TransactionForm portfolioId={selectedPortfolioId} />
-        </div>
-      </section>
-
-      <section className="panel dashboard-panel">
-        <div className="section-head">
-          <div>
-            <h2>Daily notes import</h2>
-            <p className="muted">Use this once to save the visible My Ports seed into Supabase. After import, Supabase is the source of truth.</p>
-          </div>
-          <ImportDailyPortfolioButton
-            disabled={reportHoldings.length === 0}
-            portfolioId={selectedPortfolioId}
-          />
-        </div>
-        <DashboardHoldingsTable holdings={reportHoldings.slice(0, 6)} />
-      </section>
-
       <section className="panel dashboard-panel">
         <div className="section-head">
           <div>
@@ -216,57 +169,6 @@ export default async function InvestingPage({
         <NewsByHolding reportDate={latestReport?.date} stocks={reportStocks} />
       </section>
 
-      <section className="two-column align-start">
-        <div className="panel dashboard-panel">
-          <div className="section-head">
-            <div>
-              <h2>Portfolio Activity</h2>
-              <p className="muted">Transactions and notes for the selected portfolio.</p>
-            </div>
-            <Link className="button secondary" href="/investing/journey">
-              Full activity
-            </Link>
-          </div>
-          <PortfolioActivityTimeline
-            journalEntries={data.journalEntries}
-            transactions={data.transactions}
-          />
-        </div>
-        <div className="panel dashboard-panel">
-          <div className="section-head">
-            <div>
-              <h2>Watchlist</h2>
-              <p className="muted">Research queue for future portfolio candidates.</p>
-            </div>
-            <Link className="button secondary" href="/investing/watchlist">
-              Manage
-            </Link>
-          </div>
-          <WatchlistTable items={data.watchlist.slice(0, 6)} />
-        </div>
-      </section>
-
-      <section className="two-column align-start">
-        <div className="panel dashboard-panel">
-          <div className="section-head">
-            <h2>{data.selectedPortfolio ? "Edit selected portfolio" : "Create portfolio"}</h2>
-          </div>
-          <PortfolioForm portfolio={data.selectedPortfolio} />
-        </div>
-        <div className="panel dashboard-panel">
-          <h2>Create another portfolio</h2>
-          <PortfolioForm />
-        </div>
-      </section>
-
-      <section className="panel dashboard-panel">
-        <details>
-          <summary>Add company profile</summary>
-          <CompanyForm />
-        </details>
-      </section>
-
-      <TradingBotPlaceholder />
     </main>
   );
 }

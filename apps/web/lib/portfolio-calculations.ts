@@ -84,73 +84,33 @@ export function calculatePositions(transactions: PortfolioTransaction[]) {
 }
 
 export function buildPortfolioHoldings(holdings: Holding[], transactions: PortfolioTransaction[]) {
-  const { positions, cashBalance, hasCashLedger } = calculatePositions(transactions);
-  const holdingByTicker = new Map(holdings.map((holding) => [holding.ticker.toUpperCase(), holding]));
-  const tickers = new Set([...holdingByTicker.keys(), ...positions.keys()]);
-  const raw = [...tickers].flatMap((ticker) => {
-    const position = positions.get(ticker);
-    const metadata = holdingByTicker.get(ticker);
+  const { cashBalance, hasCashLedger } = calculatePositions(transactions);
+  const raw = holdings.flatMap((holding) => {
+    const shares = number(holding.shares);
+    const avgCost = number(holding.avg_cost);
+    const latestPrice = number(holding.latest_price);
+    const storedValue = number(holding.current_value);
+    const totalCost = shares > 0 && avgCost > 0 ? shares * avgCost : storedValue;
+    const marketValue = shares > 0 && latestPrice > 0
+      ? shares * latestPrice
+      : storedValue > 0
+        ? storedValue
+        : totalCost;
 
-    if (position && position.shares <= 0) {
+    if (shares <= 0 && marketValue <= 0) {
       return [];
     }
 
-    if (!position) {
-      const fallbackValue = number(metadata?.current_value);
-      const fallbackShares = number(metadata?.shares);
-      const fallbackAvgCost = number(metadata?.avg_cost);
-      const fallbackCost = fallbackShares > 0 && fallbackAvgCost > 0 ? fallbackShares * fallbackAvgCost : fallbackValue;
-      if (!metadata || fallbackValue <= 0) {
-        return [];
-      }
-
-      return [
-        {
-          ...metadata,
-          shares: fallbackShares,
-          avg_cost: fallbackAvgCost,
-          total_cost: fallbackCost,
-          market_value: fallbackValue,
-          unrealized_gain: fallbackCost > 0 ? fallbackValue - fallbackCost : 0,
-          unrealized_gain_pct:
-            fallbackCost > 0 ? ((fallbackValue - fallbackCost) / fallbackCost) * 100 : null,
-          portfolio_weight: 0,
-        } satisfies PortfolioHolding,
-      ];
-    }
-
-    const latestPrice = number(metadata?.latest_price);
-    const fallbackValue = number(metadata?.current_value);
-    const marketValue = latestPrice > 0
-      ? position.shares * latestPrice
-      : fallbackValue > 0
-        ? fallbackValue
-        : position.totalCost;
-    return [
-      {
-        ...(metadata || {
-          id: ticker,
-          company_id: null,
-          portfolio_id: null,
-          ticker,
-          latest_price: null,
-          current_value: null,
-          target_weight: null,
-          notes: null,
-          created_at: "",
-          updated_at: "",
-          user_id: null,
-        }),
-        shares: position.shares,
-        avg_cost: position.avgCost,
-        total_cost: position.totalCost,
-        market_value: marketValue,
-        unrealized_gain: marketValue - position.totalCost,
-        unrealized_gain_pct:
-          position.totalCost > 0 ? ((marketValue - position.totalCost) / position.totalCost) * 100 : null,
-        portfolio_weight: 0,
-      } satisfies PortfolioHolding,
-    ];
+    return [{
+      ...holding,
+      shares,
+      avg_cost: avgCost,
+      total_cost: totalCost,
+      market_value: marketValue,
+      unrealized_gain: totalCost > 0 ? marketValue - totalCost : 0,
+      unrealized_gain_pct: totalCost > 0 ? ((marketValue - totalCost) / totalCost) * 100 : null,
+      portfolio_weight: 0,
+    } satisfies PortfolioHolding];
   });
 
   const investedValue = raw.reduce((sum, holding) => sum + holding.market_value, 0);

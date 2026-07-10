@@ -152,6 +152,27 @@ textarea {
   color: var(--danger);
 }
 
+.import-daily-form {
+  display: grid;
+  justify-items: end;
+  gap: 0.5rem;
+}
+
+.form-feedback {
+  max-width: 25rem;
+  margin: 0;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.form-feedback.success {
+  color: #46d7a9;
+}
+
+.form-feedback.error {
+  color: #ff9b9b;
+}
+
 .summary-grid,
 .two-column,
 .edit-grid,
@@ -550,6 +571,55 @@ dt,
 .news-impact-card p,
 .timeline-item p {
   margin-bottom: 8px;
+}
+
+.technical-snapshot {
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border: 1px solid #284052;
+  border-radius: 0.75rem;
+  background: #08131d;
+}
+
+.technical-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.technical-title span {
+  color: #7fd4ff;
+  font-size: 0.8rem;
+}
+
+.technical-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.8rem 0 0;
+}
+
+.technical-grid div {
+  min-width: 0;
+}
+
+.technical-grid dt {
+  color: #8fa9bb;
+  font-size: 0.75rem;
+}
+
+.technical-grid dd {
+  margin: 0.15rem 0 0;
+  color: #edf8ff;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.technical-note {
+  margin: 0.8rem 0 0 !important;
+  color: #a9c2d2 !important;
+  font-size: 0.82rem;
 }
 
 .timeline-item {

@@ -1,40 +1,65 @@
+import Link from "next/link";
 import { getInvestmentData } from "../../../lib/investment-data";
-import { ConfigNotice, JourneyList, TransactionForm } from "../components";
+import { ConfigNotice, JourneyList, PortfolioSelector, TransactionForm } from "../components";
+import { PortfolioAssetSearch } from "../portfolio-asset-search";
 
 export const dynamic = "force-dynamic";
 
-export default async function JourneyPage() {
-  const data = await getInvestmentData();
+export default async function JourneyPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ portfolio?: string }>;
+}) {
+  const params = searchParams ? await searchParams : {};
+  const data = await getInvestmentData({ selectedPortfolioId: params.portfolio });
+  const selectedPortfolioId = data.selectedPortfolio?.id || null;
 
   return (
     <main className="page-shell">
       <ConfigNotice configured={data.configured} error={data.error} />
+      <section className="panel">
+        <div className="section-head">
+          <div>
+            <h2>Activity</h2>
+            <p className="muted">Add holdings and record cash, buys, sells, dividends, or withdrawals for one portfolio.</p>
+          </div>
+          <Link className="button secondary" href="/investing/settings">Manage portfolio</Link>
+        </div>
+        {data.portfolios.length > 0 ? <PortfolioSelector portfolios={data.portfolios} selectedPortfolio={data.selectedPortfolio} pathname="/investing/journey" /> : null}
+      </section>
       <section className="two-column align-start">
         <div className="panel">
-          <h2>Add activity</h2>
-          <TransactionForm />
+          <h2>Add an asset</h2>
+          <p className="muted">Search a ticker, fetch its latest quote, then add it to the selected portfolio.</p>
+          <PortfolioAssetSearch portfolioId={selectedPortfolioId} />
         </div>
         <div className="panel">
-          <h2>Portfolio snapshot</h2>
-          <dl className="mini-grid">
-            <div>
-              <dt>Portfolio value</dt>
-              <dd>{new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(data.portfolioValue)}</dd>
-            </div>
-            <div>
-              <dt>Cash balance</dt>
-              <dd>{data.hasCashLedger ? new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(data.cashBalance) : "Not tracked"}</dd>
-            </div>
-            <div>
-              <dt>Open holdings</dt>
-              <dd>{data.portfolioHoldings.length}</dd>
-            </div>
-            <div>
-              <dt>Activity entries</dt>
-              <dd>{data.transactions.length}</dd>
-            </div>
-          </dl>
+          <h2>Record activity</h2>
+          <p className="muted">Use this for cash deposits, buys, sells, dividends, and withdrawals. Enter the actual buy or sell price from that date.</p>
+          <TransactionForm portfolioId={selectedPortfolioId} />
         </div>
+      </section>
+
+      <section className="panel">
+        <h2>Selected portfolio snapshot</h2>
+        <dl className="mini-grid">
+          <div>
+            <dt>Portfolio</dt>
+            <dd>{data.selectedPortfolio?.name || "No portfolio selected"}</dd>
+          </div>
+          <div>
+            <dt>Portfolio value</dt>
+            <dd>{new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(data.portfolioValue)}</dd>
+          </div>
+          <div>
+            <dt>Cash balance</dt>
+            <dd>{data.hasCashLedger ? new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(data.cashBalance) : "Not tracked"}</dd>
+          </div>
+          <div>
+            <dt>Open holdings</dt>
+            <dd>{data.portfolioHoldings.length}</dd>
+          </div>
+        </dl>
       </section>
 
       <section className="panel">

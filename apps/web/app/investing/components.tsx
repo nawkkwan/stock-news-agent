@@ -20,7 +20,6 @@ import { formatDate, formatNumber } from "../../lib/investment-data";
 import {
   upsertCompany,
   addTransaction,
-  importDailyReportPortfolio,
   upsertInvestmentJournalEntry,
   upsertHolding,
   upsertNewsItem,
@@ -28,6 +27,7 @@ import {
   upsertThesis,
   upsertWatchlistItem,
 } from "./actions";
+export { ImportDailyPortfolioButton } from "./import-daily-portfolio-button";
 
 export function ConfigNotice({ configured, error }: { configured: boolean; error?: string }) {
   if (!configured) {
@@ -73,9 +73,11 @@ export function PortfolioForm({ portfolio }: { portfolio?: Portfolio | null }) {
 export function PortfolioSelector({
   portfolios,
   selectedPortfolio,
+  pathname = "/investing",
 }: {
   portfolios: Portfolio[];
   selectedPortfolio: Portfolio | null;
+  pathname?: string;
 }) {
   if (portfolios.length === 0) {
     return <EmptyState label="No portfolios yet. Save a portfolio to start tracking separate accounts." />;
@@ -86,7 +88,7 @@ export function PortfolioSelector({
       {portfolios.map((portfolio) => (
         <Link
           className={portfolio.id === selectedPortfolio?.id ? "portfolio-tab active" : "portfolio-tab"}
-          href={`/investing?portfolio=${portfolio.id}`}
+          href={`${pathname}?portfolio=${portfolio.id}`}
           key={portfolio.id}
         >
           {portfolio.name}
@@ -135,23 +137,6 @@ export function PortfolioSummaryCards({ summaries }: { summaries: PortfolioSumma
         </article>
       ))}
     </div>
-  );
-}
-
-export function ImportDailyPortfolioButton({
-  disabled,
-  portfolioId,
-}: {
-  disabled?: boolean;
-  portfolioId?: string | null;
-}) {
-  return (
-    <form action={importDailyReportPortfolio}>
-      <input type="hidden" name="portfolio_id" value={portfolioId || ""} />
-      <button className="button secondary" disabled={disabled} type="submit">
-        Import Daily notes portfolio
-      </button>
-    </form>
   );
 }
 
@@ -268,7 +253,7 @@ export function TransactionForm({ ticker, portfolioId }: { ticker?: string; port
       <SelectField label="Action type" name="transaction_type" values={transactionTypes} defaultValue="buy" />
       <Field label="Ticker" name="ticker" defaultValue={ticker || ""} />
       <Field label="Quantity" name="quantity" type="number" />
-      <Field label="Price / cash amount" name="price_per_share" type="number" required />
+      <Field label="Price on transaction date / cash amount" name="price_per_share" type="number" required />
       <Field label="Fee" name="fee" type="number" defaultValue={0} />
       <Field label="Currency" name="currency" defaultValue="USD" required />
       <Field label="Date" name="transaction_date" type="date" defaultValue={new Date().toISOString().slice(0, 10)} required />
@@ -652,7 +637,27 @@ export type DailyReportStock = {
   portfolio_weight_pct?: number;
   unrealized_gain_thb?: number;
   unrealized_gain_pct?: number;
+  technical_summary?: string;
+  technical?: {
+    last_close?: number;
+    last_date?: string;
+    rsi14?: number;
+    macd?: number;
+    macd_signal?: number;
+    trend?: string;
+    support_zones?: number[];
+    resistance_zones?: number[];
+    technical_note?: string;
+  };
 };
+
+function formatTechnicalValue(value?: number | null) {
+  return value === null || value === undefined ? "-" : formatNumber(value);
+}
+
+function formatLevels(levels?: number[]) {
+  return levels && levels.length > 0 ? levels.map((level) => formatNumber(level)).join(" / ") : "-";
+}
 
 export function NewsByHolding({
   reportDate,
@@ -678,6 +683,39 @@ export function NewsByHolding({
           </div>
           <p>{stock.key_takeaway || stock.key_news || "No takeaway included in the latest report."}</p>
           <p className="muted">{stock.possible_impact || stock.impact || "No impact note included."}</p>
+          {stock.technical ? (
+            <div className="technical-snapshot" aria-label={`${stock.ticker || "Holding"} technical snapshot`}>
+              <div className="technical-title">
+                <strong>Technical snapshot</strong>
+                <span>{stock.technical.trend || "Trend unavailable"}</span>
+              </div>
+              <dl className="technical-grid">
+                <div>
+                  <dt>Last close</dt>
+                  <dd>{formatTechnicalValue(stock.technical.last_close)}</dd>
+                </div>
+                <div>
+                  <dt>RSI (14)</dt>
+                  <dd>{formatTechnicalValue(stock.technical.rsi14)}</dd>
+                </div>
+                <div>
+                  <dt>MACD / Signal</dt>
+                  <dd>{formatTechnicalValue(stock.technical.macd)} / {formatTechnicalValue(stock.technical.macd_signal)}</dd>
+                </div>
+                <div>
+                  <dt>Support</dt>
+                  <dd>{formatLevels(stock.technical.support_zones)}</dd>
+                </div>
+                <div>
+                  <dt>Resistance</dt>
+                  <dd>{formatLevels(stock.technical.resistance_zones)}</dd>
+                </div>
+              </dl>
+              {stock.technical.technical_note ? <p className="technical-note">{stock.technical.technical_note}</p> : null}
+            </div>
+          ) : stock.technical_summary ? (
+            <p className="technical-note">{stock.technical_summary}</p>
+          ) : null}
           <div className="tag-row">
             {stock.confidence ? <span>{stock.confidence}</span> : null}
             {stock.time_horizon || stock.timeframe ? <span>{stock.time_horizon || stock.timeframe}</span> : null}

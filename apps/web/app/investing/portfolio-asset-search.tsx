@@ -144,7 +144,7 @@ export function PortfolioAssetSearch({ portfolioId }: { portfolioId?: string | n
           <input name="shares" step="any" type="number" />
         </label>
         <label>
-          <span>Avg cost</span>
+          <span>Starting average cost</span>
           <input name="avg_cost" step="any" type="number" />
         </label>
         <label>
@@ -152,7 +152,7 @@ export function PortfolioAssetSearch({ portfolioId }: { portfolioId?: string | n
           <input defaultValue={latestPrice} key={`${selected?.symbol || "none"}-${latestPrice}`} name="latest_price" step="any" type="number" />
         </label>
         <label>
-          <span>Fallback market value</span>
+          <span>Latest market value (optional)</span>
           <input name="current_value" step="any" type="number" />
         </label>
         <label>

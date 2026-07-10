@@ -11,6 +11,7 @@ import {
   transactionTypes,
   watchlistStatuses,
   type JournalAction,
+  type Holding,
   type NewsImpact,
   type NewsTimeframe,
   type TransactionType,
@@ -149,6 +150,22 @@ async function findSingleUserRow(table: string, ticker: string, portfolioId?: st
   return data as { id: string } | null;
 }
 
+async function findHolding(ticker: string, portfolioId: string): Promise<Holding | null> {
+  const { supabase, user } = await requireUser();
+  const { data, error } = await supabase
+    .from("holdings")
+    .select("*")
+    .eq("ticker", ticker)
+    .eq("portfolio_id", portfolioId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+  return data as Holding | null;
+}
+
 export async function upsertPortfolio(formData: FormData) {
   const { supabase, user } = await requireUser();
   const id = nullableText(formData.get("id"));
@@ -222,20 +239,30 @@ export async function upsertHolding(formData: FormData) {
   const company = await ensureCompany(ticker, nullableText(formData.get("company_name")));
   const portfolio = await ensurePortfolio(nullableText(formData.get("portfolio_id")));
   const id = nullableText(formData.get("id"));
+  const existing = id ? null : await findHolding(ticker, portfolio.id);
+  const submittedShares = nullableNumber(formData.get("shares"));
+  const submittedAvgCost = nullableNumber(formData.get("avg_cost"));
+  const submittedLatestPrice = nullableNumber(formData.get("latest_price"));
+  const submittedCurrentValue = nullableNumber(formData.get("current_value"));
+  const shares = submittedShares ?? existing?.shares ?? null;
+  const avgCost = submittedAvgCost ?? existing?.avg_cost ?? null;
+  const latestPrice = submittedLatestPrice ?? existing?.latest_price ?? null;
+  const calculatedValue = shares !== null && shares > 0 && latestPrice !== null && latestPrice > 0
+    ? shares * latestPrice
+    : null;
   const payload = {
     company_id: company.id,
     portfolio_id: portfolio.id,
     ticker,
-    shares: nullableNumber(formData.get("shares")),
-    avg_cost: nullableNumber(formData.get("avg_cost")),
-    current_value: nullableNumber(formData.get("current_value")),
-    latest_price: nullableNumber(formData.get("latest_price")),
-    target_weight: nullableNumber(formData.get("target_weight")),
-    notes: nullableText(formData.get("notes")),
+    shares,
+    avg_cost: avgCost,
+    current_value: submittedCurrentValue ?? calculatedValue ?? existing?.current_value ?? null,
+    latest_price: latestPrice,
+    target_weight: nullableNumber(formData.get("target_weight")) ?? existing?.target_weight ?? null,
+    notes: nullableText(formData.get("notes")) ?? existing?.notes ?? null,
     user_id: user.id,
   };
 
-  const existing = id ? null : await findSingleUserRow("holdings", ticker, portfolio.id);
   const query = id || existing
     ? supabase.from("holdings").update(payload).eq("id", id || existing?.id)
     : supabase.from("holdings").insert(payload);
@@ -259,82 +286,104 @@ async function readLatestReport(): Promise<LatestReport | null> {
   }
 }
 
-export async function importDailyReportPortfolio(formData: FormData) {
-  const report = await readLatestReport();
-  const stocks = (report?.stocks || []).filter(
-    (stock) => normalizeTicker(stock.ticker) && Number(stock.holding_value_thb) > 0
-  );
+export type ImportDailyPortfolioResult = {
+  status: "idle" | "success" | "error";
+  message: string;
+};
 
-  if (stocks.length === 0) {
-    return;
-  }
+export async function importDailyReportPortfolio(
+  _previousState: ImportDailyPortfolioResult,
+  formData: FormData
+): Promise<ImportDailyPortfolioResult> {
+  try {
+    const report = await readLatestReport();
+    const stocks = (report?.stocks || []).filter(
+      (stock) => normalizeTicker(stock.ticker) && Number(stock.holding_value_thb) > 0
+    );
 
-  const { supabase, user } = await requireUser();
-  const selectedPortfolioId = nullableText(formData.get("portfolio_id"));
-  let portfolio = selectedPortfolioId ? await ensurePortfolio(selectedPortfolioId) : null;
-
-  if (!portfolio) {
-    const { data: existing, error: selectError } = await supabase
-      .from("portfolios")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("name", "My Ports")
-      .maybeSingle();
-
-    if (selectError) {
-      throw selectError;
+    if (stocks.length === 0) {
+      return {
+        status: "error",
+        message: "No portfolio holdings were found in the latest Daily Notes report.",
+      };
     }
 
-    if (existing) {
-      portfolio = existing;
-    } else {
-      const { data, error } = await supabase
+    const { supabase, user } = await requireUser();
+    const selectedPortfolioId = nullableText(formData.get("portfolio_id"));
+    let portfolio = selectedPortfolioId ? await ensurePortfolio(selectedPortfolioId) : null;
+
+    if (!portfolio) {
+      const { data: existing, error: selectError } = await supabase
         .from("portfolios")
-        .insert({
-          name: "My Ports",
-          description: "Imported from Daily notes holdings.",
-          base_currency: "THB",
-          target_weight: 100,
-          user_id: user.id,
-        })
         .select("*")
-        .single();
+        .eq("user_id", user.id)
+        .eq("name", "My Ports")
+        .maybeSingle();
+
+      if (selectError) {
+        throw selectError;
+      }
+
+      if (existing) {
+        portfolio = existing;
+      } else {
+        const { data, error } = await supabase
+          .from("portfolios")
+          .insert({
+            name: "My Ports",
+            description: "Imported from Daily notes holdings.",
+            base_currency: "THB",
+            target_weight: 100,
+            user_id: user.id,
+          })
+          .select("*")
+          .single();
+
+        if (error) {
+          throw error;
+        }
+        portfolio = data;
+      }
+    }
+
+    for (const stock of stocks) {
+      const ticker = normalizeTicker(stock.ticker);
+      const company = await ensureCompany(ticker, stock.company || ticker);
+      const payload = {
+        company_id: company.id,
+        portfolio_id: portfolio.id,
+        ticker,
+        shares: null,
+        avg_cost: null,
+        current_value: Number(stock.holding_value_thb),
+        latest_price: null,
+        target_weight: Number(stock.portfolio_weight_pct) || null,
+        notes: "Imported from Daily notes portfolio snapshot.",
+        user_id: user.id,
+      };
+      const existing = await findSingleUserRow("holdings", ticker, portfolio.id);
+      const query = existing
+        ? supabase.from("holdings").update(payload).eq("id", existing.id)
+        : supabase.from("holdings").insert(payload);
+      const { error } = await query;
 
       if (error) {
         throw error;
       }
-      portfolio = data;
     }
-  }
 
-  for (const stock of stocks) {
-    const ticker = normalizeTicker(stock.ticker);
-    const company = await ensureCompany(ticker, stock.company || ticker);
-    const payload = {
-      company_id: company.id,
-      portfolio_id: portfolio.id,
-      ticker,
-      shares: null,
-      avg_cost: null,
-      current_value: Number(stock.holding_value_thb),
-      latest_price: null,
-      target_weight: Number(stock.portfolio_weight_pct) || null,
-      notes: "Imported from Daily notes portfolio snapshot.",
-      user_id: user.id,
+    revalidatePath("/investing");
+    revalidatePath(`/investing?portfolio=${portfolio.id}`);
+    return {
+      status: "success",
+      message: `Imported ${stocks.length} holdings into ${portfolio.name}.`,
     };
-    const existing = await findSingleUserRow("holdings", ticker, portfolio.id);
-    const query = existing
-      ? supabase.from("holdings").update(payload).eq("id", existing.id)
-      : supabase.from("holdings").insert(payload);
-    const { error } = await query;
-
-    if (error) {
-      throw error;
-    }
+  } catch (error) {
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Could not import the Daily Notes portfolio.",
+    };
   }
-
-  revalidatePath("/investing");
-  revalidatePath(`/investing?portfolio=${portfolio.id}`);
 }
 
 export async function upsertWatchlistItem(formData: FormData) {
@@ -495,6 +544,51 @@ export async function addTransaction(formData: FormData) {
     throw new Error("Cash transactions require an amount.");
   }
 
+  const fee = nullableNumber(formData.get("fee")) || 0;
+
+  if ((transactionType === "buy" || transactionType === "sell") && ticker && quantity && pricePerShare !== null && company) {
+    const existingHolding = await findHolding(ticker, portfolio.id);
+    const existingShares = Number(existingHolding?.shares || 0);
+    const existingAvgCost = Number(existingHolding?.avg_cost || 0);
+    const isValueOnlySnapshot = existingHolding && existingShares <= 0 && Number(existingHolding.current_value || 0) > 0;
+
+    if (isValueOnlySnapshot) {
+      throw new Error(
+        `${ticker} was imported as a value-only snapshot. Set its existing shares and average cost first in Add an asset before recording a buy or sell.`
+      );
+    }
+
+    if (transactionType === "sell" && (!existingHolding || existingShares < quantity)) {
+      throw new Error(`Cannot sell ${quantity} ${ticker}. The selected portfolio only has ${existingShares} recorded shares.`);
+    }
+
+    const nextShares = transactionType === "buy" ? existingShares + quantity : existingShares - quantity;
+    const nextAvgCost = transactionType === "buy"
+      ? ((existingShares * existingAvgCost) + (quantity * pricePerShare) + fee) / nextShares
+      : existingAvgCost;
+    const latestPrice = Number(existingHolding?.latest_price || 0) > 0
+      ? Number(existingHolding?.latest_price)
+      : pricePerShare;
+    const holdingPayload = {
+      company_id: company.id,
+      portfolio_id: portfolio.id,
+      ticker,
+      shares: nextShares,
+      avg_cost: nextAvgCost,
+      latest_price: latestPrice,
+      current_value: nextShares > 0 ? nextShares * latestPrice : 0,
+      user_id: user.id,
+    };
+    const holdingQuery = existingHolding
+      ? supabase.from("holdings").update(holdingPayload).eq("id", existingHolding.id)
+      : supabase.from("holdings").insert({ ...holdingPayload, target_weight: null, notes: "Created from portfolio activity." });
+    const { error: holdingError } = await holdingQuery;
+
+    if (holdingError) {
+      throw holdingError;
+    }
+  }
+
   const { error } = await supabase.from("portfolio_transactions").insert({
     company_id: company?.id || null,
     portfolio_id: portfolio.id,
@@ -502,7 +596,7 @@ export async function addTransaction(formData: FormData) {
     transaction_type: transactionType,
     quantity,
     price_per_share: pricePerShare,
-    fee: nullableNumber(formData.get("fee")) || 0,
+    fee,
     currency: String(formData.get("currency") || "USD").trim().toUpperCase(),
     transaction_date: String(formData.get("transaction_date") || new Date().toISOString().slice(0, 10)),
     reason: nullableText(formData.get("reason")),

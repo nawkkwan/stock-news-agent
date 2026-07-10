@@ -27,6 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <Link href="/investing/journey">Activity</Link>
             <Link href="/investing/watchlist">Watchlist</Link>
             <Link href="/investing/journal">Notes</Link>
+            <Link href="/investing/settings">Settings</Link>
             <Link href="/daily">Daily News</Link>
             {user ? (
               <form action={logout}>
