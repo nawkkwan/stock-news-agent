@@ -14,11 +14,12 @@ Implemented:
 - FastAPI foundation API with health/version readiness endpoints
 - Local Docker foundation for API and worker
 - Multi-portfolio schema and dashboard foundation
+- Read-only Pixel Portfolio Agent dashboard MVP with Scout, Analyst, and Watchlist views
 
 Not Implemented:
 - Automated daily prices table ingestion
 - Discord notification bot
-- Research agent
+- Tool-using thesis-aware research agent (the current Pixel Agent page is a read-only dashboard MVP)
 - TiDB production ingestion
 - Paper trading
 - Real trading

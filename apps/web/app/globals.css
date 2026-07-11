@@ -122,6 +122,166 @@ textarea {
   margin: 18px auto 48px;
 }
 
+/* Pixel Portfolio Agent */
+.agent-page {
+  --agent-cyan: #67f5d2;
+  --agent-green: #28d79d;
+  --agent-amber: #f4b860;
+}
+
+.agent-hero {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.55fr);
+  overflow: hidden;
+  border: 1px solid #254255;
+  border-radius: 14px;
+  background:
+    linear-gradient(120deg, rgba(22, 189, 145, 0.08), transparent 46%),
+    #0b1118;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
+}
+
+.agent-portrait-wrap {
+  position: relative;
+  min-height: 410px;
+  background: #050a10;
+}
+
+.agent-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.agent-online {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid rgba(103, 245, 210, 0.36);
+  border-radius: 999px;
+  background: rgba(4, 10, 15, 0.88);
+  color: #c9fff1;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.agent-online i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--agent-green);
+  box-shadow: 0 0 12px var(--agent-green);
+}
+
+.agent-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(24px, 5vw, 58px);
+}
+
+.agent-intro h2 {
+  max-width: 760px;
+  margin: 5px 0 14px;
+  font-size: clamp(32px, 5vw, 62px);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.agent-lead {
+  max-width: 750px;
+  color: #a9bbc4;
+  font-size: 16px;
+}
+
+.agent-command {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  margin: 10px 0 20px;
+  padding: 15px;
+  border: 1px solid rgba(103, 245, 210, 0.2);
+  border-left: 3px solid var(--agent-green);
+  background: rgba(6, 14, 20, 0.72);
+}
+
+.agent-command p { margin: 0; color: #d5e4e3; }
+.agent-prompt { color: var(--agent-cyan); font-family: Consolas, monospace; font-size: 12px; font-weight: 800; }
+.agent-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.agent-primary-action, .agent-secondary-action { padding: 10px 14px; border-radius: 7px; font-size: 14px; }
+.agent-primary-action { background: var(--agent-green); color: #04100c; }
+.agent-secondary-action { border: 1px solid #365264; color: var(--ink); }
+.agent-primary-action:hover, .agent-secondary-action:hover { text-decoration: none; filter: brightness(1.08); }
+
+.agent-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 14px 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--line);
+}
+
+.agent-stats > div { padding: 15px 17px; background: #0d141c; }
+.agent-stats span { display: block; color: var(--muted); font-size: 12px; text-transform: uppercase; }
+.agent-stats strong { display: block; margin-top: 5px; color: #f2fffc; font-size: 23px; }
+
+.agent-mode-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+.agent-mode-card { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.agent-mode-card.scout { grid-column: span 7; }
+.agent-mode-card.analyst { grid-column: span 5; }
+.agent-mode-card.ranger { grid-column: span 12; }
+.agent-mode-card > p { color: var(--muted); }
+.agent-mode-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.agent-mode-head h3 { margin: 0; font-size: 22px; }
+.agent-mode-icon { display: grid; flex: 0 0 44px; height: 44px; place-items: center; border: 1px solid #346255; border-radius: 8px; background: #0a201a; color: var(--agent-cyan); font-family: Consolas, monospace; font-weight: 900; }
+
+.agent-signal-list, .agent-review-stack, .agent-watch-list { display: grid; gap: 10px; }
+.agent-signal, .agent-review-card, .agent-watch-row { padding: 13px; border: 1px solid #223541; border-radius: 8px; background: #0b1219; }
+.agent-signal-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.agent-signal p, .agent-review-card p { margin: 8px 0; color: #b8c8cc; font-size: 14px; }
+.agent-signal a { font-size: 12px; }
+.agent-badge, .agent-state { display: inline-flex; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 900; }
+.agent-badge.high, .agent-state.danger { background: rgba(251, 113, 133, 0.13); color: #ff9dad; }
+.agent-badge.medium, .agent-state.warning { background: rgba(244, 184, 96, 0.13); color: #ffd18e; }
+.agent-badge.low, .agent-state.positive { background: rgba(40, 215, 157, 0.13); color: #7cf9d0; }
+.agent-badge.unknown, .agent-state.muted, .agent-state.neutral { background: #17232d; color: #a8bac4; }
+.agent-review-card > div, .agent-watch-row, .agent-watch-meta { display: flex; justify-content: space-between; gap: 12px; }
+.agent-review-card > div span, .agent-watch-row span { color: var(--muted); font-size: 12px; }
+.agent-review-card footer { display: flex; justify-content: space-between; gap: 8px; color: #78d9c0; font-size: 11px; }
+.agent-watch-row { align-items: center; }
+.agent-watch-row > div:first-child { display: grid; gap: 2px; }
+.agent-watch-meta { align-items: center; }
+
+.agent-roadmap { display: grid; grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.3fr); gap: 24px; margin-top: 14px; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(140deg, #101820, #0b1117); }
+.agent-roadmap ol { display: grid; gap: 1px; margin: 0; padding: 0; list-style: none; background: #263541; }
+.agent-roadmap li { display: grid; grid-template-columns: 42px 1fr; gap: 12px; padding: 13px; background: #0d151c; }
+.agent-roadmap li > span { color: #5f7581; font-family: Consolas, monospace; font-weight: 800; }
+.agent-roadmap li.complete > span { color: var(--agent-cyan); }
+.agent-roadmap li p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+
+@media (max-width: 860px) {
+  .agent-hero { grid-template-columns: 1fr; }
+  .agent-portrait-wrap { min-height: 330px; max-height: 500px; }
+  .agent-stats { grid-template-columns: repeat(2, 1fr); }
+  .agent-mode-card.scout, .agent-mode-card.analyst, .agent-mode-card.ranger { grid-column: span 12; }
+  .agent-roadmap { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .agent-stats { grid-template-columns: 1fr; }
+  .agent-intro { padding: 22px; }
+  .agent-command { grid-template-columns: 1fr; }
+  .agent-review-card > div, .agent-watch-row { align-items: flex-start; flex-direction: column; }
+}
+
 .auth-shell {
   display: grid;
   min-height: calc(100vh - 100px);

@@ -29,6 +29,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <Link href="/investing/journal">Notes</Link>
             <Link href="/investing/settings">Settings</Link>
             <Link href="/daily">Daily News</Link>
+            <Link href="/agent">Pixel Agent</Link>
             {user ? (
               <form action={logout}>
                 <button className="nav-button" type="submit">
