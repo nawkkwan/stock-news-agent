@@ -87,7 +87,15 @@ export default async function InvestingPage({
             <h2>Portfolio</h2>
             <p className="muted">Select a portfolio to review its value, allocation, holdings, news, and technical context.</p>
           </div>
-          <Link className="button secondary" href="/investing/settings">Manage portfolio</Link>
+          <div className="button-row">
+            <Link
+              className="button"
+              href={data.selectedPortfolio ? `/investing/journey?portfolio=${data.selectedPortfolio.id}` : "/investing/journey"}
+            >
+              Add stock
+            </Link>
+            <Link className="button secondary" href="/investing/settings">Manage portfolio</Link>
+          </div>
         </div>
         {data.portfolios.length > 0 ? (
           <PortfolioSelector portfolios={data.portfolios} selectedPortfolio={data.selectedPortfolio} />

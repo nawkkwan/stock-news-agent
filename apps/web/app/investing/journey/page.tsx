@@ -20,8 +20,8 @@ export default async function JourneyPage({
       <section className="panel">
         <div className="section-head">
           <div>
-            <h2>Activity</h2>
-            <p className="muted">Add holdings and record cash, buys, sells, dividends, or withdrawals for one portfolio.</p>
+            <h2>Add to Portfolio</h2>
+            <p className="muted">Choose a portfolio, add a stock, then record the actual purchase details and your reason.</p>
           </div>
           <Link className="button secondary" href="/investing/settings">Manage portfolio</Link>
         </div>
@@ -34,9 +34,9 @@ export default async function JourneyPage({
           <PortfolioAssetSearch portfolioId={selectedPortfolioId} />
         </div>
         <div className="panel">
-          <h2>Record activity</h2>
-          <p className="muted">Use this for cash deposits, buys, sells, dividends, and withdrawals. Enter the actual buy or sell price from that date.</p>
-          <TransactionForm portfolioId={selectedPortfolioId} />
+          <h2>Record a Transaction</h2>
+          <p className="muted">Record a buy, sell, deposit, dividend, or withdrawal using the actual date and price.</p>
+          <TransactionForm holdings={data.portfolioHoldings} portfolioId={selectedPortfolioId} />
         </div>
       </section>
 
@@ -63,7 +63,7 @@ export default async function JourneyPage({
       </section>
 
       <section className="panel">
-        <h2>Portfolio activity</h2>
+        <h2>Transaction History</h2>
         <JourneyList transactions={data.transactions} />
       </section>
     </main>

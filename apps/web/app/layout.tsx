@@ -24,7 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
           <nav aria-label="Primary navigation">
             <Link href="/investing">Overview</Link>
-            <Link href="/investing/journey">Activity</Link>
+            <Link href="/investing/journey">Add Stock</Link>
             <Link href="/investing/watchlist">Watchlist</Link>
             <Link href="/investing/journal">Notes</Link>
             <Link href="/investing/settings">Settings</Link>

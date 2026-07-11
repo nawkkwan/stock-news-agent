@@ -98,6 +98,7 @@ export default async function AgentPage() {
             <p>{report?.summary?.portfolio_summary || "ยังไม่มี Daily Report ให้ตรวจ กรุณารัน worker ก่อน"}</p>
           </div>
           <div className="agent-actions">
+            <Link className="agent-primary-action" href="/agent/room">Enter agent room</Link>
             <Link className="agent-primary-action" href="/daily">Open daily report</Link>
             <Link className="agent-secondary-action" href="/investing/watchlist">Manage watchlist</Link>
           </div>

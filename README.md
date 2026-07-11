@@ -80,6 +80,7 @@ WEB_PORT=3000
 OPENAI_API_KEY=optional
 OPENAI_MODEL=gpt-4o-mini
 GEMINI_API_KEY=optional
+GEMINI_MODEL=gemini-2.5-flash-lite
 EODHD_API_KEY=optional-for-global-symbol-search-and-latest-quotes
 ALPHA_VANTAGE_API_KEY=optional-for-global-symbol-search-and-latest-quotes
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
@@ -93,6 +94,8 @@ TIDB_USER=your-tidb-user
 TIDB_PASSWORD=your-tidb-password
 TIDB_DATABASE=investment_research
 ```
+
+The web Agent rooms use `GEMINI_API_KEY` when it is configured, with OpenAI as a fallback.
 
 ## Web App
 

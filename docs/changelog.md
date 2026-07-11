@@ -6,6 +6,9 @@
 - Connected the agent dashboard to the existing daily report, portfolio, thesis, and watchlist context.
 - Added an original pixel-art research assistant asset and a navigation entry for the new page.
 - Kept the initial agent experience read-only and clearly separated from trading actions.
+- Added an Agent Operations Room with three visual workstations and live status derived from report and portfolio context.
+- Added walking pixel agents, agent selection, and a read-only conversational panel backed by portfolio context.
+- Rebuilt the operations room as a bird's-eye floor plan with three distinct role sprites and an unobstructed chat layout.
 
 ## 2026-06-17
 

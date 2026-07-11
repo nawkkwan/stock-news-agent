@@ -246,12 +246,43 @@ export function HoldingForm({
   );
 }
 
-export function TransactionForm({ ticker, portfolioId }: { ticker?: string; portfolioId?: string | null }) {
+export function TransactionForm({
+  ticker,
+  portfolioId,
+  holdings = [],
+}: {
+  ticker?: string;
+  portfolioId?: string | null;
+  holdings?: PortfolioHolding[];
+}) {
   return (
     <form action={addTransaction} className="form-grid">
       <input type="hidden" name="portfolio_id" value={portfolioId || ""} />
       <SelectField label="Action type" name="transaction_type" values={transactionTypes} defaultValue="buy" />
-      <Field label="Ticker" name="ticker" defaultValue={ticker || ""} />
+      <label>
+        <span>Ticker</span>
+        <input
+          autoComplete="off"
+          defaultValue={ticker || ""}
+          list="portfolio-holdings"
+          name="ticker"
+          placeholder={holdings.length > 0 ? "Search stocks in My Port" : "e.g. GOOGL"}
+        />
+        <datalist id="portfolio-holdings">
+          {holdings.map((holding) => (
+            <option
+              key={holding.id}
+              label={`${formatNumber(holding.shares)} shares · avg ${formatNumber(holding.avg_cost)}`}
+              value={holding.ticker}
+            />
+          ))}
+        </datalist>
+        <small className="field-hint">
+          {holdings.length > 0
+            ? `${holdings.length} stocks from the selected portfolio. You can still type a new ticker for a first purchase.`
+            : "This portfolio has no recorded stocks yet. Type a ticker for the first purchase."}
+        </small>
+      </label>
       <Field label="Quantity" name="quantity" type="number" />
       <Field label="Price on transaction date / cash amount" name="price_per_share" type="number" required />
       <Field label="Fee" name="fee" type="number" defaultValue={0} />
@@ -260,7 +291,7 @@ export function TransactionForm({ ticker, portfolioId }: { ticker?: string; port
       <TextArea label="Reason" name="reason" />
       <TextArea label="Notes" name="notes" />
       <button className="button" type="submit">
-        Add activity
+        Record transaction
       </button>
     </form>
   );
@@ -755,7 +786,7 @@ export function PortfolioActivityTimeline({
     .slice(0, 8);
 
   if (activities.length === 0) {
-    return <EmptyState label="Add transactions or notes to build an activity timeline." />;
+    return <EmptyState label="Record a transaction to build this portfolio history." />;
   }
 
   return (
@@ -818,7 +849,7 @@ export function TradingBotPlaceholder() {
 
 export function JourneyList({ transactions }: { transactions: PortfolioTransaction[] }) {
   if (transactions.length === 0) {
-    return <EmptyState label="No activity yet. Add your first deposit or purchase." />;
+    return <EmptyState label="No transactions yet. Add your first deposit or purchase." />;
   }
 
   return (
