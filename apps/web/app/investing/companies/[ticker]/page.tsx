@@ -1,17 +1,6 @@
 import Link from "next/link";
-import { getCompanyData, formatDate, formatNumber } from "../../../../lib/investment-data";
-import {
-  CompanyForm,
-  ConfigNotice,
-  HoldingForm,
-  InvestmentJournalForm,
-  InvestmentJournalList,
-  NewsForm,
-  NewsList,
-  ThesisForm,
-  TransactionForm,
-  WatchlistForm,
-} from "../../components";
+import { getCompanyData, formatNumber } from "../../../../lib/investment-data";
+import { ConfigNotice, NewsList, ThesisForm, WatchlistForm } from "../../components";
 
 export const dynamic = "force-dynamic";
 
@@ -25,48 +14,16 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
       <ConfigNotice configured={data.configured} error={data.error} />
       <section className="company-hero">
         <div>
-          <Link href="/investing">Back to overview</Link>
+          <Link href="/investing">Back to My Portfolio</Link>
           <h2>{ticker}</h2>
           <p>{data.company?.name || "Company profile not filled yet."}</p>
         </div>
         <dl className="mini-grid">
-          <div>
-            <dt>Sector</dt>
-            <dd>{data.company?.sector || "-"}</dd>
-          </div>
-          <div>
-            <dt>Industry</dt>
-            <dd>{data.company?.industry || "-"}</dd>
-          </div>
-          <div>
-            <dt>Confidence</dt>
-            <dd>{formatNumber(data.thesis?.confidence_score)}</dd>
-          </div>
-          <div>
-            <dt>Portfolio weight</dt>
-            <dd>{formatNumber(data.portfolioHolding?.portfolio_weight, "%")}</dd>
-          </div>
-          <div>
-            <dt>Updated</dt>
-            <dd>{formatDate(data.company?.updated_at)}</dd>
-          </div>
+          <div><dt>Sector</dt><dd>{data.company?.sector || "-"}</dd></div>
+          <div><dt>Industry</dt><dd>{data.company?.industry || "-"}</dd></div>
+          <div><dt>Confidence</dt><dd>{formatNumber(data.thesis?.confidence_score)}</dd></div>
+          <div><dt>Portfolio weight</dt><dd>{formatNumber(data.portfolioHolding?.portfolio_weight, "%")}</dd></div>
         </dl>
-      </section>
-
-      <section className="two-column align-start">
-        <div className="panel">
-          <h2>Company</h2>
-          <CompanyForm company={data.company} ticker={ticker} />
-        </div>
-        <div className="panel">
-          <h2>Holding settings</h2>
-          <HoldingForm holding={data.holding} ticker={ticker} />
-        </div>
-      </section>
-
-      <section className="panel">
-        <h2>Add to journey</h2>
-        <TransactionForm ticker={ticker} />
       </section>
 
       <section className="panel">
@@ -74,31 +31,14 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
         <ThesisForm thesis={data.thesis} ticker={ticker} />
       </section>
 
-      <section className="two-column align-start">
-        <div className="panel">
-          <h2>Watchlist</h2>
-          <WatchlistForm item={data.watchlistItem} ticker={ticker} />
-        </div>
-        <div className="panel">
-          <h2>Add journal entry</h2>
-          <InvestmentJournalForm ticker={ticker} />
-        </div>
-      </section>
-
-      <section className="two-column align-start">
-        <div className="panel">
-          <h2>Add news impact</h2>
-          <NewsForm ticker={ticker} />
-        </div>
-        <div className="panel">
-          <h2>Investment journal</h2>
-          <InvestmentJournalList entries={data.companyJournalEntries} />
-        </div>
+      <section className="panel">
+        <h2>Watchlist</h2>
+        <WatchlistForm item={data.watchlistItem} ticker={ticker} />
       </section>
 
       <section className="panel">
         <h2>Related news</h2>
-        <NewsList news={data.companyNews} editable />
+        <NewsList news={data.companyNews} />
       </section>
     </main>
   );

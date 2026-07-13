@@ -7,41 +7,30 @@ import {
   DashboardHoldingsTable,
   NewsByHolding,
   PortfolioAllocation,
+  PortfolioForm,
   PortfolioSelector,
-  PortfolioSummaryCards,
   PortfolioSnapshot,
+  PortfolioTransactionHistory,
+  TransactionForm,
   type DashboardHolding,
   type DailyReportStock,
 } from "./components";
+import { PortfolioAssetSearch } from "./portfolio-asset-search";
 
 export const dynamic = "force-dynamic";
 
 type LatestReport = {
   date?: string;
-  summary?: {
-    total_portfolio_value_thb?: number | null;
-  };
+  summary?: { total_portfolio_value_thb?: number | null };
   stocks?: DailyReportStock[];
 };
 
 async function getLatestReport(): Promise<LatestReport | null> {
   try {
-    const file = await fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8");
-    return JSON.parse(file) as LatestReport;
+    return JSON.parse(await fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8")) as LatestReport;
   } catch {
     return null;
   }
-}
-
-function formatReportDate(value?: string | null) {
-  if (!value) {
-    return "Seed";
-  }
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(value));
 }
 
 export default async function InvestingPage({
@@ -65,17 +54,15 @@ export default async function InvestingPage({
       unrealized_gain: stock.unrealized_gain_thb ?? null,
       unrealized_gain_pct: stock.unrealized_gain_pct ?? null,
     }));
-  const isUsingSeedPortfolio = data.portfolioHoldings.length === 0 && reportHoldings.length > 0;
-  const displayHoldings: DashboardHolding[] = isUsingSeedPortfolio ? reportHoldings : data.portfolioHoldings;
+  const isUsingSeedPortfolio = data.portfolios.length === 0 && data.portfolioHoldings.length === 0 && reportHoldings.length > 0;
+  const displayHoldings = isUsingSeedPortfolio ? reportHoldings : data.portfolioHoldings;
   const displayPortfolioValue = isUsingSeedPortfolio
     ? Number(latestReport?.summary?.total_portfolio_value_thb) || reportHoldings.reduce((sum, holding) => sum + holding.market_value, 0)
     : data.portfolioValue;
   const currentTickers = new Set(displayHoldings.map((holding) => holding.ticker.toUpperCase()));
-  const reportStocks = (latestReport?.stocks || []).filter((stock) =>
-    stock.ticker ? currentTickers.has(stock.ticker.toUpperCase()) : false
-  );
+  const reportStocks = (latestReport?.stocks || []).filter((stock) => stock.ticker && currentTickers.has(stock.ticker.toUpperCase()));
   const unrealizedGain = displayHoldings.reduce((sum, holding) => sum + (holding.unrealized_gain || 0), 0);
-  const displayPortfolioName = data.selectedPortfolio?.name || (isUsingSeedPortfolio ? "My Ports" : "No portfolio selected");
+  const portfolioId = data.selectedPortfolio?.id || null;
 
   return (
     <main className="page-shell">
@@ -84,99 +71,68 @@ export default async function InvestingPage({
       <section className="panel">
         <div className="section-head">
           <div>
-            <h2>Portfolio</h2>
-            <p className="muted">Select a portfolio to review its value, allocation, holdings, news, and technical context.</p>
+            <h2>My Portfolio</h2>
+            <p className="muted">เพิ่มหุ้นใหม่หรือบันทึกซื้อขายได้ด้านล่าง หุ้นที่ถือจะอัปเดตให้อัตโนมัติ</p>
           </div>
-          <div className="button-row">
-            <Link
-              className="button"
-              href={data.selectedPortfolio ? `/investing/journey?portfolio=${data.selectedPortfolio.id}` : "/investing/journey"}
-            >
-              Add stock
-            </Link>
-            <Link className="button secondary" href="/investing/settings">Manage portfolio</Link>
-          </div>
+          <a className="button" href="#portfolio-activity">เพิ่มหุ้นหรือบันทึกซื้อขาย</a>
         </div>
-        {data.portfolios.length > 0 ? (
-          <PortfolioSelector portfolios={data.portfolios} selectedPortfolio={data.selectedPortfolio} />
-        ) : null}
-        {isUsingSeedPortfolio ? (
-          <article className="portfolio-card seed-card">
-            <div className="item-card-head">
-              <div>
-                <strong>My Ports</strong>
-                <span>Seeded from the portfolio screenshot you sent. Import it to save these assets into Supabase.</span>
-              </div>
-              <span>{formatReportDate(latestReport?.date)}</span>
-            </div>
-            <dl className="mini-grid">
-              <div>
-                <dt>Value</dt>
-                <dd>{new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(displayPortfolioValue)}</dd>
-              </div>
-              <div>
-                <dt>Assets</dt>
-                <dd>{displayHoldings.length}</dd>
-              </div>
-              <div>
-                <dt>Unrealized P/L</dt>
-                <dd className={unrealizedGain >= 0 ? "positive-text" : "negative-text"}>
-                  {new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(unrealizedGain)}
-                </dd>
-              </div>
-              <div>
-                <dt>Source</dt>
-                <dd>Portfolio seed</dd>
-              </div>
-            </dl>
-          </article>
-        ) : null}
-        {data.portfolioSummaries.length > 0 ? <PortfolioSummaryCards summaries={data.portfolioSummaries} /> : null}
+        {data.portfolios.length > 1 ? <PortfolioSelector portfolios={data.portfolios} selectedPortfolio={data.selectedPortfolio} /> : null}
+        <details className="portfolio-create">
+          <summary>+ เพิ่ม Portfolio ใหม่</summary>
+          <PortfolioForm />
+        </details>
       </section>
 
       <PortfolioSnapshot
         cashBalance={data.cashBalance}
         hasCashLedger={data.hasCashLedger}
         holdingsCount={displayHoldings.length}
-        portfolioName={displayPortfolioName}
+        portfolioName={data.selectedPortfolio?.name || "My Portfolio"}
         portfolioValue={displayPortfolioValue}
         unrealizedGain={unrealizedGain}
       />
 
-      <section className="dashboard-grid">
-        <PortfolioAllocation
-          cashBalance={data.cashBalance}
-          hasCashLedger={data.hasCashLedger}
-          holdings={displayHoldings}
-        />
+      <section className="dashboard-grid" id="portfolio-activity">
         <div className="panel dashboard-panel">
-          <div className="section-head">
-            <div>
-              <h2>Assets in this portfolio</h2>
-              <p className="muted">
-                {isUsingSeedPortfolio
-                  ? "Showing My Ports seed assets from your screenshot. Import once to persist them in Supabase."
-                  : `Only holdings inside ${data.selectedPortfolio?.name || "the selected portfolio"} appear here.`}
-              </p>
-            </div>
-          </div>
-          <DashboardHoldingsTable holdings={displayHoldings} />
+          <h2>เพิ่มหุ้นใหม่</h2>
+          <p className="muted">ค้นหาหุ้น เลือกราคาล่าสุด แล้วเพิ่มเข้า Portfolio ที่กำลังดูอยู่</p>
+          <PortfolioAssetSearch portfolioId={portfolioId} />
         </div>
+        <div className="panel dashboard-panel">
+          <h2>บันทึกซื้อขาย</h2>
+          <p className="muted">บันทึกซื้อหรือขายเอง ระบบจะอัปเดตจำนวนหุ้นในพอร์ตให้</p>
+          <TransactionForm holdings={data.portfolioHoldings} portfolioId={portfolioId} />
+        </div>
+      </section>
+
+      <section className="dashboard-grid">
+        <PortfolioAllocation cashBalance={data.cashBalance} hasCashLedger={data.hasCashLedger} holdings={displayHoldings} />
+        <div className="panel dashboard-panel">
+          <h2>หุ้นที่ถืออยู่</h2>
+          <p className="muted">รายการหุ้นทั้งหมดใน Portfolio นี้</p>
+          <DashboardHoldingsTable holdings={displayHoldings} canDelete={!isUsingSeedPortfolio} />
+        </div>
+      </section>
+
+      <section className="panel dashboard-panel">
+        <h2>ประวัติซื้อขาย</h2>
+        <p className="muted">รายการที่บันทึกไว้ แยกตามหุ้นใน Portfolio ที่กำลังดู</p>
+        <PortfolioTransactionHistory
+          portfolioName={data.selectedPortfolio?.name || "My Portfolio"}
+          transactions={data.transactions}
+        />
       </section>
 
       <section className="panel dashboard-panel">
         <div className="section-head">
           <div>
             <h2>News by Holding</h2>
-            <p className="muted">Latest daily report filtered to tickers currently in this portfolio.</p>
+            <p className="muted">Latest daily report filtered to stocks in this portfolio.</p>
           </div>
-          <Link className="button secondary" href="/daily">
-            Daily News
-          </Link>
+          <Link className="button secondary" href="/daily">Daily News</Link>
         </div>
         <NewsByHolding reportDate={latestReport?.date} stocks={reportStocks} />
       </section>
-
     </main>
   );
 }

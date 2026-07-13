@@ -14,6 +14,7 @@ type AgentRoomClientProps = {
     watchlist: number;
     ready: number;
   };
+  statuses: Record<AgentId, boolean>;
 };
 
 const agents: Record<AgentId, { name: string; role: string; greeting: string }> = {
@@ -34,7 +35,7 @@ const agents: Record<AgentId, { name: string; role: string; greeting: string }> 
   },
 };
 
-export default function AgentRoomClient({ metrics }: AgentRoomClientProps) {
+export default function AgentRoomClient({ metrics, statuses }: AgentRoomClientProps) {
   const [selected, setSelected] = useState<AgentId>("analyst");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState(agents.analyst.greeting);
@@ -73,25 +74,26 @@ export default function AgentRoomClient({ metrics }: AgentRoomClientProps) {
       <section className="pixel-room interactive" aria-label="Interactive pixel art agent operations room">
         <Image
           className="pixel-room-image"
-          src="/agent/pixel-agent-room-topdown.png"
-          alt="Bird's-eye view pixel art research operations room"
-          width={1536}
-          height={1024}
+          src="/agent/pixel-agent-office-working.png"
+          alt="Isometric pixel art office with agents working at their desks"
+          width={1347}
+          height={1168}
           priority
         />
         <div className="room-scanline" />
 
-        <button className={`walking-agent scout-walk ${selected === "scout" ? "selected" : ""}`} onClick={() => selectAgent("scout")} aria-label="Talk to Scout">
-          <Image src="/agent/agent-scout.png" alt="Scout walking" width={512} height={768} />
-          <span>Scout</span>
+        <span className={`agent-screen scout-screen ${statuses.scout ? "working" : "idle"}`} aria-hidden="true" />
+        <span className={`agent-screen analyst-screen ${statuses.analyst ? "working" : "idle"}`} aria-hidden="true" />
+        <span className={`agent-screen ranger-screen ${statuses.ranger ? "working" : "idle"}`} aria-hidden="true" />
+
+        <button className={`agent-hotspot scout-seat ${selected === "scout" ? "selected" : ""}`} onClick={() => selectAgent("scout")} aria-label="Talk to Scout" aria-pressed={selected === "scout"}>
+          <span className="agent-seat-label"><i className={statuses.scout ? "working" : "idle"} />Scout · {statuses.scout ? "กำลังทำงาน" : "ว่าง"}</span>
         </button>
-        <button className={`walking-agent analyst-walk ${selected === "analyst" ? "selected" : ""}`} onClick={() => selectAgent("analyst")} aria-label="Talk to Analyst">
-          <Image src="/agent/agent-analyst.png" alt="Analyst walking" width={512} height={768} />
-          <span>Analyst</span>
+        <button className={`agent-hotspot analyst-seat ${selected === "analyst" ? "selected" : ""}`} onClick={() => selectAgent("analyst")} aria-label="Talk to Analyst" aria-pressed={selected === "analyst"}>
+          <span className="agent-seat-label"><i className={statuses.analyst ? "working" : "idle"} />Analyst · {statuses.analyst ? "กำลังทำงาน" : "ว่าง"}</span>
         </button>
-        <button className={`walking-agent ranger-walk ${selected === "ranger" ? "selected" : ""}`} onClick={() => selectAgent("ranger")} aria-label="Talk to Ranger">
-          <Image src="/agent/agent-ranger.png" alt="Ranger walking" width={512} height={768} />
-          <span>Ranger</span>
+        <button className={`agent-hotspot ranger-seat ${selected === "ranger" ? "selected" : ""}`} onClick={() => selectAgent("ranger")} aria-label="Talk to Ranger" aria-pressed={selected === "ranger"}>
+          <span className="agent-seat-label"><i className={statuses.ranger ? "working" : "idle"} />Ranger · {statuses.ranger ? "กำลังทำงาน" : "ว่าง"}</span>
         </button>
 
         <div className="room-live-strip">

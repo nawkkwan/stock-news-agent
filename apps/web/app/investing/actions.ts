@@ -277,6 +277,36 @@ export async function upsertHolding(formData: FormData) {
   revalidatePath(`/investing/companies/${ticker}`);
 }
 
+export async function deleteHolding(formData: FormData) {
+  const id = nullableText(formData.get("id"));
+  if (!id) {
+    throw new Error("Missing holding id.");
+  }
+
+  const { supabase, user } = await requireUser();
+  const { data, error } = await supabase
+    .from("holdings")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .select("id, ticker, portfolio_id")
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+  if (!data) {
+    throw new Error("Holding not found or you do not have permission to delete it.");
+  }
+
+  revalidatePath("/investing");
+  if (data.portfolio_id) {
+    revalidatePath(`/investing?portfolio=${data.portfolio_id}`);
+  }
+  revalidatePath(`/investing/companies/${data.ticker}`);
+  revalidatePath("/agent");
+}
+
 async function readLatestReport(): Promise<LatestReport | null> {
   try {
     const file = await fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8");
@@ -393,7 +423,7 @@ export async function upsertWatchlistItem(formData: FormData) {
   }
 
   const { supabase, user } = await requireUser();
-  const company = await ensureCompany(ticker);
+  const company = await ensureCompany(ticker, nullableText(formData.get("company_name")));
   const id = nullableText(formData.get("id"));
   const payload = {
     company_id: company.id,

@@ -59,7 +59,7 @@ export default async function AgentRoomPage() {
         </div>
         <div className="room-header-actions">
           <span className="room-clock">Last run · {formatRunTime(report?.generated_at)}</span>
-          <Link href="/agent">Back to dashboard</Link>
+          <Link className="agent-primary-action" href="/agent/details">อ่านรายละเอียด</Link>
         </div>
       </header>
 
@@ -70,6 +70,10 @@ export default async function AgentRoomPage() {
         risks: report?.summary?.risk_alerts?.length || 0,
         watchlist: data.watchlist.length,
         ready: readyWatchlist.length,
+      }} statuses={{
+        scout: (report?.summary?.total_articles ?? 0) > 0,
+        analyst: stocks.length > 0,
+        ranger: data.watchlist.length > 0,
       }} />
 
       <section className="room-console-grid">

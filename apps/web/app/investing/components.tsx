@@ -27,6 +27,7 @@ import {
   upsertThesis,
   upsertWatchlistItem,
 } from "./actions";
+import { DeleteHoldingButton } from "./delete-holding-button";
 export { ImportDailyPortfolioButton } from "./import-daily-portfolio-button";
 
 export function ConfigNotice({ configured, error }: { configured: boolean; error?: string }) {
@@ -609,7 +610,7 @@ function DonutChart({ slices, totalValue }: { slices: AllocationSlice[]; totalVa
   );
 }
 
-export function DashboardHoldingsTable({ holdings }: { holdings: DashboardHolding[] }) {
+export function DashboardHoldingsTable({ holdings, canDelete = true }: { holdings: DashboardHolding[]; canDelete?: boolean }) {
   if (holdings.length === 0) {
     return <EmptyState label="No assets in this portfolio yet. Add an asset, record a buy transaction, or import the Daily News snapshot." />;
   }
@@ -646,6 +647,7 @@ export function DashboardHoldingsTable({ holdings }: { holdings: DashboardHoldin
               ) : (
                 <span className="muted">P/L later</span>
               )}
+              {canDelete ? <DeleteHoldingButton id={holding.id} ticker={holding.ticker} /> : null}
             </div>
           </article>
         );
@@ -883,6 +885,39 @@ export function JourneyList({ transactions }: { transactions: PortfolioTransacti
           </dl>
           {transaction.notes ? <p className="muted">{transaction.notes}</p> : null}
         </article>
+      ))}
+    </div>
+  );
+}
+
+export function PortfolioTransactionHistory({
+  transactions,
+  portfolioName,
+}: {
+  transactions: PortfolioTransaction[];
+  portfolioName: string;
+}) {
+  if (transactions.length === 0) {
+    return <EmptyState label="ยังไม่มีประวัติซื้อขายใน Portfolio นี้" />;
+  }
+
+  const transactionsByTicker = transactions.reduce<Map<string, PortfolioTransaction[]>>((groups, transaction) => {
+    const key = transaction.ticker || "Cash";
+    groups.set(key, [...(groups.get(key) || []), transaction]);
+    return groups;
+  }, new Map());
+
+  return (
+    <div className="transaction-history-groups">
+      <p className="muted">Portfolio: {portfolioName}</p>
+      {Array.from(transactionsByTicker.entries()).map(([ticker, tickerTransactions]) => (
+        <section className="transaction-history-group" key={ticker}>
+          <div className="section-head">
+            <h3>{ticker}</h3>
+            <span>{tickerTransactions.length} รายการ</span>
+          </div>
+          <JourneyList transactions={tickerTransactions} />
+        </section>
       ))}
     </div>
   );

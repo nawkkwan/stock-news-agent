@@ -59,7 +59,7 @@ function reviewState(status: string, hasThesis: boolean) {
   return { label: "Monitoring", tone: "neutral" };
 }
 
-export default async function AgentPage() {
+export async function AgentDetails() {
   const [report, data] = await Promise.all([getLatestReport(), getInvestmentData()]);
   const stocks = report?.stocks || [];
   const priorityStocks = [...stocks].sort((a, b) => priorityScore(b) - priorityScore(a)).slice(0, 3);
@@ -201,3 +201,5 @@ export default async function AgentPage() {
     </main>
   );
 }
+
+export { default } from "./room/page";

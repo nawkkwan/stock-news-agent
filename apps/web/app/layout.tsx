@@ -23,11 +23,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <h1>Portfolio thinking workspace</h1>
           </div>
           <nav aria-label="Primary navigation">
-            <Link href="/investing">Overview</Link>
-            <Link href="/investing/journey">Add Stock</Link>
+            <Link href="/investing">My Portfolio</Link>
             <Link href="/investing/watchlist">Watchlist</Link>
-            <Link href="/investing/journal">Notes</Link>
-            <Link href="/investing/settings">Settings</Link>
             <Link href="/daily">Daily News</Link>
             <Link href="/agent">Pixel Agent</Link>
             {user ? (
