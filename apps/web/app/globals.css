@@ -612,6 +612,68 @@ dt,
   margin-top: 14px;
 }
 
+.activity-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.activity-panel-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  list-style: none;
+}
+
+.activity-panel-summary::-webkit-details-marker {
+  display: none;
+}
+
+.activity-panel-summary > span:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.activity-panel-summary strong {
+  color: var(--text);
+  font-size: 20px;
+}
+
+.activity-panel-summary small {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.activity-panel-toggle {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--accent-strong);
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.activity-panel[open] .activity-panel-toggle {
+  transform: rotate(180deg);
+  background: rgba(25, 201, 154, 0.08);
+}
+
+.activity-panel-content {
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.activity-panel-content > .muted:first-child {
+  margin-top: 14px;
+}
+
 .allocation-layout {
   display: grid;
   grid-template-columns: 1fr;

@@ -93,16 +93,32 @@ export default async function InvestingPage({
       />
 
       <section className="dashboard-grid" id="portfolio-activity">
-        <div className="panel dashboard-panel">
-          <h2>เพิ่มหุ้นใหม่</h2>
-          <p className="muted">ค้นหาหุ้น เลือกราคาล่าสุด แล้วเพิ่มเข้า Portfolio ที่กำลังดูอยู่</p>
-          <PortfolioAssetSearch portfolioId={portfolioId} />
-        </div>
-        <div className="panel dashboard-panel">
-          <h2>บันทึกซื้อขาย</h2>
-          <p className="muted">บันทึกซื้อหรือขายเอง ระบบจะอัปเดตจำนวนหุ้นในพอร์ตให้</p>
-          <TransactionForm holdings={data.portfolioHoldings} portfolioId={portfolioId} />
-        </div>
+        <details className="panel dashboard-panel activity-panel">
+          <summary className="activity-panel-summary">
+            <span>
+              <strong>เพิ่มหุ้นใหม่</strong>
+              <small>ค้นหาและเพิ่มหุ้นเข้า Portfolio</small>
+            </span>
+            <span className="activity-panel-toggle" aria-hidden="true">⌄</span>
+          </summary>
+          <div className="activity-panel-content">
+            <p className="muted">ค้นหาหุ้น เลือกราคาล่าสุด แล้วเพิ่มเข้า Portfolio ที่กำลังดูอยู่</p>
+            <PortfolioAssetSearch portfolioId={portfolioId} />
+          </div>
+        </details>
+        <details className="panel dashboard-panel activity-panel">
+          <summary className="activity-panel-summary">
+            <span>
+              <strong>บันทึกซื้อขาย</strong>
+              <small>เพิ่มรายการซื้อ ขาย หรือเงินสด</small>
+            </span>
+            <span className="activity-panel-toggle" aria-hidden="true">⌄</span>
+          </summary>
+          <div className="activity-panel-content">
+            <p className="muted">บันทึกซื้อหรือขายเอง ระบบจะอัปเดตจำนวนหุ้นในพอร์ตให้</p>
+            <TransactionForm holdings={data.portfolioHoldings} portfolioId={portfolioId} />
+          </div>
+        </details>
       </section>
 
       <section className="dashboard-grid">
