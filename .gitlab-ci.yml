@@ -1,0 +1,25 @@
+stages:
+  - verify
+
+web_verify:
+  stage: verify
+  image: node:20
+  cache:
+    key:
+      files:
+        - apps/web/package-lock.json
+    paths:
+      - apps/web/node_modules/
+  script:
+    - npm --prefix apps/web ci
+    - npm --prefix apps/web run typecheck
+    - npm --prefix apps/web run build
+
+python_verify:
+  stage: verify
+  image: python:3.12
+  script:
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt
+    - python apps/api/check_api.py
+    - python -m py_compile apps/worker/jobs/deploy_daily_report.py apps/worker/jobs/run_daily_report.py
