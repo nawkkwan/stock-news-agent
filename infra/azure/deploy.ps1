@@ -13,7 +13,7 @@ param(
 $ErrorActionPreference = "Stop"
 $requiredSecrets = @(
   "NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OWNER_SUPABASE_USER_ID",
-  "INTERNAL_API_TOKEN", "GEMINI_API_KEY", "DISCORD_OWNER_USER_ID", "DISCORD_WEBHOOK_URL"
+  "INTERNAL_API_TOKEN", "GEMINI_API_KEY", "EODHD_API_KEY", "DISCORD_OWNER_USER_ID", "DISCORD_WEBHOOK_URL"
 )
 foreach ($secretName in $requiredSecrets) {
   if (-not [Environment]::GetEnvironmentVariable($secretName)) {
@@ -43,6 +43,7 @@ $commonSecrets = @(
   "owner-user-id=$env:OWNER_SUPABASE_USER_ID",
   "internal-api-token=$env:INTERNAL_API_TOKEN",
   "gemini-api-key=$env:GEMINI_API_KEY",
+  "eodhd-api-key=$env:EODHD_API_KEY",
   "discord-owner-id=$env:DISCORD_OWNER_USER_ID",
   "discord-webhook=$env:DISCORD_WEBHOOK_URL"
 )
@@ -53,6 +54,7 @@ $commonEnv = @(
   "INTERNAL_API_TOKEN=secretref:internal-api-token",
   "GEMINI_API_KEY=secretref:gemini-api-key",
   "GEMINI_MODEL=gemini-3.5-flash",
+  "EODHD_API_KEY=secretref:eodhd-api-key",
   "DISCORD_OWNER_USER_ID=secretref:discord-owner-id",
   "DISCORD_WEBHOOK_URL=secretref:discord-webhook",
   "SUPABASE_PORTFOLIO_SOURCE=supabase"

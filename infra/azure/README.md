@@ -9,6 +9,8 @@ Hermes can remain in its existing repository. Pass its published image as `-Herm
 
 Set the required environment variables from `.env.example`, authenticate with `az login`, then run from the repository root:
 
+Required runtime secrets are the Supabase URL/service-role key and owner UUID, internal API token, Gemini key, EODHD key, Discord owner ID, and Discord webhook. `DISCORD_BOT_TOKEN` is additionally required when deploying a Hermes image.
+
 ```powershell
 .\infra\azure\deploy.ps1 -ResourceGroup investment-os-rg -AcrName <globally-unique-acr-name> -HermesImage <optional-hermes-image>
 ```
