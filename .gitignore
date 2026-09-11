@@ -18,6 +18,7 @@ node_modules/
 apps/web/.next/
 *.tsbuildinfo
 npm-debug.log*
+apps/web/*-server.*.log
 
 reports/*-raw-news.json
 reports/*-deduped-news.json

@@ -78,11 +78,8 @@ def normalize_portfolio_item(item: dict[str, Any]) -> dict[str, Any]:
 
 def load_supabase_portfolio() -> list[dict[str, Any]]:
     url = env_value("SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_URL").rstrip("/")
-    key = env_value("SUPABASE_SERVICE_ROLE_KEY", "SUPABASE_ANON_KEY", "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY")
-    user_id = env_value("SUPABASE_USER_ID")
-    portfolio_id = env_value("SUPABASE_PORTFOLIO_ID")
-    portfolio_name = env_value("SUPABASE_PORTFOLIO_NAME")
-
+    key = env_value("SUPABASE_SERVICE_ROLE_KEY")
+    user_id = env_value("OWNER_SUPABASE_USER_ID")
     if not url or not key or not user_id:
         return []
 
@@ -94,43 +91,35 @@ def load_supabase_portfolio() -> list[dict[str, Any]]:
     session = requests.Session()
     session.headers.update(headers)
 
-    selected_portfolio_id = portfolio_id
-    if not selected_portfolio_id:
-        params: dict[str, str] = {
-            "select": "id,name",
-            "user_id": f"eq.{user_id}",
-            "order": "created_at.asc",
-            "limit": "1",
-        }
-        if portfolio_name:
-            params["name"] = f"eq.{portfolio_name}"
-        response = session.get(f"{url}/rest/v1/portfolios", params=params, timeout=REQUEST_TIMEOUT_SECONDS)
-        response.raise_for_status()
-        portfolios = response.json()
-        if portfolios:
-            selected_portfolio_id = str(portfolios[0]["id"])
+    response = session.get(
+        f"{url}/rest/v1/portfolios",
+        params={"select": "id,name", "user_id": f"eq.{user_id}", "limit": "1"},
+        timeout=REQUEST_TIMEOUT_SECONDS,
+    )
+    response.raise_for_status()
+    portfolios = response.json()
+    if not portfolios:
+        return []
+    selected_portfolio_id = str(portfolios[0]["id"])
 
     holdings_params = {
         "select": "ticker,current_value,target_weight,company_id",
         "user_id": f"eq.{user_id}",
     }
-    transactions_params = {
-        "select": "ticker,portfolio_id",
-        "user_id": f"eq.{user_id}",
-        "not.ticker": "is.null",
-    }
-    if selected_portfolio_id:
-        holdings_params["portfolio_id"] = f"eq.{selected_portfolio_id}"
-        transactions_params["portfolio_id"] = f"eq.{selected_portfolio_id}"
+    holdings_params["portfolio_id"] = f"eq.{selected_portfolio_id}"
 
     holdings_response = session.get(f"{url}/rest/v1/holdings", params=holdings_params, timeout=REQUEST_TIMEOUT_SECONDS)
     holdings_response.raise_for_status()
-    transaction_response = session.get(
-        f"{url}/rest/v1/portfolio_transactions",
-        params=transactions_params,
+    watchlist_response = session.get(
+        f"{url}/rest/v1/watchlist",
+        params={
+            "select": "ticker,portfolio_id,company_id",
+            "user_id": f"eq.{user_id}",
+            "portfolio_id": f"eq.{selected_portfolio_id}",
+        },
         timeout=REQUEST_TIMEOUT_SECONDS,
     )
-    transaction_response.raise_for_status()
+    watchlist_response.raise_for_status()
     companies_response = session.get(
         f"{url}/rest/v1/companies",
         params={"select": "id,ticker,name", "user_id": f"eq.{user_id}"},
@@ -161,15 +150,12 @@ def load_supabase_portfolio() -> list[dict[str, Any]]:
             }
         )
 
-    for transaction in transaction_response.json():
-        ticker = str(transaction.get("ticker", "")).strip().upper()
+    for watched in watchlist_response.json():
+        ticker = str(watched.get("ticker", "")).strip().upper()
         if ticker and ticker not in by_ticker:
-            company = company_by_ticker.get(ticker) or {}
+            company = company_by_id.get(str(watched.get("company_id"))) or company_by_ticker.get(ticker) or {}
             by_ticker[ticker] = normalize_portfolio_item(
-                {
-                    "ticker": ticker,
-                    "company": company.get("name") or ticker,
-                }
+                {"ticker": ticker, "company": company.get("name") or ticker}
             )
 
     return sorted(by_ticker.values(), key=lambda item: item["ticker"])

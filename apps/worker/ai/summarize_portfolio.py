@@ -343,15 +343,43 @@ def parse_json_object(text: str) -> dict[str, Any]:
     return json.loads(cleaned)
 
 
+GEMINI_ANALYSIS_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "date": {"type": "string"},
+        "daily_briefing": {"type": "string"},
+        "portfolio_summary": {"type": "string"},
+        "macro_summary": {"type": "string"},
+        "what_matters": {"type": "array", "items": {"type": "string"}},
+        "cross_portfolio_themes": {"type": "array", "items": {"type": "string"}},
+        "risk_alerts": {"type": "array", "items": {"type": "string"}},
+        "read_more": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "ticker": {"type": "string"}, "title": {"type": "string"},
+                    "url": {"type": "string"}, "source": {"type": "string"}, "why_read": {"type": "string"},
+                },
+                "required": ["ticker", "title", "url", "source", "why_read"],
+            },
+        },
+        "stocks": {"type": "array", "items": {"type": "object"}},
+    },
+    "required": ["date", "daily_briefing", "portfolio_summary", "macro_summary", "what_matters", "cross_portfolio_themes", "risk_alerts", "read_more", "stocks"],
+}
+
+
 def create_gemini_analysis(payload: dict[str, Any], report_date: str) -> dict[str, Any]:
     from google import genai
 
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
     response = client.models.generate_content(
-        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash"),
         contents=create_analysis_prompt(payload, report_date),
         config={
             "response_mime_type": "application/json",
+            "response_json_schema": GEMINI_ANALYSIS_SCHEMA,
             "temperature": 0.2,
         },
     )

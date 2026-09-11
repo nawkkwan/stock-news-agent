@@ -1,0 +1,1 @@
+-- Intentionally empty. Production users are created through Supabase Auth after migration.

@@ -318,3 +318,149 @@ grant select, insert, update, delete on
   investment_journal,
   news_items
 to authenticated;
+
+-- Single-account portfolio ownership and agent persistence foundation.
+create schema if not exists private;
+revoke all on schema private from public, anon, authenticated;
+
+create table if not exists private.portfolio_archives (
+  id uuid primary key default gen_random_uuid(),
+  original_user_id uuid,
+  archived_at timestamptz not null default now(),
+  reason text not null default 'single-owner portfolio reset',
+  snapshot jsonb not null
+);
+revoke all on private.portfolio_archives from public, anon, authenticated;
+
+alter table watchlist add column if not exists portfolio_id uuid references portfolios(id) on delete cascade;
+alter table thesis_notes add column if not exists portfolio_id uuid references portfolios(id) on delete cascade;
+alter table news_items add column if not exists portfolio_id uuid references portfolios(id) on delete cascade;
+
+alter table companies alter column user_id set not null;
+alter table holdings alter column user_id set not null;
+alter table holdings alter column portfolio_id set not null;
+alter table portfolio_transactions alter column user_id set not null;
+alter table portfolio_transactions alter column portfolio_id set not null;
+alter table watchlist alter column user_id set not null;
+alter table watchlist alter column portfolio_id set not null;
+alter table thesis_notes alter column user_id set not null;
+alter table thesis_notes alter column portfolio_id set not null;
+alter table investment_journal alter column user_id set not null;
+alter table investment_journal alter column portfolio_id set not null;
+alter table news_items alter column user_id set not null;
+alter table news_items alter column portfolio_id set not null;
+
+drop index if exists portfolios_user_name_uidx;
+create unique index if not exists portfolios_one_per_user_uidx on portfolios (user_id);
+create unique index if not exists portfolios_id_user_uidx on portfolios (id, user_id);
+
+alter table investment_journal drop constraint if exists investment_journal_portfolio_id_fkey;
+alter table holdings add constraint holdings_portfolio_owner_fk foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade;
+alter table portfolio_transactions add constraint portfolio_transactions_portfolio_owner_fk foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade;
+alter table watchlist add constraint watchlist_portfolio_owner_fk foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade;
+alter table thesis_notes add constraint thesis_notes_portfolio_owner_fk foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade;
+alter table investment_journal add constraint investment_journal_portfolio_owner_fk foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade;
+alter table news_items add constraint news_items_portfolio_owner_fk foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade;
+
+create table if not exists agent_runs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  portfolio_id uuid not null,
+  agent_role text not null check (agent_role in ('lead', 'research', 'secretary', 'discovery')),
+  request jsonb not null default '{}'::jsonb,
+  response jsonb,
+  status text not null default 'running' check (status in ('running', 'succeeded', 'failed')),
+  error text,
+  created_at timestamptz not null default now(),
+  completed_at timestamptz,
+  foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade
+);
+
+create table if not exists daily_briefings (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  portfolio_id uuid not null,
+  report_date date not null,
+  payload jsonb not null,
+  digest_text text not null,
+  status text not null default 'ready' check (status in ('ready', 'sent', 'failed')),
+  error text,
+  created_at timestamptz not null default now(),
+  foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade,
+  unique (user_id, report_date)
+);
+
+create table if not exists alert_deliveries (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  portfolio_id uuid not null,
+  briefing_id uuid references daily_briefings(id) on delete set null,
+  channel text not null default 'discord',
+  dedupe_key text not null unique,
+  status text not null default 'pending' check (status in ('pending', 'sent', 'failed')),
+  error text,
+  sent_at timestamptz,
+  created_at timestamptz not null default now(),
+  foreign key (portfolio_id, user_id) references portfolios(id, user_id) on delete cascade
+);
+
+create or replace function private.create_default_portfolio_for_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  insert into public.portfolios (name, description, base_currency, target_weight, user_id)
+  values ('Main Portfolio', 'Primary portfolio for this account.', 'USD', 100, new.id)
+  on conflict (user_id) do nothing;
+  return new;
+end;
+$$;
+
+revoke all on function private.create_default_portfolio_for_user() from public, anon, authenticated;
+drop trigger if exists on_auth_user_created_create_portfolio on auth.users;
+create trigger on_auth_user_created_create_portfolio
+after insert on auth.users
+for each row execute function private.create_default_portfolio_for_user();
+
+do $$
+declare table_name text;
+begin
+  foreach table_name in array array[
+    'portfolios', 'companies', 'holdings', 'portfolio_transactions', 'watchlist',
+    'thesis_notes', 'investment_journal', 'news_items', 'agent_runs',
+    'daily_briefings', 'alert_deliveries'
+  ] loop
+    execute format('alter table public.%I enable row level security', table_name);
+    execute format('drop policy if exists %I on public.%I', 'users_manage_own_' || table_name, table_name);
+    execute format('create policy %I on public.%I for select to authenticated using ((select auth.uid()) is not null and (select auth.uid()) = user_id)', table_name || '_select_own', table_name);
+  end loop;
+end;
+$$;
+
+do $$
+declare table_name text;
+begin
+  foreach table_name in array array[
+    'companies', 'holdings', 'portfolio_transactions', 'watchlist',
+    'thesis_notes', 'investment_journal', 'news_items'
+  ] loop
+    execute format('create policy %I on public.%I for insert to authenticated with check ((select auth.uid()) is not null and (select auth.uid()) = user_id)', table_name || '_insert_own', table_name);
+    execute format('create policy %I on public.%I for update to authenticated using ((select auth.uid()) is not null and (select auth.uid()) = user_id) with check ((select auth.uid()) is not null and (select auth.uid()) = user_id)', table_name || '_update_own', table_name);
+    execute format('create policy %I on public.%I for delete to authenticated using ((select auth.uid()) is not null and (select auth.uid()) = user_id)', table_name || '_delete_own', table_name);
+  end loop;
+end;
+$$;
+
+drop policy if exists portfolios_update_own on portfolios;
+create policy portfolios_update_own on portfolios
+for update to authenticated
+using ((select auth.uid()) is not null and (select auth.uid()) = user_id)
+with check ((select auth.uid()) is not null and (select auth.uid()) = user_id);
+
+revoke all on all tables in schema public from anon;
+revoke all on agent_runs, daily_briefings, alert_deliveries from authenticated;
+revoke insert, delete on portfolios from authenticated;
+grant select, update on portfolios to authenticated;
+grant select on agent_runs, daily_briefings, alert_deliveries to authenticated;

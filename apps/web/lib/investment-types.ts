@@ -30,13 +30,13 @@ export type Company = {
   description: string | null;
   created_at: string;
   updated_at: string;
-  user_id: string | null;
+  user_id: string;
 };
 
 export type Holding = {
   id: string;
   company_id: string | null;
-  portfolio_id: string | null;
+  portfolio_id: string;
   ticker: string;
   shares: number | null;
   avg_cost: number | null;
@@ -46,7 +46,7 @@ export type Holding = {
   notes: string | null;
   created_at: string;
   updated_at: string;
-  user_id: string | null;
+  user_id: string;
 };
 
 export type PortfolioHolding = Holding & {
@@ -62,7 +62,7 @@ export type PortfolioHolding = Holding & {
 export type PortfolioTransaction = {
   id: string;
   company_id: string | null;
-  portfolio_id: string | null;
+  portfolio_id: string;
   ticker: string | null;
   transaction_type: TransactionType;
   quantity: number | null;
@@ -79,17 +79,19 @@ export type PortfolioTransaction = {
 export type WatchlistItem = {
   id: string;
   company_id: string | null;
+  portfolio_id: string;
   ticker: string;
   status: WatchlistStatus;
   reason: string | null;
   created_at: string;
   updated_at: string;
-  user_id: string | null;
+  user_id: string;
 };
 
 export type ThesisNote = {
   id: string;
   company_id: string | null;
+  portfolio_id: string;
   ticker: string;
   business_overview: string | null;
   bull_case: string | null;
@@ -101,13 +103,13 @@ export type ThesisNote = {
   confidence_score: number | null;
   created_at: string;
   updated_at: string;
-  user_id: string | null;
+  user_id: string;
 };
 
 export type InvestmentJournalEntry = {
   id: string;
   company_id: string | null;
-  portfolio_id: string | null;
+  portfolio_id: string;
   date: string;
   ticker: string | null;
   action: JournalAction;
@@ -117,12 +119,13 @@ export type InvestmentJournalEntry = {
   risk: string | null;
   what_would_make_this_wrong: string | null;
   created_at: string;
-  user_id: string | null;
+  user_id: string;
 };
 
 export type NewsItem = {
   id: string;
   company_id: string | null;
+  portfolio_id: string;
   ticker: string;
   title: string;
   url: string | null;
@@ -134,7 +137,7 @@ export type NewsItem = {
   thesis_changed: boolean;
   my_note: string | null;
   created_at: string;
-  user_id: string | null;
+  user_id: string;
 };
 
 export type InvestmentData = {

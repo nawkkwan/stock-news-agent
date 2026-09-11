@@ -7,14 +7,17 @@ export async function login(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   const password = String(formData.get("password") || "");
   const nextPath = String(formData.get("next") || "/investing");
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+  let errorMessage = "";
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    errorMessage = error?.message || "";
+  } catch {
+    errorMessage = "Authentication service is temporarily unavailable.";
   }
 
-  redirect(nextPath.startsWith("/") ? nextPath : "/investing");
+  if (errorMessage) redirect(`/login?error=${encodeURIComponent(errorMessage)}`);
+  redirect(nextPath.startsWith("/") && !nextPath.startsWith("//") ? nextPath : "/investing");
 }
 
 export async function logout() {

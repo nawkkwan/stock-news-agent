@@ -109,24 +109,7 @@ async function ensurePortfolio(portfolioId?: string | null) {
   if (existing) {
     return existing;
   }
-
-  const { data, error } = await supabase
-    .from("portfolios")
-    .insert({
-      name: "My Ports",
-      description: "Default portfolio for current holdings and transactions.",
-      base_currency: "USD",
-      target_weight: 100,
-      user_id: user.id,
-    })
-    .select("*")
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  throw new Error("Your account does not have a portfolio. Apply the single-owner migration or create a new Auth user.");
 }
 
 async function findSingleUserRow(table: string, ticker: string, portfolioId?: string | null) {
@@ -182,9 +165,11 @@ export async function upsertPortfolio(formData: FormData) {
     user_id: user.id,
   };
 
-  const query = id
-    ? supabase.from("portfolios").update(payload).eq("id", id).eq("user_id", user.id)
-    : supabase.from("portfolios").insert(payload);
+  const query = supabase
+    .from("portfolios")
+    .update(payload)
+    .eq("user_id", user.id)
+    .eq("id", id || (await ensurePortfolio()).id);
   const { error } = await query;
 
   if (error) {
@@ -340,41 +325,7 @@ export async function importDailyReportPortfolio(
 
     const { supabase, user } = await requireUser();
     const selectedPortfolioId = nullableText(formData.get("portfolio_id"));
-    let portfolio = selectedPortfolioId ? await ensurePortfolio(selectedPortfolioId) : null;
-
-    if (!portfolio) {
-      const { data: existing, error: selectError } = await supabase
-        .from("portfolios")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("name", "My Ports")
-        .maybeSingle();
-
-      if (selectError) {
-        throw selectError;
-      }
-
-      if (existing) {
-        portfolio = existing;
-      } else {
-        const { data, error } = await supabase
-          .from("portfolios")
-          .insert({
-            name: "My Ports",
-            description: "Imported from Daily notes holdings.",
-            base_currency: "THB",
-            target_weight: 100,
-            user_id: user.id,
-          })
-          .select("*")
-          .single();
-
-        if (error) {
-          throw error;
-        }
-        portfolio = data;
-      }
-    }
+    const portfolio = await ensurePortfolio(selectedPortfolioId);
 
     for (const stock of stocks) {
       const ticker = normalizeTicker(stock.ticker);
@@ -423,17 +374,19 @@ export async function upsertWatchlistItem(formData: FormData) {
   }
 
   const { supabase, user } = await requireUser();
+  const portfolio = await ensurePortfolio();
   const company = await ensureCompany(ticker, nullableText(formData.get("company_name")));
   const id = nullableText(formData.get("id"));
   const payload = {
     company_id: company.id,
+    portfolio_id: portfolio.id,
     ticker,
     status: oneOf<WatchlistStatus>(formData.get("status"), watchlistStatuses, "not_started"),
     reason: nullableText(formData.get("reason")),
     user_id: user.id,
   };
 
-  const existing = id ? null : await findSingleUserRow("watchlist", ticker);
+  const existing = id ? null : await findSingleUserRow("watchlist", ticker, portfolio.id);
   const query = id || existing
     ? supabase.from("watchlist").update(payload).eq("id", id || existing?.id)
     : supabase.from("watchlist").insert(payload);
@@ -455,10 +408,12 @@ export async function upsertThesis(formData: FormData) {
   }
 
   const { supabase, user } = await requireUser();
+  const portfolio = await ensurePortfolio();
   const company = await ensureCompany(ticker);
   const id = nullableText(formData.get("id"));
   const payload = {
     company_id: company.id,
+    portfolio_id: portfolio.id,
     ticker,
     business_overview: nullableText(formData.get("business_overview")),
     growth_drivers: nullableText(formData.get("growth_drivers")),
@@ -471,7 +426,7 @@ export async function upsertThesis(formData: FormData) {
     user_id: user.id,
   };
 
-  const existing = id ? null : await findSingleUserRow("thesis_notes", ticker);
+  const existing = id ? null : await findSingleUserRow("thesis_notes", ticker, portfolio.id);
   const query = id || existing
     ? supabase.from("thesis_notes").update(payload).eq("id", id || existing?.id)
     : supabase.from("thesis_notes").insert(payload);
@@ -488,10 +443,12 @@ export async function upsertThesis(formData: FormData) {
 export async function upsertInvestmentJournalEntry(formData: FormData) {
   const ticker = normalizeTicker(formData.get("ticker"));
   const { supabase, user } = await requireUser();
+  const portfolio = await ensurePortfolio();
   const company = ticker ? await ensureCompany(ticker) : null;
   const id = nullableText(formData.get("id"));
   const payload = {
     company_id: company?.id || null,
+    portfolio_id: portfolio.id,
     date: nullableText(formData.get("date")) || new Date().toISOString().slice(0, 10),
     ticker: ticker || null,
     action: oneOf<JournalAction>(formData.get("action"), journalActions, "research"),
@@ -527,10 +484,12 @@ export async function upsertNewsItem(formData: FormData) {
   }
 
   const { supabase, user } = await requireUser();
+  const portfolio = await ensurePortfolio();
   const company = await ensureCompany(ticker);
   const id = nullableText(formData.get("id"));
   const payload = {
     company_id: company.id,
+    portfolio_id: portfolio.id,
     ticker,
     title,
     url: nullableText(formData.get("url")),

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from datetime import datetime
@@ -22,6 +23,7 @@ from path_utils import display_path
 REPORTS_DIR = ROOT_DIR / "reports"
 LOOKBACK_PERIOD = "1y"
 YAHOO_CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+EODHD_URL = "https://eodhd.com/api/eod/{ticker}"
 REQUEST_TIMEOUT_SECONDS = (5, 10)
 
 
@@ -79,9 +81,33 @@ def momentum_note(rsi: float | None, macd: float | None, signal: float | None) -
     return " ".join(parts) or "Momentum data is not available."
 
 
-def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
-    end = int(time.time())
-    start = end - 370 * 24 * 60 * 60
+def fetch_price_frame_eodhd(ticker: str, start: int, end: int) -> pd.DataFrame:
+    api_key = os.getenv("EODHD_API_KEY", "").strip()
+    if not api_key:
+        raise RuntimeError("EODHD_API_KEY is not configured")
+    symbol = ticker if "." in ticker else f"{ticker}.US"
+    response = requests.get(
+        EODHD_URL.format(ticker=symbol),
+        params={
+            "api_token": api_key,
+            "fmt": "json",
+            "from": datetime.fromtimestamp(start).date().isoformat(),
+            "to": datetime.fromtimestamp(end).date().isoformat(),
+            "period": "d",
+        },
+        timeout=REQUEST_TIMEOUT_SECONDS,
+    )
+    response.raise_for_status()
+    rows = response.json()
+    if not isinstance(rows, list) or not rows:
+        raise RuntimeError("EODHD returned no price history")
+    return pd.DataFrame(
+        {"Close": [row.get("adjusted_close") or row.get("close") for row in rows], "Volume": [row.get("volume") for row in rows]},
+        index=pd.to_datetime([row.get("date") for row in rows]),
+    ).dropna(subset=["Close"])
+
+
+def fetch_price_frame_yahoo(ticker: str, start: int, end: int) -> pd.DataFrame:
     response = requests.get(
         YAHOO_CHART_URL.format(ticker=ticker),
         params={
@@ -97,7 +123,7 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
     response.raise_for_status()
     chart = response.json()["chart"]
     if chart.get("error"):
-        return {"ticker": ticker, "company": company, "error": str(chart["error"])}
+        raise RuntimeError(str(chart["error"]))
 
     result = chart["result"][0]
     timestamps = result.get("timestamp", [])
@@ -105,13 +131,24 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
     adjclose = result.get("indicators", {}).get("adjclose", [{}])[0].get("adjclose")
     close_values = adjclose or quote.get("close", [])
     volume_values = quote.get("volume", [])
-    data = pd.DataFrame(
+    return pd.DataFrame(
         {
             "Close": close_values,
             "Volume": volume_values,
         },
         index=pd.to_datetime(timestamps, unit="s"),
     ).dropna(subset=["Close"])
+
+
+def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
+    end = int(time.time())
+    start = end - 370 * 24 * 60 * 60
+    provider = "eodhd"
+    try:
+        data = fetch_price_frame_eodhd(ticker, start, end)
+    except Exception:
+        provider = "yahoo-fallback"
+        data = fetch_price_frame_yahoo(ticker, start, end)
 
     if data.empty:
         return {"ticker": ticker, "company": company, "error": "No price data returned."}
@@ -137,6 +174,7 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
     return {
         "ticker": ticker,
         "company": company,
+        "provider": provider,
         "last_close": as_float(last_close),
         "last_date": str(close.index[-1].date()),
         "ema20": last_ema20,

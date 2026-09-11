@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { logout } from "./login/actions";
-import { createSupabaseServerClient, hasSupabaseConfig } from "../lib/supabase-server";
+import { getCurrentUserOrNull } from "../lib/supabase-server";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,9 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = hasSupabaseConfig()
-    ? (await (await createSupabaseServerClient()).auth.getUser()).data.user
-    : null;
+  const user = await getCurrentUserOrNull();
 
   return (
     <html lang="en">

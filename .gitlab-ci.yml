@@ -1,5 +1,8 @@
 stages:
   - verify
+  - test
+  - build
+  - deploy
 
 web_verify:
   stage: verify
@@ -23,3 +26,56 @@ python_verify:
     - pip install -r requirements.txt
     - python apps/api/check_api.py
     - python -m py_compile apps/worker/jobs/deploy_daily_report.py apps/worker/jobs/run_daily_report.py
+
+python_test:
+  stage: test
+  image: python:3.12
+  script:
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt
+    - python -m unittest discover -s tests -p "test_*_unittest.py" -v
+
+supabase_rls_test:
+  stage: test
+  image: postgres:17-alpine
+  script:
+    - test -n "$SUPABASE_TEST_DATABASE_URL"
+    - psql "$SUPABASE_TEST_DATABASE_URL" -f supabase/tests/rls_ci.sql
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+.azure_login:
+  image: mcr.microsoft.com/azure-cli:latest
+  before_script:
+    - az login --service-principal --username "$AZURE_CLIENT_ID" --password "$AZURE_CLIENT_SECRET" --tenant "$AZURE_TENANT_ID"
+    - az account set --subscription "$AZURE_SUBSCRIPTION_ID"
+
+build_api:
+  extends: .azure_login
+  stage: build
+  script:
+    - az acr build --registry "$AZURE_ACR_NAME" --image "investment-api:$CI_COMMIT_SHA" --file docker/Dockerfile.api .
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+build_worker:
+  extends: .azure_login
+  stage: build
+  script:
+    - az acr build --registry "$AZURE_ACR_NAME" --image "investment-worker:$CI_COMMIT_SHA" --file docker/Dockerfile.worker .
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+deploy_azure:
+  extends: .azure_login
+  stage: deploy
+  needs: [build_api, build_worker, python_test, supabase_rls_test, web_verify]
+  script:
+    - ACR_SERVER=$(az acr show --name "$AZURE_ACR_NAME" --query loginServer -o tsv)
+    - az containerapp update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_API_APP_NAME" --image "$ACR_SERVER/investment-api:$CI_COMMIT_SHA"
+    - az containerapp job update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_WORKER_JOB_NAME" --image "$ACR_SERVER/investment-worker:$CI_COMMIT_SHA"
+  environment:
+    name: production
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual

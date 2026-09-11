@@ -27,7 +27,7 @@ portfolio-investment-os/
 ## Apps
 
 - `apps/web`: Next.js App Router app backed by Supabase Auth and Supabase Postgres.
-- `apps/api`: FastAPI foundation service for research API readiness.
+- `apps/api`: FastAPI service for the owner-only Hermes and agent API.
 - `apps/worker`: Python daily news/report worker.
 - `legacy/mongo-journal-api`: archived MongoDB journal API kept for reference only.
 - `legacy/static-site`: archived static site assets kept for reference only.
@@ -52,11 +52,13 @@ The migration that preserves existing journal rows is:
 supabase/migrations/202606170002_rename_decision_journal_to_investment_journal.sql
 ```
 
-The migration that enables separate portfolios is:
+The migration that enforces one portfolio per account and archives legacy rows is:
 
 ```text
-supabase/migrations/202606250001_multi_portfolio_foundation.sql
+supabase/migrations/20260911145432_single_owner_portfolio_agent_foundation.sql
 ```
+
+Follow `docs/supabase-cutover.md` before applying this destructive migration to production.
 
 Core Investment OS tables:
 
@@ -77,17 +79,20 @@ Copy `.env.example` to `.env` and set:
 APP_ENV=local
 API_PORT=8000
 WEB_PORT=3000
+API_BASE_URL=http://127.0.0.1:8000
 OPENAI_API_KEY=optional
 OPENAI_MODEL=gpt-4o-mini
 GEMINI_API_KEY=optional
-GEMINI_MODEL=gemini-2.5-flash-lite
+GEMINI_MODEL=gemini-3.5-flash
 EODHD_API_KEY=optional-for-global-symbol-search-and-latest-quotes
 ALPHA_VANTAGE_API_KEY=optional-for-global-symbol-search-and-latest-quotes
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 SUPABASE_SERVICE_ROLE_KEY=backend-only-service-role-key
-SUPABASE_USER_ID=auth-user-id-for-daily-worker
-SUPABASE_PORTFOLIO_NAME=My Ports
+OWNER_SUPABASE_USER_ID=auth-user-id-for-api-worker-and-hermes
+INTERNAL_API_TOKEN=long-random-token
+DISCORD_OWNER_USER_ID=your-discord-user-id
+DISCORD_WEBHOOK_URL=your-private-discord-webhook
 TIDB_HOST=your-tidb-host
 TIDB_PORT=4000
 TIDB_USER=your-tidb-user
@@ -99,7 +104,7 @@ The web Agent rooms use `GEMINI_API_KEY` when it is configured, with OpenAI as a
 
 ## Web App
 
-The Overview page is portfolio-first: select one portfolio, then assets, cash movements, transactions, and filtered news all belong to that portfolio.
+Each Supabase Auth account owns exactly one portfolio. The Overview page loads that account's assets, cash movements, transactions, watchlist, thesis, and news.
 
 Global asset search and latest quote lookup use EODHD first, then Alpha Vantage fallback, when these server-side env vars are set:
 
@@ -137,18 +142,18 @@ Run the full daily report:
 python apps/worker/jobs/run_daily_report.py
 ```
 
-Run and commit deployable web data:
+Run, persist the briefing in Supabase, and send one deduplicated Discord digest:
 
 ```powershell
 python apps/worker/jobs/deploy_daily_report.py
 ```
 
-The worker reads Supabase holdings and portfolio transactions when these backend-only variables are set:
+The worker reads the owner's Supabase holdings and watchlist when these backend-only variables are set:
 
 ```text
 SUPABASE_SERVICE_ROLE_KEY
-SUPABASE_USER_ID
-SUPABASE_PORTFOLIO_ID or SUPABASE_PORTFOLIO_NAME
+OWNER_SUPABASE_USER_ID
+DISCORD_WEBHOOK_URL
 ```
 
 If Supabase worker variables are not set, it falls back to:
@@ -165,7 +170,7 @@ apps/web/data/latest-report.json
 apps/web/data/reports/YYYY-MM-DD.json
 ```
 
-## FastAPI Foundation
+## FastAPI and Hermes API
 
 Run locally:
 
@@ -187,13 +192,13 @@ docker compose -f docker/docker-compose.dev.yml up api
 
 ## Automation
 
-GitHub Actions daily news workflow:
+GitHub Actions manual report verification workflow:
 
 ```text
 .github/workflows/daily-news.yml
 ```
 
-It runs the Python worker and commits updated web data when the generated report is valid.
+It builds a report on demand without publishing. Azure Container Apps Scheduled Jobs owns the production 18:00 Asia/Bangkok schedule.
 
 ## Project Rules
 

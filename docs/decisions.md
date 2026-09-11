@@ -47,3 +47,19 @@ Add a `portfolios` layer and link holdings, portfolio transactions, and journal 
 
 Reason:
 The system needs to separate real accounts, experimental portfolios, theme portfolios, and future bot portfolios without mixing positions, cash ledgers, or journal context.
+
+## 2026-09-11
+
+Decision:
+Replace the multi-portfolio model with exactly one portfolio per Supabase Auth account and archive existing portfolio rows before the reset.
+
+Reason:
+Account ownership is the product boundary. A unique portfolio owner plus RLS and composite ownership constraints prevents data from different accounts from being mixed.
+
+## 2026-09-11
+
+Decision:
+Deploy FastAPI and the daily worker from this repository to Azure, while keeping the existing Hermes Discord runtime as a separate service connected through an internal API.
+
+Reason:
+The API can protect Supabase service credentials and enforce an owner-only command boundary. Hermes may research and manage the watchlist, but it cannot modify holdings, transactions, or place trades.

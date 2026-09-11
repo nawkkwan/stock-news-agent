@@ -7,8 +7,6 @@ import {
   DashboardHoldingsTable,
   NewsByHolding,
   PortfolioAllocation,
-  PortfolioForm,
-  PortfolioSelector,
   PortfolioSnapshot,
   PortfolioTransactionHistory,
   TransactionForm,
@@ -76,11 +74,7 @@ export default async function InvestingPage({
           </div>
           <a className="button" href="#portfolio-activity">เพิ่มหุ้นหรือบันทึกซื้อขาย</a>
         </div>
-        {data.portfolios.length > 1 ? <PortfolioSelector portfolios={data.portfolios} selectedPortfolio={data.selectedPortfolio} /> : null}
-        <details className="portfolio-create">
-          <summary>+ เพิ่ม Portfolio ใหม่</summary>
-          <PortfolioForm />
-        </details>
+        <p className="muted">บัญชีนี้ใช้พอร์ตหลักเพียงพอร์ตเดียว ข้อมูลทั้งหมดถูกแยกด้วย Supabase Auth และ RLS</p>
       </section>
 
       <PortfolioSnapshot

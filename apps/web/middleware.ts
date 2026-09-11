@@ -5,6 +5,12 @@ export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) {
+    if (request.nextUrl.pathname.startsWith("/investing")) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("error", "Authentication is not configured for this deployment.");
+      return NextResponse.redirect(url);
+    }
     return response;
   }
 
@@ -25,9 +31,20 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Supabase may be temporarily unreachable during local development.
+  // Do not crash the whole page when the auth refresh request fails.
+  let user = null;
+  try {
+    const result = await supabase.auth.getUser();
+    user = result.data.user;
+  } catch {
+    if (request.nextUrl.pathname.startsWith("/investing")) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("error", "Authentication service is temporarily unavailable.");
+      return NextResponse.redirect(url);
+    }
+  }
 
   if (!user && request.nextUrl.pathname.startsWith("/investing")) {
     const url = request.nextUrl.clone();
