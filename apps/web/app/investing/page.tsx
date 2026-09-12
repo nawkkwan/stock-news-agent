@@ -7,12 +7,13 @@ import {
   DashboardHoldingsTable,
   NewsByHolding,
   PortfolioAllocation,
-  PortfolioSnapshot,
+  PortfolioPerformance,
+  PortfolioSummary,
   PortfolioTransactionHistory,
-  TransactionForm,
   type DashboardHolding,
   type DailyReportStock,
 } from "./components";
+import { AddTransactionDrawer } from "./add-transaction-drawer";
 import { PortfolioAssetSearch } from "./portfolio-asset-search";
 
 export const dynamic = "force-dynamic";
@@ -61,87 +62,77 @@ export default async function InvestingPage({
   const reportStocks = (latestReport?.stocks || []).filter((stock) => stock.ticker && currentTickers.has(stock.ticker.toUpperCase()));
   const unrealizedGain = displayHoldings.reduce((sum, holding) => sum + (holding.unrealized_gain || 0), 0);
   const portfolioId = data.selectedPortfolio?.id || null;
+  const portfolioCurrency = isUsingSeedPortfolio ? "THB" : data.selectedPortfolio?.base_currency || "USD";
+  const lastUpdated = data.selectedPortfolio?.updated_at || latestReport?.date || null;
+  const formattedLastUpdated = lastUpdated
+    ? new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short", day: "numeric" }).format(new Date(lastUpdated))
+    : "Not available";
 
   return (
-    <main className="page-shell">
+    <main className="page-shell portfolio-page">
       <ConfigNotice configured={data.configured} error={data.error} />
 
-      <section className="panel">
-        <div className="section-head">
-          <div>
-            <h2>My Portfolio</h2>
-            <p className="muted">เพิ่มหุ้นใหม่หรือบันทึกซื้อขายได้ด้านล่าง หุ้นที่ถือจะอัปเดตให้อัตโนมัติ</p>
-          </div>
-          <a className="button" href="#portfolio-activity">เพิ่มหุ้นหรือบันทึกซื้อขาย</a>
+      <header className="portfolio-page-header">
+        <div>
+          <p className="eyebrow">Portfolio</p>
+          <h2>{data.selectedPortfolio?.name || "Main Portfolio"}</h2>
+          <p>Track holdings, allocation and portfolio performance.</p>
+          <small>Last updated: {formattedLastUpdated}</small>
         </div>
-        <p className="muted">บัญชีนี้ใช้พอร์ตหลักเพียงพอร์ตเดียว ข้อมูลทั้งหมดถูกแยกด้วย Supabase Auth และ RLS</p>
-      </section>
+        <AddTransactionDrawer currency={portfolioCurrency} holdings={data.portfolioHoldings} portfolioId={portfolioId} />
+      </header>
 
-      <PortfolioSnapshot
-        cashBalance={data.cashBalance}
-        hasCashLedger={data.hasCashLedger}
+      <PortfolioSummary
+        currency={portfolioCurrency}
         holdingsCount={displayHoldings.length}
-        portfolioName={data.selectedPortfolio?.name || "My Portfolio"}
         portfolioValue={displayPortfolioValue}
         unrealizedGain={unrealizedGain}
       />
 
-      <section className="dashboard-grid" id="portfolio-activity">
-        <details className="panel dashboard-panel activity-panel">
-          <summary className="activity-panel-summary">
-            <span>
-              <strong>เพิ่มหุ้นใหม่</strong>
-              <small>ค้นหาและเพิ่มหุ้นเข้า Portfolio</small>
-            </span>
-            <span className="activity-panel-toggle" aria-hidden="true">⌄</span>
-          </summary>
-          <div className="activity-panel-content">
-            <p className="muted">ค้นหาหุ้น เลือกราคาล่าสุด แล้วเพิ่มเข้า Portfolio ที่กำลังดูอยู่</p>
-            <PortfolioAssetSearch portfolioId={portfolioId} />
+      <section className="portfolio-core-grid">
+        <section className="panel portfolio-section holdings-section">
+          <div className="portfolio-section-head">
+            <div>
+              <h2>Holdings</h2>
+              <p>Your current positions, sorted by market value.</p>
+            </div>
+            <span>{displayHoldings.length} {displayHoldings.length === 1 ? "asset" : "assets"}</span>
           </div>
-        </details>
-        <details className="panel dashboard-panel activity-panel">
-          <summary className="activity-panel-summary">
-            <span>
-              <strong>บันทึกซื้อขาย</strong>
-              <small>เพิ่มรายการซื้อ ขาย หรือเงินสด</small>
-            </span>
-            <span className="activity-panel-toggle" aria-hidden="true">⌄</span>
-          </summary>
-          <div className="activity-panel-content">
-            <p className="muted">บันทึกซื้อหรือขายเอง ระบบจะอัปเดตจำนวนหุ้นในพอร์ตให้</p>
-            <TransactionForm holdings={data.portfolioHoldings} portfolioId={portfolioId} />
-          </div>
-        </details>
-      </section>
-
-      <section className="dashboard-grid">
-        <PortfolioAllocation cashBalance={data.cashBalance} hasCashLedger={data.hasCashLedger} holdings={displayHoldings} />
-        <div className="panel dashboard-panel">
-          <h2>หุ้นที่ถืออยู่</h2>
-          <p className="muted">รายการหุ้นทั้งหมดใน Portfolio นี้</p>
           <DashboardHoldingsTable holdings={displayHoldings} canDelete={!isUsingSeedPortfolio} />
-        </div>
+          {!isUsingSeedPortfolio ? (
+            <details className="portfolio-secondary-action">
+              <summary>+ Add an asset manually</summary>
+              <div><PortfolioAssetSearch portfolioId={portfolioId} /></div>
+            </details>
+          ) : null}
+        </section>
+        <PortfolioAllocation cashBalance={data.cashBalance} hasCashLedger={data.hasCashLedger} holdings={displayHoldings} />
       </section>
 
-      <section className="panel dashboard-panel">
-        <h2>ประวัติซื้อขาย</h2>
-        <p className="muted">รายการที่บันทึกไว้ แยกตามหุ้นใน Portfolio ที่กำลังดู</p>
-        <PortfolioTransactionHistory
-          portfolioName={data.selectedPortfolio?.name || "My Portfolio"}
-          transactions={data.transactions}
-        />
-      </section>
+      <PortfolioPerformance />
 
-      <section className="panel dashboard-panel">
-        <div className="section-head">
+      <section className="panel portfolio-section">
+        <div className="portfolio-section-head">
           <div>
-            <h2>News by Holding</h2>
-            <p className="muted">Latest daily report filtered to stocks in this portfolio.</p>
+            <h2>News for your holdings</h2>
+            <p>Latest daily report filtered to assets in this portfolio.</p>
           </div>
-          <Link className="button secondary" href="/daily">Daily News</Link>
+          <Link className="portfolio-text-link" href="/daily">Daily Report →</Link>
         </div>
         <NewsByHolding reportDate={latestReport?.date} stocks={reportStocks} />
+      </section>
+
+      <section className="panel portfolio-section">
+        <div className="portfolio-section-head">
+          <div>
+            <h2>Transaction History</h2>
+            <p>All recorded activity for this portfolio.</p>
+          </div>
+        </div>
+        <PortfolioTransactionHistory
+          portfolioName={data.selectedPortfolio?.name || "Main Portfolio"}
+          transactions={data.transactions}
+        />
       </section>
     </main>
   );

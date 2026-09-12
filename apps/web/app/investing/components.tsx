@@ -443,48 +443,56 @@ export type DashboardHolding = {
   unrealized_gain_pct?: number | null;
 };
 
-export function PortfolioSnapshot({
-  portfolioName,
+export function PortfolioSummary({
   portfolioValue,
   unrealizedGain,
-  cashBalance,
-  hasCashLedger,
   holdingsCount,
+  currency = "USD",
 }: {
-  portfolioName?: string | null;
   portfolioValue: number;
   unrealizedGain: number;
-  cashBalance: number;
-  hasCashLedger: boolean;
   holdingsCount: number;
+  currency?: string;
 }) {
   const gainClassName = unrealizedGain >= 0 ? "positive-text" : "negative-text";
+  const costBasis = portfolioValue - unrealizedGain;
+  const unrealizedGainPct = costBasis > 0 ? (unrealizedGain / costBasis) * 100 : null;
+  const formatMoney = (value: number) => {
+    try {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 2,
+      }).format(value);
+    } catch {
+      return `${formatNumber(value)} ${currency}`;
+    }
+  };
 
   return (
-    <section className="dashboard-hero">
-      <div>
-        <p className="eyebrow">My Portfolio</p>
-        <h2>{portfolioName || "Daily notes portfolio"}</h2>
-        <p className="muted">Simple view first: what you hold, how much it weighs, and what news matters today.</p>
-      </div>
-      <div className="metric-grid">
-        <div className="metric-card primary">
-          <span>Total value</span>
-          <strong>{formatNumber(portfolioValue)}</strong>
-        </div>
-        <div className="metric-card">
-          <span>Unrealized P/L</span>
-          <strong className={gainClassName}>{formatNumber(unrealizedGain)}</strong>
-        </div>
-        <div className="metric-card">
-          <span>Cash balance</span>
-          <strong>{hasCashLedger ? formatNumber(cashBalance) : "Not tracked"}</strong>
-        </div>
-        <div className="metric-card">
-          <span>Open holdings</span>
-          <strong>{holdingsCount}</strong>
-        </div>
-      </div>
+    <section aria-label="Portfolio summary" className="portfolio-kpi-grid">
+      <article className="portfolio-kpi-card primary">
+        <span>Portfolio Value</span>
+        <strong>{formatMoney(portfolioValue)}</strong>
+        <small>Current market value</small>
+      </article>
+      <article className="portfolio-kpi-card">
+        <span>Total P/L</span>
+        <strong className={gainClassName}>{unrealizedGain >= 0 ? "+" : ""}{formatMoney(unrealizedGain)}</strong>
+        <small className={gainClassName}>
+          {unrealizedGainPct === null ? "—" : `${unrealizedGainPct >= 0 ? "+" : ""}${formatNumber(unrealizedGainPct, "%")}`}
+        </small>
+      </article>
+      <article className="portfolio-kpi-card">
+        <span>Today&apos;s P/L</span>
+        <strong>—</strong>
+        <small>Daily change is not available</small>
+      </article>
+      <article className="portfolio-kpi-card">
+        <span>Holdings</span>
+        <strong>{holdingsCount}</strong>
+        <small>{holdingsCount === 1 ? "asset" : "assets"}</small>
+      </article>
     </section>
   );
 }
@@ -537,7 +545,7 @@ export function PortfolioAllocation({
 
   if (slices.length === 0) {
     return (
-      <section className="panel dashboard-panel">
+      <section className="panel dashboard-panel allocation-card">
         <div className="section-head">
           <h2>My Portfolio Allocation</h2>
         </div>
@@ -547,11 +555,11 @@ export function PortfolioAllocation({
   }
 
   return (
-    <section className="panel dashboard-panel">
+    <section className="panel dashboard-panel allocation-card">
       <div className="section-head">
         <div>
           <h2>Allocation</h2>
-          <p className="muted">Donut chart uses the same weights as the asset list.</p>
+          <p className="muted">Portfolio weight by asset.</p>
         </div>
         <strong>{formatNumber(totalValue)}</strong>
       </div>
@@ -603,7 +611,7 @@ function DonutChart({ slices, totalValue }: { slices: AllocationSlice[]; totalVa
         })}
       </svg>
       <div className="donut-center">
-        <span>Total</span>
+        <span>Portfolio</span>
         <strong>{formatNumber(totalValue)}</strong>
       </div>
     </div>
@@ -616,43 +624,77 @@ export function DashboardHoldingsTable({ holdings, canDelete = true }: { holding
   }
 
   return (
-    <div className="asset-list">
-      <div className="asset-list-head">
-        <span>{holdings.length} assets</span>
-        <span>Holding value</span>
-        <span>Weight / P&L</span>
+    <>
+      <div className="holdings-table-wrap">
+        <table className="holdings-table">
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>Value</th>
+              <th>Weight</th>
+              <th>Quantity</th>
+              <th>Average Cost</th>
+              <th>P/L</th>
+              <th><span className="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {holdings.map((holding) => {
+              const hasGain = holding.unrealized_gain !== null && holding.unrealized_gain !== undefined;
+              const gainClass = (holding.unrealized_gain || 0) >= 0 ? "positive-text" : "negative-text";
+              return (
+                <tr key={holding.id}>
+                  <td>
+                    <div className="holding-identity">
+                      <span className="holding-mark">{holding.ticker.slice(0, 1)}</span>
+                      <span>
+                        <Link href={`/investing/companies/${holding.ticker}`}>{holding.ticker}</Link>
+                        <small>{holding.company || "Portfolio holding"}</small>
+                      </span>
+                    </div>
+                  </td>
+                  <td className="holding-number">{formatNumber(holding.market_value)}</td>
+                  <td className="holding-number">{formatNumber(holding.portfolio_weight, "%")}</td>
+                  <td className="holding-number">{holding.shares ? formatNumber(holding.shares) : "—"}</td>
+                  <td className="holding-number">{holding.avg_cost ? formatNumber(holding.avg_cost) : "—"}</td>
+                  <td className={`holding-pl ${hasGain ? gainClass : ""}`}>
+                    {hasGain ? (
+                      <><strong>{(holding.unrealized_gain || 0) >= 0 ? "+" : ""}{formatNumber(holding.unrealized_gain)}</strong><small>{formatNumber(holding.unrealized_gain_pct, "%")}</small></>
+                    ) : "—"}
+                  </td>
+                  <td className="holding-action-cell">{canDelete ? <DeleteHoldingButton id={holding.id} ticker={holding.ticker} /> : null}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-      {holdings.map((holding) => {
-        const hasGain = holding.unrealized_gain !== null && holding.unrealized_gain !== undefined;
-        const gainClass = (holding.unrealized_gain || 0) >= 0 ? "positive-text" : "negative-text";
-        return (
-          <article className="asset-row" key={holding.id}>
-            <div className="asset-main">
-              <div className="asset-logo">{holding.ticker.slice(0, 1)}</div>
-              <div>
-                <Link href={`/investing/companies/${holding.ticker}`}>{holding.ticker}</Link>
-                <span>{holding.company || "Portfolio holding"}</span>
+
+      <div className="holding-mobile-list">
+        {holdings.map((holding) => {
+          const hasGain = holding.unrealized_gain !== null && holding.unrealized_gain !== undefined;
+          const gainClass = (holding.unrealized_gain || 0) >= 0 ? "positive-text" : "negative-text";
+          return (
+            <article className="holding-mobile-card" key={holding.id}>
+              <div className="holding-mobile-head">
+                <div className="holding-identity">
+                  <span className="holding-mark">{holding.ticker.slice(0, 1)}</span>
+                  <span><Link href={`/investing/companies/${holding.ticker}`}>{holding.ticker}</Link><small>{holding.company || "Portfolio holding"}</small></span>
+                </div>
+                {hasGain ? <strong className={gainClass}>{formatNumber(holding.unrealized_gain_pct, "%")}</strong> : <strong>—</strong>}
               </div>
-            </div>
-            <div className="asset-value">
-              <strong>{formatNumber(holding.market_value)}</strong>
-              {holding.shares ? <span>{formatNumber(holding.shares)} shares</span> : <span>Value-only holding</span>}
-            </div>
-            <div className="asset-profit">
-              <strong>{formatNumber(holding.portfolio_weight, "%")}</strong>
-              {hasGain ? (
-                <span className={gainClass}>
-                  {formatNumber(holding.unrealized_gain)} ({formatNumber(holding.unrealized_gain_pct, "%")})
-                </span>
-              ) : (
-                <span className="muted">P/L later</span>
-              )}
+              <strong className="holding-mobile-value">{formatNumber(holding.market_value)}</strong>
+              <span>{formatNumber(holding.portfolio_weight, "%")} of portfolio</span>
+              <dl>
+                <div><dt>Quantity</dt><dd>{holding.shares ? formatNumber(holding.shares) : "—"}</dd></div>
+                <div><dt>Average Cost</dt><dd>{holding.avg_cost ? formatNumber(holding.avg_cost) : "—"}</dd></div>
+              </dl>
               {canDelete ? <DeleteHoldingButton id={holding.id} ticker={holding.ticker} /> : null}
-            </div>
-          </article>
-        );
-      })}
-    </div>
+            </article>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -700,62 +742,57 @@ export function NewsByHolding({
   stocks: DailyReportStock[];
 }) {
   if (stocks.length === 0) {
-    return <EmptyState label="No latest report items matched the selected holdings." />;
+    return (
+      <div className="portfolio-empty-state">
+        <strong>No recent news matched your holdings.</strong>
+        <span>New items will appear after the next daily report.</span>
+      </div>
+    );
   }
 
   return (
-    <div className="news-card-grid compact-news">
+    <div className="portfolio-news-list">
       {stocks.map((stock) => (
-        <article className="news-impact-card" key={stock.ticker}>
-          <div className="item-card-head">
-            <div>
-              <strong>{stock.ticker || "-"}</strong>
+        <article className="portfolio-news-item" key={stock.ticker}>
+          <div className="portfolio-news-ticker">{stock.ticker || "-"}</div>
+          <div className="portfolio-news-content">
+            <div className="portfolio-news-meta">
               <span>{stock.company || "Portfolio holding"}</span>
+              <time>{reportDate || "Latest"}</time>
             </div>
-            <time>{reportDate || "Latest"}</time>
-          </div>
-          <p>{stock.key_takeaway || stock.key_news || "No takeaway included in the latest report."}</p>
-          <p className="muted">{stock.possible_impact || stock.impact || "No impact note included."}</p>
-          {stock.technical ? (
-            <div className="technical-snapshot" aria-label={`${stock.ticker || "Holding"} technical snapshot`}>
-              <div className="technical-title">
-                <strong>Technical snapshot</strong>
-                <span>{stock.technical.trend || "Trend unavailable"}</span>
+            <h3>{stock.key_takeaway || stock.key_news || "No headline included in the latest report."}</h3>
+            {stock.possible_impact || stock.impact ? <p>{stock.possible_impact || stock.impact}</p> : null}
+            {stock.confidence || stock.time_horizon || stock.timeframe ? (
+              <div className="portfolio-news-tags">
+                {stock.confidence ? <span>{stock.confidence}</span> : null}
+                {stock.time_horizon || stock.timeframe ? <span>{stock.time_horizon || stock.timeframe}</span> : null}
               </div>
-              <dl className="technical-grid">
-                <div>
-                  <dt>Last close</dt>
-                  <dd>{formatTechnicalValue(stock.technical.last_close)}</dd>
-                </div>
-                <div>
-                  <dt>RSI (14)</dt>
-                  <dd>{formatTechnicalValue(stock.technical.rsi14)}</dd>
-                </div>
-                <div>
-                  <dt>MACD / Signal</dt>
-                  <dd>{formatTechnicalValue(stock.technical.macd)} / {formatTechnicalValue(stock.technical.macd_signal)}</dd>
-                </div>
-                <div>
-                  <dt>Support</dt>
-                  <dd>{formatLevels(stock.technical.support_zones)}</dd>
-                </div>
-                <div>
-                  <dt>Resistance</dt>
-                  <dd>{formatLevels(stock.technical.resistance_zones)}</dd>
-                </div>
-              </dl>
-              {stock.technical.technical_note ? <p className="technical-note">{stock.technical.technical_note}</p> : null}
-            </div>
-          ) : stock.technical_summary ? (
-            <p className="technical-note">{stock.technical_summary}</p>
-          ) : null}
-          <div className="tag-row">
-            {stock.confidence ? <span>{stock.confidence}</span> : null}
-            {stock.time_horizon || stock.timeframe ? <span>{stock.time_horizon || stock.timeframe}</span> : null}
+            ) : null}
           </div>
         </article>
       ))}
     </div>
+  );
+}
+
+export function PortfolioPerformance() {
+  return (
+    <section className="panel portfolio-section portfolio-performance">
+      <div className="portfolio-section-head">
+        <div>
+          <h2>Portfolio Performance</h2>
+          <p>Historical return and benchmark comparison.</p>
+        </div>
+        <div aria-label="Performance time range" className="performance-ranges">
+          {['1D', '1W', '1M', '3M', '1Y', 'ALL'].map((range) => <button disabled key={range} type="button">{range}</button>)}
+        </div>
+      </div>
+      <div className="performance-empty-state">
+        <div className="performance-placeholder" aria-hidden="true"><span /><span /><span /></div>
+        <strong>Portfolio performance history is not available yet.</strong>
+        <p>It will appear after transaction history has enough dated valuation data. No chart has been fabricated.</p>
+      </div>
+    </section>
   );
 }
 
@@ -898,27 +935,37 @@ export function PortfolioTransactionHistory({
   portfolioName: string;
 }) {
   if (transactions.length === 0) {
-    return <EmptyState label="ยังไม่มีประวัติซื้อขายใน Portfolio นี้" />;
+    return <EmptyState label="No transactions recorded yet." />;
   }
 
-  const transactionsByTicker = transactions.reduce<Map<string, PortfolioTransaction[]>>((groups, transaction) => {
-    const key = transaction.ticker || "Cash";
-    groups.set(key, [...(groups.get(key) || []), transaction]);
-    return groups;
-  }, new Map());
-
   return (
-    <div className="transaction-history-groups">
+    <div className="portfolio-transaction-wrap">
       <p className="muted">Portfolio: {portfolioName}</p>
-      {Array.from(transactionsByTicker.entries()).map(([ticker, tickerTransactions]) => (
-        <section className="transaction-history-group" key={ticker}>
-          <div className="section-head">
-            <h3>{ticker}</h3>
-            <span>{tickerTransactions.length} รายการ</span>
-          </div>
-          <JourneyList transactions={tickerTransactions} />
-        </section>
-      ))}
+      <div className="table-wrap">
+        <table className="portfolio-transaction-table">
+          <thead>
+            <tr><th>Date</th><th>Type</th><th>Ticker</th><th>Quantity</th><th>Price</th><th>Value</th><th>Reason</th></tr>
+          </thead>
+          <tbody>
+            {transactions.map((transaction) => {
+              const quantity = Number(transaction.quantity || 0);
+              const price = Number(transaction.price_per_share || 0);
+              const value = transaction.transaction_type === "buy" || transaction.transaction_type === "sell" ? quantity * price : price;
+              return (
+                <tr key={transaction.id}>
+                  <td>{formatDate(transaction.transaction_date)}</td>
+                  <td><span className={`transaction-badge ${transaction.transaction_type}`}>{transaction.transaction_type.toUpperCase()}</span></td>
+                  <td><strong>{transaction.ticker || "Cash"}</strong></td>
+                  <td>{transaction.quantity === null ? "—" : formatNumber(transaction.quantity)}</td>
+                  <td>{transaction.price_per_share === null ? "—" : formatNumber(transaction.price_per_share)}</td>
+                  <td>{formatNumber(value)}</td>
+                  <td className="transaction-reason">{transaction.reason || transaction.notes || "—"}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
