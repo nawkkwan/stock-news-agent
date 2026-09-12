@@ -48,6 +48,13 @@ supabase_rls_test:
 .azure_login:
   image: mcr.microsoft.com/azure-cli:latest
   before_script:
+    - test -n "$AZURE_CLIENT_ID"
+    - test -n "$AZURE_CLIENT_SECRET"
+    - test -n "$AZURE_TENANT_ID"
+    - test -n "$AZURE_SUBSCRIPTION_ID"
+    - test -n "$AZURE_RESOURCE_GROUP"
+    - test -n "$AZURE_API_APP_NAME"
+    - test -n "$AZURE_WORKER_JOB_NAME"
     - az login --service-principal --username "$AZURE_CLIENT_ID" --password "$AZURE_CLIENT_SECRET" --tenant "$AZURE_TENANT_ID"
     - az account set --subscription "$AZURE_SUBSCRIPTION_ID"
 
@@ -99,7 +106,7 @@ deploy_azure:
   environment:
     name: production
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_CLIENT_ID && $AZURE_ACR_LOGIN_SERVER && $SUPABASE_TEST_DATABASE_URL'
+    - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual
 
 deploy_cloudflare:
