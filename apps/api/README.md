@@ -27,6 +27,8 @@ Endpoints:
 - `GET /version`
 - `GET /v1/portfolio/context`
 - `POST /v1/agent/dispatch`
+- `POST /v1/agent/chat`
+- `POST /v1/user/agent/chat` (Supabase user access token)
 - `POST /v1/research`
 - `POST /v1/discover`
 - `POST /v1/watchlist`

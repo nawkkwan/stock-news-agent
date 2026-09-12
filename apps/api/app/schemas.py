@@ -27,6 +27,11 @@ class LeadDispatchRequest(BaseModel):
     command: str = Field(min_length=1, max_length=1600)
 
 
+class RoomChatRequest(BaseModel):
+    agent: Literal["scout", "analyst", "ranger"]
+    question: str = Field(min_length=1, max_length=1200)
+
+
 class AgentResponse(BaseModel):
     agent: Literal["lead", "research", "secretary", "discovery"]
     result: dict[str, Any]

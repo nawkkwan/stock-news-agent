@@ -16,11 +16,14 @@ class ServiceError(RuntimeError):
 
 
 class SupabasePortfolioStore:
-    def __init__(self, settings: Settings):
-        if not settings.supabase_backend_configured or not settings.owner_supabase_user_id:
-            raise ServiceError("Supabase backend and owner user must be configured.")
+    def __init__(self, settings: Settings, user_id: str | None = None):
+        if not settings.supabase_backend_configured:
+            raise ServiceError("Supabase backend must be configured.")
+        resolved_user_id = user_id or settings.owner_supabase_user_id
+        if not resolved_user_id:
+            raise ServiceError("A Supabase user id is required.")
         self.base_url = settings.supabase_url.rstrip("/")
-        self.user_id = settings.owner_supabase_user_id
+        self.user_id = resolved_user_id
         self.session = requests.Session()
         self.session.headers.update({
             "apikey": settings.supabase_service_role_key,
@@ -96,9 +99,7 @@ class GeminiAgentTeam:
     def __init__(self, settings: Settings, store: SupabasePortfolioStore):
         if not settings.gemini_api_key:
             raise ServiceError("GEMINI_API_KEY is not configured.")
-        from google import genai
-
-        self.client = genai.Client(api_key=settings.gemini_api_key)
+        self.gemini_api_key = settings.gemini_api_key
         self.model = settings.gemini_model
         self.store = store
         self.eodhd_api_key = settings.eodhd_api_key
@@ -148,12 +149,14 @@ class GeminiAgentTeam:
             f"Role: {role}\nTask: {instruction}\nContext: {json.dumps(payload, ensure_ascii=False)}"
         )
         try:
-            response = self.client.models.generate_content(
-                model=self.model,
-                contents=prompt,
-                config={
-                    "response_mime_type": "application/json",
-                    "response_json_schema": {
+            response = requests.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent",
+                headers={"x-goog-api-key": self.gemini_api_key, "content-type": "application/json"},
+                json={
+                    "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "responseMimeType": "application/json",
+                        "responseJsonSchema": {
                         "type": "object",
                         "properties": {
                             "summary": {"type": "string"},
@@ -175,12 +178,22 @@ class GeminiAgentTeam:
                         "required": ["summary", "facts", "inferences", "risks", "sources"],
                     },
                 },
+                },
+                timeout=(5, 60),
             )
-            result = json.loads(response.text or "{}")
+            response.raise_for_status()
+            provider_payload = response.json()
+            parts = provider_payload.get("candidates", [{}])[0].get("content", {}).get("parts", [])
+            response_text = "".join(str(part.get("text", "")) for part in parts).strip()
+            if not response_text:
+                raise ValueError("Gemini returned no text content.")
+            result = json.loads(response_text)
             self.store.save_agent_run(role, payload, result)
             return result
         except Exception as exc:
-            safe_error = f"{type(exc).__name__}: agent provider request failed"
+            status_code = exc.response.status_code if isinstance(exc, requests.HTTPError) and exc.response is not None else None
+            status_suffix = f" (HTTP {status_code})" if status_code else ""
+            safe_error = f"{type(exc).__name__}: agent provider request failed{status_suffix}"
             self.store.save_agent_run(role, payload, None, safe_error)
             raise ServiceError(safe_error) from exc
 
@@ -216,6 +229,28 @@ class GeminiAgentTeam:
             "lead",
             "Classify this Hermes command for research, discovery, secretary, portfolio_context, or watchlist. Return a safe routing recommendation only. Refuse holdings, transaction, or trading changes.",
             {"command": command, "allowed_actions": ["research", "discovery", "secretary", "portfolio_context", "watchlist"]},
+        )
+
+    def room_chat(self, agent: str, question: str) -> tuple[str, dict[str, Any]]:
+        roles = {
+            "scout": (
+                "discovery",
+                "Review news relevance, source quality, duplicate coverage, and possible research candidates. Do not add anything to the watchlist.",
+            ),
+            "analyst": (
+                "research",
+                "Explain portfolio impact, thesis implications, concentration, risks, and evidence gaps.",
+            ),
+            "ranger": (
+                "secretary",
+                "Review watchlist readiness, thesis completeness, portfolio follow-ups, and what information should be checked next.",
+            ),
+        }
+        role, instruction = roles[agent]
+        return role, self._generate(
+            role,
+            f"{instruction} Answer the user's question in Thai. Never issue buy, sell, hold, trim, or add instructions.",
+            {"question": question, "portfolio_context": self.store.context()},
         )
 
     def digest(self, report_date: str | None = None) -> dict[str, Any]:

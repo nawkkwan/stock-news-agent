@@ -3,8 +3,8 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException
 
 from apps.api.app.config import get_settings
-from apps.api.app.schemas import AgentResponse, DigestRequest, DiscoveryRequest, LeadDispatchRequest, ResearchRequest, WatchlistCreate
-from apps.api.app.security import require_hermes_owner, require_internal_token
+from apps.api.app.schemas import AgentResponse, DigestRequest, DiscoveryRequest, LeadDispatchRequest, ResearchRequest, RoomChatRequest, WatchlistCreate
+from apps.api.app.security import require_hermes_owner, require_internal_token, require_supabase_user
 from apps.api.app.services import GeminiAgentTeam, ServiceError, SupabasePortfolioStore
 
 
@@ -52,6 +52,21 @@ def team(portfolio_store: SupabasePortfolioStore = Depends(store)) -> GeminiAgen
 
 HermesOwner = Annotated[None, Depends(require_hermes_owner)]
 InternalCaller = Annotated[None, Depends(require_internal_token)]
+SupabaseUser = Annotated[str, Depends(require_supabase_user)]
+
+
+def user_store(user_id: SupabaseUser) -> SupabasePortfolioStore:
+    try:
+        return SupabasePortfolioStore(settings, user_id=user_id)
+    except ServiceError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+def user_team(portfolio_store: SupabasePortfolioStore = Depends(user_store)) -> GeminiAgentTeam:
+    try:
+        return GeminiAgentTeam(settings, portfolio_store)
+    except ServiceError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 @app.get("/v1/portfolio/context")
@@ -74,6 +89,24 @@ def research(payload: ResearchRequest, _: HermesOwner, agents: GeminiAgentTeam =
 def dispatch(payload: LeadDispatchRequest, _: HermesOwner, agents: GeminiAgentTeam = Depends(team)) -> AgentResponse:
     try:
         return AgentResponse(agent="lead", result=agents.lead(payload.command))
+    except ServiceError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/v1/agent/chat", response_model=AgentResponse)
+def room_chat(payload: RoomChatRequest, _: HermesOwner, agents: GeminiAgentTeam = Depends(team)) -> AgentResponse:
+    try:
+        role, result = agents.room_chat(payload.agent, payload.question)
+        return AgentResponse(agent=role, result=result)
+    except ServiceError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/v1/user/agent/chat", response_model=AgentResponse)
+def user_room_chat(payload: RoomChatRequest, agents: GeminiAgentTeam = Depends(user_team)) -> AgentResponse:
+    try:
+        role, result = agents.room_chat(payload.agent, payload.question)
+        return AgentResponse(agent=role, result=result)
     except ServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 

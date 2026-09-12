@@ -14,6 +14,7 @@ Command mapping:
 | Discord command | API call |
 |---|---|
 | free-form command routing | `POST /v1/agent/dispatch` |
+| Pixel Room role chat | `POST /v1/agent/chat` |
 | `/portfolio` | `GET /v1/portfolio/context` |
 | `/research TICKER` | `POST /v1/research` |
 | `/discover CRITERIA` | `POST /v1/discover` |
