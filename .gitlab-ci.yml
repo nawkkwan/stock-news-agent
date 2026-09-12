@@ -104,7 +104,7 @@ deploy_azure:
 
 deploy_cloudflare:
   stage: deploy
-  image: node:20
+  image: node:22
   needs:
     - web_verify
   before_script:
