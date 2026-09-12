@@ -1,12 +1,11 @@
 param(
   [Parameter(Mandatory = $true)][string]$ResourceGroup,
   [Parameter(Mandatory = $true)][string]$AcrName,
-  # Azure for Students subscription policy allows East Asia but rejects
-  # Southeast Asia for this account's resource deployments.
-  [string]$Location = "eastasia",
-  [string]$EnvironmentName = "investment-os-env",
-  [string]$ApiName = "investment-research-api",
-  [string]$WorkerJobName = "investment-daily-worker",
+  # Japan West is in this subscription's allowed-locations policy.
+  [string]$Location = "japanwest",
+  [string]$EnvironmentName = "investment-os-japanwest-env",
+  [string]$ApiName = "investment-research-api-jp",
+  [string]$WorkerJobName = "investment-daily-worker-jp",
   [string]$HermesName = "investment-hermes",
   [string]$HermesImage = "",
   [string]$ImageTag = "latest",
@@ -54,8 +53,12 @@ if ($HermesImage -and -not [Environment]::GetEnvironmentVariable("DISCORD_BOT_TO
 
 az extension add --name containerapp --upgrade | Out-Null
 Assert-AzureCommandSucceeded "Installing the Container Apps extension"
-az group create --name $ResourceGroup --location $Location | Out-Null
-Assert-AzureCommandSucceeded "Creating or reading resource group '$ResourceGroup'"
+if (-not (Test-AzureResourceExists { az group show --name $ResourceGroup })) {
+  az group create --name $ResourceGroup --location $Location | Out-Null
+  Assert-AzureCommandSucceeded "Creating resource group '$ResourceGroup'"
+} else {
+  Write-Host "Using existing resource group '$ResourceGroup'. Resources may use location '$Location'."
+}
 if (-not (Test-AzureResourceExists { az acr show --resource-group $ResourceGroup --name $AcrName })) {
   az acr create --resource-group $ResourceGroup --name $AcrName --sku Basic --location $Location | Out-Null
   Assert-AzureCommandSucceeded "Creating container registry '$AcrName'"
