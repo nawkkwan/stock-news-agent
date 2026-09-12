@@ -1,8 +1,7 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import Image from "next/image";
 import Link from "next/link";
 import { getInvestmentData } from "../../lib/investment-data";
+import { getLatestReport } from "../../lib/latest-report";
 
 type ReportArticle = {
   title?: string;
@@ -36,15 +35,6 @@ type LatestReport = {
   stocks?: ReportStock[];
 };
 
-async function getLatestReport(): Promise<LatestReport | null> {
-  try {
-    const file = await fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8");
-    return JSON.parse(file) as LatestReport;
-  } catch {
-    return null;
-  }
-}
-
 function priorityScore(stock: ReportStock) {
   const relevance = stock.relevance_score === "High" ? 3 : stock.relevance_score === "Medium" ? 2 : 1;
   const risk = stock.risk_level === "High" ? 3 : stock.risk_level === "Medium" ? 2 : 1;
@@ -60,7 +50,7 @@ function reviewState(status: string, hasThesis: boolean) {
 }
 
 export async function AgentDetails() {
-  const [report, data] = await Promise.all([getLatestReport(), getInvestmentData()]);
+  const [report, data] = await Promise.all([getLatestReport<LatestReport>(), getInvestmentData()]);
   const stocks = report?.stocks || [];
   const priorityStocks = [...stocks].sort((a, b) => priorityScore(b) - priorityScore(a)).slice(0, 3);
   const thesisTickers = new Set(data.thesisNotes.map((note) => note.ticker));

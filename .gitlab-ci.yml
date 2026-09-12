@@ -17,6 +17,7 @@ web_verify:
     - npm --prefix apps/web ci
     - npm --prefix apps/web run typecheck
     - npm --prefix apps/web run build
+    - npm --prefix apps/web run build:cloudflare
 
 python_verify:
   stage: verify
@@ -99,4 +100,24 @@ deploy_azure:
     name: production
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_CLIENT_ID && $AZURE_ACR_LOGIN_SERVER && $SUPABASE_TEST_DATABASE_URL'
+      when: manual
+
+deploy_cloudflare:
+  stage: deploy
+  image: node:20
+  needs:
+    - web_verify
+  before_script:
+    - npm --prefix apps/web ci
+  script:
+    - npm --prefix apps/web run build:cloudflare
+    - cd apps/web
+    - npx wrangler deploy --var "NEXT_PUBLIC_SUPABASE_URL:$NEXT_PUBLIC_SUPABASE_URL" --var "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY" --var "API_BASE_URL:$API_BASE_URL" --var "DISCORD_OWNER_USER_ID:$DISCORD_OWNER_USER_ID"
+    - printf '%s' "$INTERNAL_API_TOKEN" | npx wrangler secret put INTERNAL_API_TOKEN
+    - printf '%s' "$GEMINI_API_KEY" | npx wrangler secret put GEMINI_API_KEY
+    - printf '%s' "$EODHD_API_KEY" | npx wrangler secret put EODHD_API_KEY
+  environment:
+    name: web-production
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CLOUDFLARE_API_TOKEN && $CLOUDFLARE_ACCOUNT_ID && $NEXT_PUBLIC_SUPABASE_URL && $NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY && $API_BASE_URL && $INTERNAL_API_TOKEN && $DISCORD_OWNER_USER_ID && $GEMINI_API_KEY && $EODHD_API_KEY'
       when: manual

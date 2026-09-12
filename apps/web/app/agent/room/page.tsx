@@ -1,7 +1,6 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import Link from "next/link";
 import { getInvestmentData } from "../../../lib/investment-data";
+import { getLatestReport } from "../../../lib/latest-report";
 import AgentRoomClient from "./agent-room-client";
 
 type RoomStock = {
@@ -20,15 +19,6 @@ type RoomReport = {
   stocks?: RoomStock[];
 };
 
-async function getRoomReport(): Promise<RoomReport | null> {
-  try {
-    const file = await fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8");
-    return JSON.parse(file) as RoomReport;
-  } catch {
-    return null;
-  }
-}
-
 function formatRunTime(value?: string) {
   if (!value) return "Waiting for first run";
   return new Intl.DateTimeFormat("th-TH", {
@@ -39,7 +29,7 @@ function formatRunTime(value?: string) {
 }
 
 export default async function AgentRoomPage() {
-  const [report, data] = await Promise.all([getRoomReport(), getInvestmentData()]);
+  const [report, data] = await Promise.all([getLatestReport<RoomReport>(), getInvestmentData()]);
   const stocks = report?.stocks || [];
   const prioritySignals = stocks.filter(
     (stock) => stock.relevance_score === "High" || stock.risk_level === "High"

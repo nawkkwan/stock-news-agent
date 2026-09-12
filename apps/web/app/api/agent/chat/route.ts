@@ -1,7 +1,6 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import { NextResponse } from "next/server";
 import { getInvestmentData } from "../../../../lib/investment-data";
+import { getLatestReport } from "../../../../lib/latest-report";
 
 const allowedAgents = new Set(["scout", "analyst", "ranger"]);
 
@@ -23,13 +22,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const [reportText, data] = await Promise.all([
-    fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8").catch(() => "{}"),
+  const [report, data] = await Promise.all([
+    getLatestReport<Record<string, unknown>>(),
     getInvestmentData(),
   ]);
-  const report = JSON.parse(reportText) as Record<string, unknown>;
   const safeContext = {
-    report,
+    report: report || {},
     portfolio: {
       selectedPortfolio: data.selectedPortfolio?.name || null,
       holdings: data.portfolioHoldings.map((item) => ({ ticker: item.ticker, weight: item.portfolio_weight, latest_price: item.latest_price })),

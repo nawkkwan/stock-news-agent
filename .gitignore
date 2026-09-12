@@ -16,6 +16,7 @@ __pycache__/
 node_modules/
 .next/
 apps/web/.next/
+apps/web/.open-next/
 *.tsbuildinfo
 npm-debug.log*
 apps/web/*-server.*.log

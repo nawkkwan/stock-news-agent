@@ -1,5 +1,4 @@
-import fs from "node:fs/promises";
-import path from "node:path";
+import { getLatestReport } from "../../lib/latest-report";
 
 type ReportStock = {
   ticker?: string;
@@ -22,17 +21,8 @@ type LatestReport = {
   stocks?: ReportStock[];
 };
 
-async function getLatestReport(): Promise<LatestReport | null> {
-  try {
-    const file = await fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8");
-    return JSON.parse(file) as LatestReport;
-  } catch {
-    return null;
-  }
-}
-
 export default async function DailyPage() {
-  const report = await getLatestReport();
+  const report = await getLatestReport<LatestReport>();
   const stocks = report?.stocks || [];
 
   return (
