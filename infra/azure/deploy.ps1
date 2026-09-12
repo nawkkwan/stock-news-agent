@@ -167,13 +167,16 @@ if ($HermesImage) {
     "DISCORD_OWNER_USER_ID=secretref:discord-owner-id",
     "DISCORD_BOT_TOKEN=secretref:discord-bot-token"
   )
+  if ($env:DISCORD_GUILD_ID) {
+    $hermesEnv += "DISCORD_GUILD_ID=$env:DISCORD_GUILD_ID"
+  }
   if (Test-AzureResourceExists { az containerapp show --resource-group $ResourceGroup --name $HermesName }) {
     az containerapp secret set --resource-group $ResourceGroup --name $HermesName --secrets $hermesSecrets | Out-Null
     Assert-AzureCommandSucceeded "Updating Hermes secrets"
     az containerapp update --resource-group $ResourceGroup --name $HermesName --image $HermesImage --set-env-vars $hermesEnv | Out-Null
     Assert-AzureCommandSucceeded "Updating Hermes container app"
   } else {
-    az containerapp create --resource-group $ResourceGroup --environment $EnvironmentName --name $HermesName --image $HermesImage --min-replicas 1 --max-replicas 1 --secrets $hermesSecrets --env-vars $hermesEnv | Out-Null
+    az containerapp create --resource-group $ResourceGroup --environment $EnvironmentName --name $HermesName --image $HermesImage --registry-server $acrServer --registry-identity system --min-replicas 1 --max-replicas 1 --secrets $hermesSecrets --env-vars $hermesEnv | Out-Null
     Assert-AzureCommandSucceeded "Creating Hermes container app"
   }
 }

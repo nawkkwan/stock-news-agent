@@ -25,6 +25,7 @@ python_verify:
   script:
     - python -m pip install --upgrade pip
     - pip install -r requirements.txt
+    - pip install -r requirements-hermes.txt
     - python apps/api/check_api.py
     - python -m py_compile apps/worker/jobs/deploy_daily_report.py apps/worker/jobs/run_daily_report.py
 
@@ -34,6 +35,7 @@ python_test:
   script:
     - python -m pip install --upgrade pip
     - pip install -r requirements.txt
+    - pip install -r requirements-hermes.txt
     - python -m unittest discover -s tests -p "test_*_unittest.py" -v
 
 supabase_rls_test:
@@ -90,12 +92,23 @@ build_worker:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_ACR_LOGIN_SERVER && $AZURE_ACR_USERNAME && $AZURE_ACR_PASSWORD'
 
+build_hermes:
+  extends: .acr_image_build
+  stage: build
+  script:
+    - docker build --pull --file docker/Dockerfile.hermes --tag "$AZURE_ACR_LOGIN_SERVER/investment-hermes:$CI_COMMIT_SHA" --tag "$AZURE_ACR_LOGIN_SERVER/investment-hermes:latest" .
+    - docker push "$AZURE_ACR_LOGIN_SERVER/investment-hermes:$CI_COMMIT_SHA"
+    - docker push "$AZURE_ACR_LOGIN_SERVER/investment-hermes:latest"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_ACR_LOGIN_SERVER && $AZURE_ACR_USERNAME && $AZURE_ACR_PASSWORD'
+
 deploy_azure:
   extends: .azure_login
   stage: deploy
   needs:
     - build_api
     - build_worker
+    - build_hermes
     - python_test
     - web_verify
     - job: supabase_rls_test
@@ -103,6 +116,7 @@ deploy_azure:
   script:
     - az containerapp update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_API_APP_NAME" --image "$AZURE_ACR_LOGIN_SERVER/investment-api:$CI_COMMIT_SHA"
     - az containerapp job update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_WORKER_JOB_NAME" --image "$AZURE_ACR_LOGIN_SERVER/investment-worker:$CI_COMMIT_SHA"
+    - if [ -n "$AZURE_HERMES_APP_NAME" ]; then az containerapp update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_HERMES_APP_NAME" --image "$AZURE_ACR_LOGIN_SERVER/investment-hermes:$CI_COMMIT_SHA"; fi
   environment:
     name: production
   rules:
