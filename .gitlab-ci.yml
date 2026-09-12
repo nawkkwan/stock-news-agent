@@ -50,32 +50,53 @@ supabase_rls_test:
     - az login --service-principal --username "$AZURE_CLIENT_ID" --password "$AZURE_CLIENT_SECRET" --tenant "$AZURE_TENANT_ID"
     - az account set --subscription "$AZURE_SUBSCRIPTION_ID"
 
+.acr_image_build:
+  image: docker:27-cli
+  services:
+    - name: docker:27-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "/certs/client"
+  before_script:
+    - echo "$AZURE_ACR_PASSWORD" | docker login "$AZURE_ACR_LOGIN_SERVER" --username "$AZURE_ACR_USERNAME" --password-stdin
+
 build_api:
-  extends: .azure_login
+  extends: .acr_image_build
   stage: build
   script:
-    - az acr build --registry "$AZURE_ACR_NAME" --image "investment-api:$CI_COMMIT_SHA" --file docker/Dockerfile.api .
+    - docker build --pull --file docker/Dockerfile.api --tag "$AZURE_ACR_LOGIN_SERVER/investment-api:$CI_COMMIT_SHA" --tag "$AZURE_ACR_LOGIN_SERVER/investment-api:latest" .
+    - docker push "$AZURE_ACR_LOGIN_SERVER/investment-api:$CI_COMMIT_SHA"
+    - docker push "$AZURE_ACR_LOGIN_SERVER/investment-api:latest"
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_CLIENT_ID && $AZURE_ACR_NAME'
+    - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_ACR_LOGIN_SERVER && $AZURE_ACR_USERNAME && $AZURE_ACR_PASSWORD'
 
 build_worker:
-  extends: .azure_login
+  extends: .acr_image_build
   stage: build
   script:
-    - az acr build --registry "$AZURE_ACR_NAME" --image "investment-worker:$CI_COMMIT_SHA" --file docker/Dockerfile.worker .
+    - docker build --pull --file docker/Dockerfile.worker --tag "$AZURE_ACR_LOGIN_SERVER/investment-worker:$CI_COMMIT_SHA" --tag "$AZURE_ACR_LOGIN_SERVER/investment-worker:latest" .
+    - docker push "$AZURE_ACR_LOGIN_SERVER/investment-worker:$CI_COMMIT_SHA"
+    - docker push "$AZURE_ACR_LOGIN_SERVER/investment-worker:latest"
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_CLIENT_ID && $AZURE_ACR_NAME'
+    - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_ACR_LOGIN_SERVER && $AZURE_ACR_USERNAME && $AZURE_ACR_PASSWORD'
 
 deploy_azure:
   extends: .azure_login
   stage: deploy
-  needs: [build_api, build_worker, python_test, supabase_rls_test, web_verify]
+  needs:
+    - build_api
+    - build_worker
+    - python_test
+    - web_verify
+    - job: supabase_rls_test
+      optional: true
   script:
-    - ACR_SERVER=$(az acr show --name "$AZURE_ACR_NAME" --query loginServer -o tsv)
-    - az containerapp update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_API_APP_NAME" --image "$ACR_SERVER/investment-api:$CI_COMMIT_SHA"
-    - az containerapp job update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_WORKER_JOB_NAME" --image "$ACR_SERVER/investment-worker:$CI_COMMIT_SHA"
+    - az containerapp update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_API_APP_NAME" --image "$AZURE_ACR_LOGIN_SERVER/investment-api:$CI_COMMIT_SHA"
+    - az containerapp job update --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_WORKER_JOB_NAME" --image "$AZURE_ACR_LOGIN_SERVER/investment-worker:$CI_COMMIT_SHA"
   environment:
     name: production
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_CLIENT_ID && $AZURE_ACR_NAME && $SUPABASE_TEST_DATABASE_URL'
+    - if: '$CI_COMMIT_BRANCH == "main" && $AZURE_CLIENT_ID && $AZURE_ACR_LOGIN_SERVER && $SUPABASE_TEST_DATABASE_URL'
       when: manual
