@@ -401,6 +401,29 @@ export async function upsertWatchlistItem(formData: FormData) {
   revalidatePath(`/investing/companies/${ticker}`);
 }
 
+export async function deleteWatchlistItem(formData: FormData) {
+  const id = nullableText(formData.get("id"));
+  if (!id) {
+    throw new Error("Missing watchlist id.");
+  }
+
+  const { supabase, user } = await requireUser();
+  const { data, error } = await supabase
+    .from("watchlist")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .select("id,ticker")
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error("Watchlist item not found or you do not have permission to delete it.");
+
+  revalidatePath("/investing");
+  revalidatePath("/investing/watchlist");
+  revalidatePath(`/investing/companies/${data.ticker}`);
+  revalidatePath("/agent");
+}
+
 export async function upsertThesis(formData: FormData) {
   const ticker = normalizeTicker(formData.get("ticker"));
   if (!ticker) {

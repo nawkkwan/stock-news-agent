@@ -1,5 +1,3 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import Link from "next/link";
 import { getInvestmentData } from "../../lib/investment-data";
 import {
@@ -15,6 +13,8 @@ import {
 } from "./components";
 import { AddTransactionDrawer } from "./add-transaction-drawer";
 import { PortfolioAssetSearch } from "./portfolio-asset-search";
+import { PortfolioDecisionCenter } from "./portfolio-decision-center";
+import { getLatestReport } from "../../lib/latest-report";
 
 export const dynamic = "force-dynamic";
 
@@ -24,14 +24,6 @@ type LatestReport = {
   stocks?: DailyReportStock[];
 };
 
-async function getLatestReport(): Promise<LatestReport | null> {
-  try {
-    return JSON.parse(await fs.readFile(path.join(process.cwd(), "data", "latest-report.json"), "utf8")) as LatestReport;
-  } catch {
-    return null;
-  }
-}
-
 export default async function InvestingPage({
   searchParams,
 }: {
@@ -40,7 +32,7 @@ export default async function InvestingPage({
   const params = searchParams ? await searchParams : {};
   const [data, latestReport] = await Promise.all([
     getInvestmentData({ selectedPortfolioId: params.portfolio }),
-    getLatestReport(),
+    getLatestReport<LatestReport>(),
   ]);
   const reportHoldings: DashboardHolding[] = (latestReport?.stocks || [])
     .filter((stock) => stock.ticker && Number(stock.holding_value_thb) > 0)
@@ -87,6 +79,14 @@ export default async function InvestingPage({
         holdingsCount={displayHoldings.length}
         portfolioValue={displayPortfolioValue}
         unrealizedGain={unrealizedGain}
+      />
+
+      <PortfolioDecisionCenter
+        holdingTickers={displayHoldings.map((holding) => holding.ticker)}
+        reportDate={latestReport?.date}
+        snapshots={data.researchSnapshots}
+        stocks={reportStocks}
+        watchlist={data.watchlist}
       />
 
       <section className="portfolio-core-grid">

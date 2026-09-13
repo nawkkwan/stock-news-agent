@@ -28,6 +28,7 @@ import {
   upsertWatchlistItem,
 } from "./actions";
 import { DeleteHoldingButton } from "./delete-holding-button";
+import { DeleteWatchlistButton } from "./delete-watchlist-button";
 export { ImportDailyPortfolioButton } from "./import-daily-portfolio-button";
 
 export function ConfigNotice({ configured, error }: { configured: boolean; error?: string }) {
@@ -713,6 +714,12 @@ export type DailyReportStock = {
   unrealized_gain_thb?: number;
   unrealized_gain_pct?: number;
   technical_summary?: string;
+  bullish_points?: string[];
+  bearish_points?: string[];
+  what_to_monitor?: string;
+  risk_level?: string;
+  relevance_score?: string;
+  articles?: Array<{ title?: string; url?: string; source?: string; published?: string }>;
   technical?: {
     last_close?: number;
     last_date?: string;
@@ -984,6 +991,7 @@ export function WatchlistTable({ items }: { items: WatchlistItem[] }) {
             <th>Status</th>
             <th>Reason</th>
             <th>Updated</th>
+            <th><span className="sr-only">Actions</span></th>
           </tr>
         </thead>
         <tbody>
@@ -995,6 +1003,7 @@ export function WatchlistTable({ items }: { items: WatchlistItem[] }) {
               <td>{item.status.replaceAll("_", " ")}</td>
               <td>{item.reason || "-"}</td>
               <td>{formatDate(item.updated_at)}</td>
+              <td><DeleteWatchlistButton id={item.id} ticker={item.ticker} /></td>
             </tr>
           ))}
         </tbody>

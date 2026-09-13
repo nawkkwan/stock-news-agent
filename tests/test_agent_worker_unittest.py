@@ -134,6 +134,12 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(payload["market_snapshot"]["close"], 100)
         self.assertEqual(len(payload["recent_news"]), 1)
 
+    def test_market_overview_without_eodhd_key_returns_safe_empty_state(self):
+        team = GeminiAgentTeam(Settings(), FakeStore())
+        result = team.market_overview("MSFT")
+        self.assertFalse(result["available"])
+        self.assertEqual(result["history"], [])
+
     def test_hermes_run_uses_bearer_auth_and_does_not_share_discord_session(self):
         settings = Settings(
             hermes_base_url="http://investment-hermes",
@@ -224,6 +230,27 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(response["result"]["summary"], "done")
         self.assertEqual(store.updated[0]["status"], "succeeded")
 
+    def test_owner_stock_research_completion_persists_snapshot(self):
+        store = FakeRunStore()
+        store.get_agent_run = Mock(return_value={
+            "status": "running",
+            "request": {"kind": "stock_research", "ticker": "GOOGL.US"},
+            "response": {"hermes_run_id": "run-hermes-1"},
+        })
+        store.stock_context = Mock(return_value={"news": [{"title": "News"}]})
+        store.save_research_snapshot = Mock(return_value={"id": "snapshot-1"})
+        owner_settings = Settings(owner_supabase_user_id="owner-user", hermes_base_url="http://investment-hermes", hermes_api_key="secret")
+        with patch.object(api_main, "settings", owner_settings), patch.object(
+            api_main.HermesAgentClient, "get_run", return_value={"status": "completed", "output": {"summary": "done"}}
+        ), patch.object(api_main.GeminiAgentTeam, "market_overview", return_value={"support_zones": [95, 100]}):
+            response = api_main.user_agent_run_status(
+                "7d824bd4-2df4-4a64-b334-5db40e235c69", "owner-user", store
+            )
+        self.assertEqual(response["status"], "succeeded")
+        self.assertEqual(response["result"]["snapshot_id"], "snapshot-1")
+        self.assertEqual(store.save_research_snapshot.call_args.kwargs["source"], "hermes")
+        self.assertEqual(store.save_research_snapshot.call_args.kwargs["news_count"], 1)
+
     def test_eodhd_failure_uses_yahoo_fallback(self):
         dates = pd.date_range("2025-01-01", periods=250, freq="D")
         frame = pd.DataFrame({"Close": range(100, 350), "Volume": [1000] * 250}, index=dates)
@@ -232,6 +259,16 @@ class AgentWorkerTests(unittest.TestCase):
         ):
             result = technicals.analyze_ticker("MSFT", "Microsoft")
         self.assertEqual(result["provider"], "yahoo-fallback")
+        self.assertEqual(len(result["price_history"]), 90)
+
+    def test_discord_alerts_only_include_high_impact_or_watch_zone(self):
+        report = {"stocks": [
+            {"ticker": "CALM", "risk_level": "Low", "relevance_score": "Low", "technical": {"last_close": 110, "support_zones": [95, 100]}},
+            {"ticker": "WATCH", "risk_level": "Low", "relevance_score": "Low", "technical": {"last_close": 99, "support_zones": [95, 100]}},
+            {"ticker": "RISK", "risk_level": "High", "relevance_score": "Medium", "technical": {}},
+        ]}
+        alerts = publisher.CloudPublisher.important_alerts(report)
+        self.assertEqual([item["ticker"] for item in alerts], ["WATCH", "RISK"])
 
     def test_sent_digest_is_not_delivered_twice(self):
         cloud = publisher.CloudPublisher.__new__(publisher.CloudPublisher)

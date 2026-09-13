@@ -32,6 +32,10 @@ class RoomChatRequest(BaseModel):
     question: str = Field(min_length=1, max_length=1200)
 
 
+class StockResearchRequest(BaseModel):
+    question: str = Field(default="", max_length=1200)
+
+
 class AgentResponse(BaseModel):
     agent: Literal["lead", "research", "secretary", "discovery"]
     result: dict[str, Any]

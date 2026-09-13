@@ -1,11 +1,13 @@
-from typing import Annotated
+import re
+from typing import Annotated, Any
 from uuid import UUID
+from uuid import uuid4
 
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 
 from apps.api.app.config import get_settings
-from apps.api.app.schemas import AgentResponse, DigestRequest, DiscoveryRequest, GeminiChatResponse, HermesRunCreatedResponse, HermesRunStatusResponse, LeadDispatchRequest, ResearchRequest, RoomChatRequest, WatchlistCreate
+from apps.api.app.schemas import AgentResponse, DigestRequest, DiscoveryRequest, GeminiChatResponse, HermesRunCreatedResponse, HermesRunStatusResponse, LeadDispatchRequest, ResearchRequest, RoomChatRequest, StockResearchRequest, WatchlistCreate
 from apps.api.app.security import require_hermes_owner, require_internal_token, require_supabase_user
 from apps.api.app.services import GeminiAgentTeam, HermesAgentClient, ServiceError, SupabasePortfolioStore
 
@@ -69,6 +71,65 @@ def user_team(portfolio_store: SupabasePortfolioStore = Depends(user_store)) -> 
         return GeminiAgentTeam(settings, portfolio_store)
     except ServiceError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+def normalized_ticker(value: str) -> str:
+    ticker = value.strip().upper()
+    if not re.fullmatch(r"[A-Z0-9.\-]{1,20}", ticker):
+        raise HTTPException(status_code=400, detail="Invalid ticker.")
+    return ticker
+
+
+def decision_with_watch_zone(result: dict[str, Any], market: dict[str, Any]) -> dict[str, Any]:
+    decision = dict(result)
+    if not isinstance(decision.get("watch_zone"), dict):
+        supports = market.get("support_zones") if isinstance(market.get("support_zones"), list) else []
+        decision["watch_zone"] = {
+            "lower": min(supports) if supports else None,
+            "upper": max(supports) if supports else None,
+            "rationale": "ช่วงแนวรับจากราคาปิดรายวันล่าสุด ใช้เป็นจุดกลับมาทบทวนเท่านั้น",
+            "conditions": [
+                "ตรวจว่าข่าวหรือสมมติฐานธุรกิจเปลี่ยนจริงหรือไม่",
+                "ตรวจแนวโน้มราคาและปริมาณซื้อขายอีกครั้ง",
+                "ทบทวนน้ำหนักและความเสี่ยงรวมของพอร์ต",
+            ],
+        }
+    return decision
+
+
+def market_from_snapshot(snapshot: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not snapshot or not isinstance(snapshot.get("market_snapshot"), dict):
+        return None
+    market = snapshot["market_snapshot"]
+    raw_history = market.get("price_history")
+    if not isinstance(raw_history, list) or len(raw_history) < 2:
+        return None
+    history = []
+    for row in raw_history:
+        if not isinstance(row, dict) or row.get("close") is None or not row.get("date"):
+            continue
+        close = float(row["close"])
+        history.append({"date": str(row["date"]), "open": close, "high": close, "low": close, "close": close, "volume": int(row.get("volume") or 0)})
+    if len(history) < 2:
+        return None
+    previous = history[-2]["close"]
+    current = history[-1]["close"]
+    return {
+        "ticker": snapshot.get("ticker"),
+        "available": True,
+        "provider": str(market.get("provider") or "Daily Worker"),
+        "currency": "USD",
+        "as_of": market.get("last_date") or history[-1]["date"],
+        "price": current,
+        "previous_close": previous,
+        "change": round(current - previous, 4),
+        "change_pct": round(((current - previous) / previous * 100) if previous else 0, 4),
+        "day_low": current,
+        "day_high": current,
+        "support_zones": market.get("support_zones") or [],
+        "resistance_zones": market.get("resistance_zones") or [],
+        "history": history,
+    }
 
 
 @app.get("/v1/portfolio/context")
@@ -164,6 +225,73 @@ def user_agent_history(
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
+@app.get("/v1/user/stocks/{ticker}")
+def user_stock_overview(
+    ticker: str,
+    _user_id: SupabaseUser,
+    portfolio_store: SupabasePortfolioStore = Depends(user_store),
+) -> dict[str, object]:
+    normalized = normalized_ticker(ticker)
+    try:
+        agents = GeminiAgentTeam(settings, portfolio_store)
+        snapshots = portfolio_store.research_snapshots(normalized)
+        return {
+            "ticker": normalized,
+            "context": portfolio_store.stock_context(normalized),
+            "market": market_from_snapshot(snapshots[0] if snapshots else None) or agents.market_overview(normalized),
+            "snapshots": snapshots,
+        }
+    except ServiceError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/v1/user/stocks/{ticker}/research")
+def user_stock_research(
+    ticker: str,
+    payload: StockResearchRequest,
+    user_id: SupabaseUser,
+    portfolio_store: SupabasePortfolioStore = Depends(user_store),
+) -> JSONResponse:
+    normalized = normalized_ticker(ticker)
+    question = payload.question.strip() or (
+        f"วิเคราะห์ {normalized} จากราคา ข่าว Thesis และน้ำหนักพอร์ต แยกข้อเท็จจริงกับข้อสรุป "
+        "พร้อม Watch Zone ที่เป็นเพียงช่วงกลับมาทบทวน"
+    )
+    try:
+        market = GeminiAgentTeam(settings, portfolio_store).market_overview(normalized)
+        if user_id == settings.owner_supabase_user_id:
+            run = portfolio_store.create_agent_run(
+                "research",
+                {"mode": "hermes", "kind": "stock_research", "agent": "analyst", "ticker": normalized, "question": question},
+            )
+            try:
+                hermes_run_id = HermesAgentClient(settings).start_run(
+                    agent="analyst",
+                    question=question,
+                    context={**portfolio_store.stock_context(normalized), "market": market},
+                    idempotency_key=str(run["id"]),
+                )
+            except ServiceError:
+                portfolio_store.update_agent_run(str(run["id"]), "failed", error="Hermes stock research could not be started.")
+                raise
+            portfolio_store.update_agent_run(str(run["id"]), "running", response_data={"hermes_run_id": hermes_run_id})
+            return JSONResponse(status_code=202, content={"mode": "hermes", "status": "running", "run_id": str(run["id"])})
+
+        result = GeminiAgentTeam(settings, portfolio_store).research(normalized, question)
+        decision = decision_with_watch_zone(result, market)
+        snapshot = portfolio_store.save_research_snapshot(
+            ticker=normalized,
+            source="gemini",
+            market_snapshot=market,
+            decision_summary=decision,
+            news_count=len(portfolio_store.stock_context(normalized).get("news", [])),
+            dedupe_key=f"gemini:{normalized}:{user_id}:{uuid4()}",
+        )
+        return JSONResponse(status_code=200, content={"mode": "gemini", "status": "completed", "result": decision, "snapshot_id": snapshot["id"]})
+    except ServiceError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
 @app.get("/v1/user/agent/runs/{run_id}", response_model=HermesRunStatusResponse)
 def user_agent_run_status(
     run_id: UUID,
@@ -197,6 +325,21 @@ def user_agent_run_status(
         if hermes_status == "completed":
             output = hermes_run.get("output")
             result = output if isinstance(output, dict) else {"summary": str(output or "Hermes completed without text output.")}
+            request_data = run.get("request") if isinstance(run.get("request"), dict) else {}
+            if request_data.get("kind") == "stock_research" and request_data.get("ticker"):
+                ticker = normalized_ticker(str(request_data["ticker"]))
+                market = GeminiAgentTeam(settings, portfolio_store).market_overview(ticker)
+                result = decision_with_watch_zone(result, market)
+                snapshot = portfolio_store.save_research_snapshot(
+                    ticker=ticker,
+                    source="hermes",
+                    market_snapshot=market,
+                    decision_summary=result,
+                    news_count=len(portfolio_store.stock_context(ticker).get("news", [])),
+                    dedupe_key=f"agent:{local_run_id}",
+                    agent_run_id=local_run_id,
+                )
+                result = {**result, "snapshot_id": snapshot["id"]}
             portfolio_store.update_agent_run(local_run_id, "succeeded", response_data=result)
             return {"mode": "hermes", "status": "succeeded", "result": result, "error": None}
         if hermes_status in {"failed", "cancelled"}:

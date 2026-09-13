@@ -170,6 +170,14 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
     last_macd = as_float(macd.iloc[-1])
     last_signal = as_float(signal.iloc[-1])
     supports, resistances = nearest_levels(close, last_close)
+    price_history = [
+        {
+            "date": str(index.date()),
+            "close": as_float(row["Close"]),
+            "volume": int(row["Volume"]) if not pd.isna(row["Volume"]) else 0,
+        }
+        for index, row in data.tail(90).iterrows()
+    ]
 
     return {
         "ticker": ticker,
@@ -187,6 +195,7 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
         "support_zones": supports,
         "resistance_zones": resistances,
         "volume_latest": int(volume.iloc[-1]) if not pd.isna(volume.iloc[-1]) else None,
+        "price_history": price_history,
         "technical_note": momentum_note(last_rsi, last_macd, last_signal),
         "disclaimer": "Technical levels are context only, not buy or sell advice.",
     }

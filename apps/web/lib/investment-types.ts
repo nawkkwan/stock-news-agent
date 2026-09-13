@@ -140,6 +140,22 @@ export type NewsItem = {
   user_id: string;
 };
 
+export type StockResearchSnapshot = {
+  id: string;
+  user_id: string;
+  portfolio_id: string;
+  ticker: string;
+  source: "daily" | "hermes" | "gemini";
+  as_of: string;
+  market_snapshot: Record<string, unknown>;
+  decision_summary: Record<string, unknown>;
+  news_count: number;
+  status: "ready" | "partial" | "failed";
+  agent_run_id: string | null;
+  dedupe_key: string;
+  created_at: string;
+};
+
 export type InvestmentData = {
   configured: boolean;
   error?: string;
@@ -157,6 +173,7 @@ export type InvestmentData = {
   thesisNotes: ThesisNote[];
   journalEntries: InvestmentJournalEntry[];
   news: NewsItem[];
+  researchSnapshots: StockResearchSnapshot[];
 };
 
 export type PortfolioSummary = {

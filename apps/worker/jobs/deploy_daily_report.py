@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from datetime import datetime
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -76,6 +78,118 @@ class CloudPublisher:
         except Exception:
             print("Could not persist the sanitized daily-job failure status.")
 
+    @staticmethod
+    def _published_at(value: Any) -> str | None:
+        if not value:
+            return None
+        try:
+            return parsedate_to_datetime(str(value)).isoformat()
+        except (TypeError, ValueError, OverflowError):
+            return None
+
+    def _ticker_map(self, portfolio_id: str) -> dict[str, str]:
+        mapping: dict[str, str] = {}
+        for table in ("holdings", "watchlist"):
+            rows = self.request(
+                "GET",
+                table,
+                params={"select": "ticker", "user_id": f"eq.{self.user_id}", "portfolio_id": f"eq.{portfolio_id}"},
+            )
+            for row in rows or []:
+                ticker = str(row.get("ticker") or "").upper()
+                if ticker:
+                    mapping[ticker.split(".")[0]] = ticker
+        return mapping
+
+    def persist_stock_evidence(self, report: dict[str, Any], report_date: str, portfolio_id: str) -> None:
+        ticker_map = self._ticker_map(portfolio_id)
+        for stock in report.get("stocks", []):
+            raw_ticker = str(stock.get("ticker") or "").upper()
+            if not raw_ticker:
+                continue
+            ticker = ticker_map.get(raw_ticker.split(".")[0], raw_ticker)
+            articles = stock.get("articles") if isinstance(stock.get("articles"), list) else []
+            for article in articles[:20]:
+                title = str(article.get("title") or "").strip()
+                url = str(article.get("url") or "").strip()
+                if not title:
+                    continue
+                source = str(article.get("source") or "Unknown source").strip()
+                external_key = hashlib.sha256(f"{url or title}|{source}".encode("utf-8")).hexdigest()
+                self.request(
+                    "POST",
+                    "news_items",
+                    params={"on_conflict": "user_id,portfolio_id,ticker,external_key"},
+                    headers={"Prefer": "resolution=merge-duplicates,return=minimal"},
+                    json={
+                        "user_id": self.user_id,
+                        "portfolio_id": portfolio_id,
+                        "ticker": ticker,
+                        "title": title,
+                        "url": url or None,
+                        "source": source,
+                        "published_at": self._published_at(article.get("published")),
+                        "summary": stock.get("key_takeaway") or stock.get("key_news"),
+                        "impact": "negative" if str(stock.get("risk_level") or "").lower() == "high" else "neutral",
+                        "timeframe": "long_term" if "long" in str(stock.get("time_horizon") or "").lower() else "short_term",
+                        "thesis_changed": False,
+                        "external_key": external_key,
+                    },
+                )
+
+            technical = stock.get("technical") if isinstance(stock.get("technical"), dict) else {}
+            supports = [float(value) for value in technical.get("support_zones", []) if isinstance(value, (int, float))]
+            decision = {
+                "summary": stock.get("key_takeaway") or stock.get("key_news") or "ยังไม่มีข่าวสำคัญใหม่",
+                "facts": [stock.get("key_news")] if stock.get("key_news") else [],
+                "inferences": [stock.get("possible_impact") or stock.get("impact")] if stock.get("possible_impact") or stock.get("impact") else [],
+                "risks": stock.get("bearish_points") or [],
+                "what_to_monitor": stock.get("what_to_monitor"),
+                "sources": [{"title": item.get("title"), "url": item.get("url")} for item in articles[:8] if item.get("url")],
+                "watch_zone": {
+                    "lower": min(supports) if supports else None,
+                    "upper": max(supports) if supports else None,
+                    "rationale": "ช่วงแนวรับจาก Daily Worker สำหรับกลับมาทบทวน ไม่ใช่สัญญาณซื้อ",
+                    "conditions": [
+                        "ตรวจว่าข่าวเปลี่ยนสมมติฐานธุรกิจหรือไม่",
+                        "ตรวจแนวโน้มราคาและ Volume อีกครั้ง",
+                        "ทบทวนน้ำหนักและความเสี่ยงรวมของพอร์ต",
+                    ],
+                },
+            }
+            self.request(
+                "POST",
+                "stock_research_snapshots",
+                params={"on_conflict": "user_id,dedupe_key"},
+                headers={"Prefer": "resolution=merge-duplicates,return=minimal"},
+                json={
+                    "user_id": self.user_id,
+                    "portfolio_id": portfolio_id,
+                    "ticker": ticker,
+                    "source": "daily",
+                    "as_of": f"{report_date}T18:00:00+07:00",
+                    "market_snapshot": technical,
+                    "decision_summary": decision,
+                    "news_count": len(articles),
+                    "status": "ready" if technical and articles else "partial",
+                    "dedupe_key": f"daily:{portfolio_id}:{ticker}:{report_date}",
+                },
+            )
+
+    @staticmethod
+    def important_alerts(report: dict[str, Any]) -> list[dict[str, Any]]:
+        important: list[dict[str, Any]] = []
+        for stock in report.get("stocks", []):
+            technical = stock.get("technical") if isinstance(stock.get("technical"), dict) else {}
+            supports = [float(value) for value in technical.get("support_zones", []) if isinstance(value, (int, float))]
+            close = technical.get("last_close")
+            in_watch_zone = bool(supports and isinstance(close, (int, float)) and min(supports) <= float(close) <= max(supports))
+            high_risk = str(stock.get("risk_level") or "").lower() == "high"
+            high_impact = str(stock.get("relevance_score") or "").lower() == "high" and bool(stock.get("possible_impact") or stock.get("impact"))
+            if high_risk or high_impact or in_watch_zone:
+                important.append({**stock, "in_watch_zone": in_watch_zone})
+        return important
+
     def publish(self, report: dict[str, Any], report_date: str) -> None:
         portfolio_id = self.portfolio_id()
         summary = report.get("summary", {})
@@ -87,6 +201,11 @@ class CloudPublisher:
             json={"user_id": self.user_id, "portfolio_id": portfolio_id, "report_date": report_date, "payload": report, "digest_text": digest, "status": "ready", "error": None},
         )
         briefing_id = briefing_rows[0]["id"]
+        self.persist_stock_evidence(report, report_date, portfolio_id)
+        important = self.important_alerts(report)
+        if not important:
+            print("No high-impact portfolio alert; saved the full report to the web without sending Discord.")
+            return
         dedupe_key = f"discord:daily:{self.user_id}:{report_date}"
         claimed = self.request(
             "POST", "alert_deliveries",
@@ -105,7 +224,13 @@ class CloudPublisher:
         try:
             if not self.discord_webhook:
                 raise RuntimeError("DISCORD_WEBHOOK_URL is required for daily delivery.")
-            delivery = requests.post(self.discord_webhook, json={"content": f"**Portfolio Daily Brief — {report_date}**\n{digest}"[:2000]}, timeout=REQUEST_TIMEOUT)
+            alert_lines = [
+                f"• {item.get('ticker')}: {item.get('key_takeaway') or item.get('key_news') or item.get('what_to_monitor') or 'มีประเด็นสำคัญให้ตรวจ'}"
+                + (" (เข้า Watch Zone)" if item.get("in_watch_zone") else "")
+                for item in important[:5]
+            ]
+            content = f"**Portfolio Alert — {report_date}**\n" + "\n".join(alert_lines) + "\n\nรายละเอียดเต็มอยู่ในเว็บ Portfolio"
+            delivery = requests.post(self.discord_webhook, json={"content": content[:2000]}, timeout=REQUEST_TIMEOUT)
             delivery.raise_for_status()
         except Exception as exc:
             safe_error = f"{type(exc).__name__}: Discord delivery failed"

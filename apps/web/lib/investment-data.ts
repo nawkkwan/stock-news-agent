@@ -10,6 +10,7 @@ import type {
   PortfolioSummary,
   PortfolioTransaction,
   ThesisNote,
+  StockResearchSnapshot,
   WatchlistItem,
 } from "./investment-types";
 
@@ -73,6 +74,7 @@ async function emptyInvestmentData(configured: boolean, error?: string): Promise
     thesisNotes: [],
     journalEntries: [],
     news: [],
+    researchSnapshots: [],
   };
 }
 
@@ -119,7 +121,7 @@ export async function getInvestmentData(options: InvestmentDataOptions = {}): Pr
       return emptyInvestmentData(true, "Sign in to load your investment data.");
     }
 
-    const [portfoliosResult, companiesResult, holdingsResult, transactionsResult, watchlistResult, thesisResult, journalResult, newsResult] =
+    const [portfoliosResult, companiesResult, holdingsResult, transactionsResult, watchlistResult, thesisResult, journalResult, newsResult, snapshotsResult] =
       await Promise.all([
         supabase.from("portfolios").select("*").eq("user_id", user.id).order("created_at", { ascending: true }),
         supabase.from("companies").select("*").eq("user_id", user.id).order("ticker", { ascending: true }),
@@ -129,6 +131,7 @@ export async function getInvestmentData(options: InvestmentDataOptions = {}): Pr
         supabase.from("thesis_notes").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
         supabase.from("investment_journal").select("*").eq("user_id", user.id).order("date", { ascending: false }),
         supabase.from("news_items").select("*").eq("user_id", user.id).order("published_at", { ascending: false }),
+        supabase.from("stock_research_snapshots").select("*").eq("user_id", user.id).order("as_of", { ascending: false }).limit(100),
       ]);
 
     const firstError = [
@@ -175,6 +178,8 @@ export async function getInvestmentData(options: InvestmentDataOptions = {}): Pr
       thesisNotes: (thesisResult.data || []) as ThesisNote[],
       journalEntries: selectedJournalEntries,
       news: (newsResult.data || []) as NewsItem[],
+      // Keep the rest of Portfolio usable while the new migration is being rolled out.
+      researchSnapshots: snapshotsResult.error ? [] : (snapshotsResult.data || []) as StockResearchSnapshot[],
     };
   } catch (error) {
     return emptyInvestmentData(true, error instanceof Error ? error.message : "Unable to load investment data.");
@@ -193,6 +198,7 @@ export async function getCompanyData(ticker: string) {
     thesis: data.thesisNotes.find((note) => note.ticker === normalized) || null,
     watchlistItem: data.watchlist.find((item) => item.ticker === normalized) || null,
     companyNews: data.news.filter((item) => item.ticker === normalized),
+    researchSnapshots: data.researchSnapshots.filter((item) => item.ticker === normalized),
     companyJournalEntries: data.journalEntries.filter((entry) => entry.ticker === normalized),
   };
 }
