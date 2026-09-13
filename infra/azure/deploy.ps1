@@ -258,7 +258,7 @@ if (-not $SkipHermes) {
     throw "Could not find the Hermes container in the Container App definition."
   }
   $hermesContainer | Add-Member -NotePropertyName volumeMounts -NotePropertyValue @(
-    [pscustomobject]@{ volumeName = "hermes-data"; mountPath = "/opt/data" }
+    [pscustomobject]@{ volumeName = "hermes-data"; mountPath = "/mnt/hermes-persist" }
   ) -Force
   $hermesDefinition.properties.template | Add-Member -NotePropertyName volumes -NotePropertyValue @(
     [pscustomobject]@{ name = "hermes-data"; storageName = $HermesEnvironmentStorageName; storageType = "AzureFile" }

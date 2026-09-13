@@ -6,7 +6,7 @@ This repository deploys three images from one repository:
 - `docker/Dockerfile.worker` → Azure Container Apps scheduled job
 - `docker/Dockerfile.hermes` → internal, always-on official Hermes Agent
 
-The Hermes image derives from the official `nousresearch/hermes-agent` image pinned by digest. It seeds a secret-free config and the `portfolio-agent` skill, then persists `/opt/data` on an Azure Files share. Its API ingress is internal and FastAPI reaches it at `http://investment-hermes` inside the same Container Apps environment.
+The Hermes image derives from the official `nousresearch/hermes-agent` image pinned by digest. It keeps Hermes runtime data on local `/opt/data`, which requires POSIX file locking, and mounts Azure Files at `/mnt/hermes-persist` only for `MEMORY.md`, `USER.md`, `SOUL.md`, `memories/`, and `portfolio-agent`. Its API ingress is internal and FastAPI reaches it at `http://investment-hermes` inside the same Container Apps environment.
 
 Set the required environment variables from `.env.example`, authenticate with `az login`, then run from the repository root. The script defaults to using an image already built by GitLab CI because Azure for Students blocks ACR Tasks:
 
