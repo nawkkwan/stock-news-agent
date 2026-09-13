@@ -134,7 +134,7 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(payload["market_snapshot"]["close"], 100)
         self.assertEqual(len(payload["recent_news"]), 1)
 
-    def test_hermes_run_uses_bearer_auth_and_owner_session_scope(self):
+    def test_hermes_run_uses_bearer_auth_and_does_not_share_discord_session(self):
         settings = Settings(
             hermes_base_url="http://investment-hermes",
             hermes_api_key="hermes-secret",
@@ -146,7 +146,6 @@ class AgentWorkerTests(unittest.TestCase):
 
         with patch("apps.api.app.services.requests.post", return_value=response) as post:
             run_id = client.start_run(
-                user_id="owner-user",
                 agent="analyst",
                 question="สรุปความเสี่ยง",
                 context={"portfolio": {"id": "p1"}, "holdings": []},
@@ -156,7 +155,8 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(run_id, "run-hermes-1")
         self.assertEqual(post.call_args.kwargs["headers"]["authorization"], "Bearer hermes-secret")
         self.assertEqual(post.call_args.kwargs["headers"]["idempotency-key"], "local-run-id")
-        self.assertEqual(post.call_args.kwargs["headers"]["x-hermes-session-key"], "portfolio-owner:web:owner-user")
+        self.assertNotIn("x-hermes-session-key", post.call_args.kwargs["headers"])
+        self.assertNotIn("session_id", post.call_args.kwargs["json"])
         self.assertNotIn("hermes-secret", json.dumps(post.call_args.kwargs["json"]))
 
     def test_owner_chat_starts_hermes_without_using_gemini(self):
