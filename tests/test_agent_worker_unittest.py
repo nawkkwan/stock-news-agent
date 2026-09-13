@@ -135,7 +135,9 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(len(payload["recent_news"]), 1)
 
     def test_market_overview_without_eodhd_key_returns_safe_empty_state(self):
-        team = GeminiAgentTeam(Settings(), FakeStore())
+        # CI has a real EODHD key, so make the absent-key scenario explicit
+        # instead of inheriting the runner environment.
+        team = GeminiAgentTeam(Settings(eodhd_api_key=""), FakeStore())
         result = team.market_overview("MSFT")
         self.assertFalse(result["available"])
         self.assertEqual(result["history"], [])
