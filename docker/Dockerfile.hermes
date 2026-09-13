@@ -8,3 +8,7 @@ COPY integrations/hermes/portfolio-agent /opt/hermes-seed/skills/finance/portfol
 COPY docker/start-hermes.sh /etc/cont-init.d/00-portfolio-hermes
 COPY docker/sync-hermes-state.sh /etc/services.d/hermes-state-sync/run
 RUN chmod 0755 /etc/cont-init.d/00-portfolio-hermes /etc/services.d/hermes-state-sync/run
+
+# Preserve the official s6 entrypoint, but replace its interactive CLI default
+# with the long-running gateway required by the internal Runs API.
+CMD ["hermes", "gateway", "run"]
