@@ -7,12 +7,14 @@ if [ ! -f /opt/data/config.yaml ]; then
   cp /opt/hermes-seed/config.yaml /opt/data/config.yaml
 fi
 
-# The pinned Hermes image requires a schema version before it will start the
-# API server. Existing Azure Files volumes were seeded by an earlier template
-# without this marker, so add the supported migration floor once, preserving
-# every existing user setting and all persisted memories.
-if ! grep -q '^_config_version:' /opt/data/config.yaml; then
-  sed -i '1i_config_version: 12' /opt/data/config.yaml
+# Azure Files is deliberately used for durable memory, but it does not permit
+# the non-root Hermes process to atomically rewrite config.yaml during schema
+# migration. This lean config uses only current keys, so set the image's
+# current schema version before Hermes starts and avoid that unsafe rewrite.
+if grep -q '^_config_version:' /opt/data/config.yaml; then
+  sed -i 's/^_config_version:.*/_config_version: 44/' /opt/data/config.yaml
+else
+  sed -i '1i_config_version: 44' /opt/data/config.yaml
 fi
 
 if [ ! -d /opt/data/skills/finance/portfolio-agent ]; then
