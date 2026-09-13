@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/command/with-contenv sh
 set -eu
 
 mkdir -p /opt/data/skills/finance
@@ -18,5 +18,3 @@ fi
 if [ ! -d /opt/data/skills/finance/portfolio-agent ]; then
   cp -R /opt/hermes-seed/skills/finance/portfolio-agent /opt/data/skills/finance/portfolio-agent
 fi
-
-exec hermes gateway run

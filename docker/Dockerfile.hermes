@@ -5,7 +5,5 @@ USER root
 
 COPY infra/hermes/config.yaml /opt/hermes-seed/config.yaml
 COPY integrations/hermes/portfolio-agent /opt/hermes-seed/skills/finance/portfolio-agent
-COPY docker/start-hermes.sh /opt/hermes-seed/start-hermes.sh
-RUN chmod 0755 /opt/hermes-seed/start-hermes.sh
-
-CMD ["/opt/hermes-seed/start-hermes.sh"]
+COPY docker/start-hermes.sh /etc/cont-init.d/00-portfolio-hermes
+RUN chmod 0755 /etc/cont-init.d/00-portfolio-hermes
