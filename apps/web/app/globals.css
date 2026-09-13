@@ -379,7 +379,12 @@ textarea {
 .agent-chat-head { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 13px; border-bottom: 1px solid #263946; }
 .agent-chat-head h3 { margin: 0; font-size: 25px; }
 .agent-chat-head > span { align-self: center; color: #6decc9; font-family: Consolas, monospace; font-size: 10px; }
+.agent-chat-transcript { display: grid; gap: 10px; max-height: 620px; overflow-y: auto; padding-right: 4px; }
+.agent-chat-turn { display: grid; gap: 7px; }
+.agent-chat-question { justify-self: end; max-width: 88%; margin: 0; padding: 9px 11px; border: 1px solid #2f655e; border-radius: 9px; background: rgba(24, 119, 98, 0.16); color: #cdf8ed; font-size: 13px; white-space: pre-wrap; }
+.agent-chat-question.current { border-style: dashed; }
 .agent-chat-message { display: grid; grid-template-columns: 34px 1fr; gap: 10px; margin: 0; padding: 13px; border: 1px solid #243a47; border-radius: 9px; background: #091118; }
+.agent-chat-message.current { border-color: rgba(53, 222, 170, 0.42); }
 .agent-chat-message p { margin: 0; color: #c3d2d4; font-size: 14px; white-space: pre-wrap; }
 .agent-chat-avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 7px; background: #163d35; color: #73f4d0; font-weight: 900; }
 .agent-chat-suggestions { display: flex; align-content: flex-start; gap: 7px; flex-wrap: wrap; }

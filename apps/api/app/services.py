@@ -125,6 +125,22 @@ class SupabasePortfolioStore:
         )
         return rows[0] if rows else None
 
+    def list_hermes_agent_runs(self, limit: int = 30) -> list[dict[str, Any]]:
+        rows = self._request(
+            "GET",
+            "agent_runs",
+            params={
+                "select": "id,agent_role,request,response,status,error,created_at,completed_at",
+                "user_id": f"eq.{self.user_id}",
+                "order": "created_at.desc",
+                "limit": str(limit),
+            },
+        )
+        return [
+            row for row in rows
+            if isinstance(row.get("request"), dict) and row["request"].get("mode") == "hermes"
+        ]
+
     def update_agent_run(
         self,
         run_id: str,
@@ -177,7 +193,6 @@ class HermesAgentClient:
     def start_run(
         self,
         *,
-        user_id: str,
         agent: str,
         question: str,
         context: dict[str, Any],
@@ -197,17 +212,18 @@ class HermesAgentClient:
             f"PORTFOLIO_CONTEXT: {json.dumps(self._safe_context(context), ensure_ascii=False, default=str)}"
         )
         try:
+            # A run without a persisted Hermes session waits for delegated work and
+            # returns one final synthesis. The web keeps its own, separate history
+            # in agent_runs instead of sharing Discord's Hermes conversation.
             response = requests.post(
                 f"{self.base_url}/v1/runs",
                 headers={
                     "authorization": f"Bearer {self.api_key}",
                     "content-type": "application/json",
                     "idempotency-key": idempotency_key,
-                    "x-hermes-session-key": f"portfolio-owner:web:{user_id}",
                 },
                 json={
                     "input": input_text,
-                    "session_id": f"portfolio-web-{user_id}",
                     "instructions": instructions,
                     "model": "gemini-3.5-flash-lite",
                     "provider": "gemini",

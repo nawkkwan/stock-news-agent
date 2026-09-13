@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 type AgentId = "scout" | "analyst" | "ranger";
 
@@ -16,6 +16,16 @@ type AgentRoomClientProps = {
     ready: number;
   };
   statuses: Record<AgentId, boolean>;
+};
+
+type HermesHistoryItem = {
+  id: string;
+  agent: AgentId;
+  question: string;
+  answer: string;
+  status: "running" | "succeeded" | "failed";
+  error: string;
+  createdAt: string;
 };
 
 const agents: Record<AgentId, { name: string; role: string; greeting: string }> = {
@@ -49,6 +59,19 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
   const [loading, setLoading] = useState(false);
   const [runId, setRunId] = useState<string | null>(null);
   const [timedOut, setTimedOut] = useState(false);
+  const [history, setHistory] = useState<HermesHistoryItem[]>([]);
+  const [activeQuestion, setActiveQuestion] = useState<string | null>(null);
+
+  async function loadHermesHistory() {
+    if (!isHermesOwner) return;
+    const response = await fetch("/api/agent/history", { cache: "no-store" });
+    const payload = (await response.json().catch(() => null)) as { runs?: HermesHistoryItem[] } | null;
+    if (response.ok && payload?.runs) setHistory(payload.runs);
+  }
+
+  useEffect(() => {
+    void loadHermesHistory();
+  }, [isHermesOwner]);
 
   function selectAgent(agent: AgentId) {
     if (loading) return;
@@ -81,12 +104,16 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
         setQuestion("");
         setRunId(null);
         setLoading(false);
+        await loadHermesHistory();
+        setActiveQuestion(null);
         return;
       }
       if (payload?.status === "failed") {
         setAnswer(payload.error || "Hermes ทำงานไม่สำเร็จ กรุณาลองอีกครั้ง");
         setRunId(null);
         setLoading(false);
+        await loadHermesHistory();
+        setActiveQuestion(null);
         return;
       }
     }
@@ -102,6 +129,7 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
 
     setLoading(true);
     setAnswer("กำลังเปิดแฟ้มข้อมูลและตรวจหลักฐาน...");
+    setActiveQuestion(trimmed);
     try {
       const response = await fetch("/api/agent/chat", {
         method: "POST",
@@ -118,6 +146,7 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
       if (response.status === 202 && payload.mode === "hermes" && payload.runId) {
         setRunId(payload.runId);
         setAnswer("Hermes กำลังแบ่งงานให้ sub-agent และรวบรวมคำตอบ...");
+        void loadHermesHistory();
         await pollHermesRun(payload.runId);
         return;
       }
@@ -125,6 +154,7 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
       if (response.ok) setQuestion("");
     } catch {
       setAnswer("เชื่อมต่อ Agent ไม่สำเร็จ กรุณาลองอีกครั้ง");
+      setActiveQuestion(null);
     } finally {
       setLoading(false);
     }
@@ -169,9 +199,23 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
           <div><p className="eyebrow">Now talking</p><h3>{isHermesOwner ? "Hermes Lead" : agents[selected].name}</h3></div>
           <span>{isHermesOwner ? `Route · ${agents[selected].name}` : agents[selected].role}</span>
         </div>
-        <div className="agent-chat-message">
-          <span className="agent-chat-avatar">{agents[selected].name.slice(0, 1)}</span>
-          <p>{answer}</p>
+        <div className="agent-chat-transcript" aria-live="polite">
+          {isHermesOwner && history.map((item) => (
+            <article className="agent-chat-turn" key={item.id}>
+              <p className="agent-chat-question">คุณ · {agents[item.agent]?.name || "Hermes"}<br />{item.question}</p>
+              <div className="agent-chat-message">
+                <span className="agent-chat-avatar">H</span>
+                <p>{item.status === "running" ? "Hermes กำลังแบ่งงานให้ sub-agent และรวบรวมคำตอบ..." : item.status === "failed" ? (item.error || "Hermes ทำงานไม่สำเร็จ") : item.answer}</p>
+              </div>
+            </article>
+          ))}
+          {activeQuestion ? <p className="agent-chat-question current">คุณ · {agents[selected].name}<br />{activeQuestion}</p> : null}
+          {(!isHermesOwner || !history.length || activeQuestion) ? (
+            <div className="agent-chat-message current">
+              <span className="agent-chat-avatar">{isHermesOwner ? "H" : agents[selected].name.slice(0, 1)}</span>
+              <p>{answer}</p>
+            </div>
+          ) : null}
         </div>
         <div className="agent-chat-suggestions">
           {selected === "scout" ? <button onClick={() => setQuestion("วันนี้ข่าวอะไรสำคัญที่สุด และเพราะอะไร")}>ข่าวสำคัญที่สุด</button> : null}

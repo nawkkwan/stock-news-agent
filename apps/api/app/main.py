@@ -119,7 +119,6 @@ def user_room_chat(
             )
             try:
                 hermes_run_id = HermesAgentClient(settings).start_run(
-                    user_id=user_id,
                     agent=payload.agent,
                     question=payload.question,
                     context=portfolio_store.context(),
@@ -148,6 +147,19 @@ def user_room_chat(
             status_code=200,
             content={"mode": "gemini", "status": "completed", "agent": role, "result": result},
         )
+    except ServiceError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/v1/user/agent/history")
+def user_agent_history(
+    user_id: SupabaseUser,
+    portfolio_store: SupabasePortfolioStore = Depends(user_store),
+) -> dict[str, object]:
+    if user_id != settings.owner_supabase_user_id:
+        raise HTTPException(status_code=403, detail="Hermes is only available to the owner account.")
+    try:
+        return {"runs": portfolio_store.list_hermes_agent_runs()}
     except ServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
