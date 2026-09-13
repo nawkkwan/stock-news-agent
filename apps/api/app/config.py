@@ -17,7 +17,7 @@ def _env(name: str, default: str = "") -> str:
 @dataclass(frozen=True)
 class Settings:
     service_name: str = "investment-research-api"
-    service_version: str = "0.2.0"
+    service_version: str = "0.3.0"
     environment: str = _env("APP_ENV", "local")
     api_port: int = int(_env("API_PORT", "8000") or "8000")
     supabase_url: str = _env("NEXT_PUBLIC_SUPABASE_URL")
@@ -30,6 +30,9 @@ class Settings:
     gemini_api_key: str = _env("GEMINI_API_KEY")
     gemini_model: str = _env("GEMINI_MODEL", "gemini-3.5-flash")
     eodhd_api_key: str = _env("EODHD_API_KEY")
+    hermes_base_url: str = _env("HERMES_BASE_URL")
+    hermes_api_key: str = _env("HERMES_API_KEY")
+    hermes_request_timeout_seconds: int = int(_env("HERMES_REQUEST_TIMEOUT_SECONDS", "20") or "20")
     tidb_host: str = _env("TIDB_HOST")
     tidb_port: str = _env("TIDB_PORT", "4000")
     tidb_user: str = _env("TIDB_USER")
@@ -58,8 +61,8 @@ class Settings:
     @property
     def hermes_configured(self) -> bool:
         return bool(
-            self.internal_api_token
-            and self.discord_owner_user_id
+            self.hermes_base_url
+            and self.hermes_api_key
             and self.owner_supabase_user_id
             and self.supabase_backend_configured
         )

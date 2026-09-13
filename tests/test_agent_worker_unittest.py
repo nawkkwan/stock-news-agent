@@ -3,13 +3,16 @@ import sys
 import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
+import json
 
 import pandas as pd
 from fastapi import HTTPException
 
 from apps.api.app.config import Settings
 from apps.api.app.security import require_supabase_user
-from apps.api.app.services import GeminiAgentTeam, ServiceError, SupabasePortfolioStore
+from apps.api.app.services import GeminiAgentTeam, HermesAgentClient, ServiceError, SupabasePortfolioStore
+from apps.api.app.schemas import RoomChatRequest
+from apps.api.app import main as api_main
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +40,19 @@ class FakeStore:
 
     def save_agent_run(self, role, request, response, error=None):
         self.runs.append({"role": role, "request": request, "response": response, "error": error})
+
+
+class FakeRunStore(FakeStore):
+    def __init__(self):
+        super().__init__()
+        self.updated = []
+
+    def create_agent_run(self, role, request):
+        self.runs.append({"role": role, "request": request})
+        return {"id": "7d824bd4-2df4-4a64-b334-5db40e235c69"}
+
+    def update_agent_run(self, run_id, status, response_data=None, error=None):
+        self.updated.append({"run_id": run_id, "status": status, "response": response_data, "error": error})
 
 
 class AgentWorkerTests(unittest.TestCase):
@@ -117,6 +133,96 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(payload["ticker"], "MSFT")
         self.assertEqual(payload["market_snapshot"]["close"], 100)
         self.assertEqual(len(payload["recent_news"]), 1)
+
+    def test_hermes_run_uses_bearer_auth_and_owner_session_scope(self):
+        settings = Settings(
+            hermes_base_url="http://investment-hermes",
+            hermes_api_key="hermes-secret",
+        )
+        client = HermesAgentClient(settings)
+        response = Mock()
+        response.raise_for_status.return_value = None
+        response.json.return_value = {"run_id": "run-hermes-1", "status": "started"}
+
+        with patch("apps.api.app.services.requests.post", return_value=response) as post:
+            run_id = client.start_run(
+                user_id="owner-user",
+                agent="analyst",
+                question="สรุปความเสี่ยง",
+                context={"portfolio": {"id": "p1"}, "holdings": []},
+                idempotency_key="local-run-id",
+            )
+
+        self.assertEqual(run_id, "run-hermes-1")
+        self.assertEqual(post.call_args.kwargs["headers"]["authorization"], "Bearer hermes-secret")
+        self.assertEqual(post.call_args.kwargs["headers"]["idempotency-key"], "local-run-id")
+        self.assertEqual(post.call_args.kwargs["headers"]["x-hermes-session-key"], "portfolio-owner:web:owner-user")
+        self.assertNotIn("hermes-secret", json.dumps(post.call_args.kwargs["json"]))
+
+    def test_owner_chat_starts_hermes_without_using_gemini(self):
+        store = FakeRunStore()
+        owner_settings = Settings(
+            owner_supabase_user_id="owner-user",
+            hermes_base_url="http://investment-hermes",
+            hermes_api_key="hermes-secret",
+        )
+        with patch.object(api_main, "settings", owner_settings), patch.object(
+            api_main.HermesAgentClient, "start_run", return_value="run-hermes-1"
+        ), patch.object(api_main, "GeminiAgentTeam") as gemini:
+            response = api_main.user_room_chat(
+                RoomChatRequest(agent="scout", question="หาข่าวสำคัญ"),
+                "owner-user",
+                store,
+            )
+
+        self.assertEqual(response.status_code, 202)
+        self.assertEqual(json.loads(response.body)["mode"], "hermes")
+        self.assertEqual(store.runs[0]["role"], "discovery")
+        self.assertEqual(store.updated[0]["response"]["hermes_run_id"], "run-hermes-1")
+        gemini.assert_not_called()
+
+    def test_friend_chat_keeps_existing_gemini_flow(self):
+        store = FakeRunStore()
+        owner_settings = Settings(owner_supabase_user_id="owner-user")
+        fake_team = Mock()
+        fake_team.room_chat.return_value = ("research", {"summary": "friend result"})
+        with patch.object(api_main, "settings", owner_settings), patch.object(
+            api_main, "GeminiAgentTeam", return_value=fake_team
+        ):
+            response = api_main.user_room_chat(
+                RoomChatRequest(agent="analyst", question="พอร์ตของฉัน"),
+                "friend-user",
+                store,
+            )
+
+        payload = json.loads(response.body)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(payload["mode"], "gemini")
+        self.assertEqual(payload["result"]["summary"], "friend result")
+
+    def test_owner_run_completion_is_persisted_and_returned(self):
+        store = FakeRunStore()
+        store.get_agent_run = Mock(return_value={
+            "status": "running",
+            "response": {"hermes_run_id": "run-hermes-1"},
+        })
+        owner_settings = Settings(
+            owner_supabase_user_id="owner-user",
+            hermes_base_url="http://investment-hermes",
+            hermes_api_key="hermes-secret",
+        )
+        with patch.object(api_main, "settings", owner_settings), patch.object(
+            api_main.HermesAgentClient, "get_run", return_value={"status": "completed", "output": "done"}
+        ):
+            response = api_main.user_agent_run_status(
+                "7d824bd4-2df4-4a64-b334-5db40e235c69",
+                "owner-user",
+                store,
+            )
+
+        self.assertEqual(response["status"], "succeeded")
+        self.assertEqual(response["result"]["summary"], "done")
+        self.assertEqual(store.updated[0]["status"], "succeeded")
 
     def test_eodhd_failure_uses_yahoo_fallback(self):
         dates = pd.date_range("2025-01-01", periods=250, freq="D")

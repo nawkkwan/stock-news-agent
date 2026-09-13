@@ -8,7 +8,12 @@ param(
   [string]$WorkerJobName = "investment-daily-worker-jp",
   [string]$HermesName = "investment-hermes",
   [string]$HermesImage = "",
+  [string]$HermesStorageAccountName = "stockagentkwan2549data",
+  [string]$HermesStorageShareName = "hermes-data",
+  [string]$HermesEnvironmentStorageName = "hermesfiles",
   [string]$ImageTag = "latest",
+  [switch]$SkipHermes,
+  [switch]$EnableHermesDiscord,
   [switch]$BuildImagesWithAcr
 )
 
@@ -47,8 +52,22 @@ foreach ($secretName in $requiredSecrets) {
     throw "Missing required environment variable: $secretName"
   }
 }
-if ($HermesImage -and -not [Environment]::GetEnvironmentVariable("DISCORD_BOT_TOKEN")) {
-  throw "DISCORD_BOT_TOKEN is required when HermesImage is provided"
+if (-not $SkipHermes -and -not [Environment]::GetEnvironmentVariable("HERMES_API_KEY")) {
+  $tokenBytes = New-Object byte[] 48
+  $random = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+  try {
+    $random.GetBytes($tokenBytes)
+  } finally {
+    $random.Dispose()
+  }
+  $env:HERMES_API_KEY = [Convert]::ToBase64String($tokenBytes)
+  Write-Host "Generated a new HERMES_API_KEY for this deployment. It will be stored only in Azure Container Apps secrets."
+}
+if ($EnableHermesDiscord -and -not [Environment]::GetEnvironmentVariable("DISCORD_BOT_TOKEN")) {
+  throw "DISCORD_BOT_TOKEN is required when -EnableHermesDiscord is used"
+}
+if (-not $SkipHermes -and $HermesStorageAccountName -notmatch '^[a-z0-9]{3,24}$') {
+  throw "HermesStorageAccountName must contain 3-24 lowercase letters or numbers."
 }
 
 az extension add --name containerapp --upgrade | Out-Null
@@ -117,6 +136,10 @@ $commonSecrets = @(
   "discord-owner-id=$env:DISCORD_OWNER_USER_ID",
   "discord-webhook=$env:DISCORD_WEBHOOK_URL"
 )
+$apiSecrets = $commonSecrets
+if (-not $SkipHermes) {
+  $apiSecrets += "hermes-api-key=$env:HERMES_API_KEY"
+}
 $commonEnv = @(
   "NEXT_PUBLIC_SUPABASE_URL=secretref:supabase-url",
   "SUPABASE_SERVICE_ROLE_KEY=secretref:supabase-service-role",
@@ -129,14 +152,22 @@ $commonEnv = @(
   "DISCORD_WEBHOOK_URL=secretref:discord-webhook",
   "SUPABASE_PORTFOLIO_SOURCE=supabase"
 )
+$apiEnv = $commonEnv
+if (-not $SkipHermes) {
+  $apiEnv += @(
+    "HERMES_BASE_URL=http://$HermesName",
+    "HERMES_API_KEY=secretref:hermes-api-key",
+    "HERMES_REQUEST_TIMEOUT_SECONDS=20"
+  )
+}
 
 if (Test-AzureResourceExists { az containerapp show --resource-group $ResourceGroup --name $ApiName }) {
-  az containerapp secret set --resource-group $ResourceGroup --name $ApiName --secrets $commonSecrets | Out-Null
+  az containerapp secret set --resource-group $ResourceGroup --name $ApiName --secrets $apiSecrets | Out-Null
   Assert-AzureCommandSucceeded "Updating API secrets"
-  az containerapp update --resource-group $ResourceGroup --name $ApiName --image "$acrServer/investment-api:$ImageTag" --set-env-vars $commonEnv | Out-Null
+  az containerapp update --resource-group $ResourceGroup --name $ApiName --image "$acrServer/investment-api:$ImageTag" --set-env-vars $apiEnv | Out-Null
   Assert-AzureCommandSucceeded "Updating API container app"
 } else {
-  az containerapp create --resource-group $ResourceGroup --environment $EnvironmentName --name $ApiName --image "$acrServer/investment-api:$ImageTag" --registry-server $acrServer --registry-identity system --ingress external --target-port 8000 --min-replicas 0 --max-replicas 3 --secrets $commonSecrets --env-vars $commonEnv | Out-Null
+  az containerapp create --resource-group $ResourceGroup --environment $EnvironmentName --name $ApiName --image "$acrServer/investment-api:$ImageTag" --registry-server $acrServer --registry-identity system --ingress external --target-port 8000 --min-replicas 0 --max-replicas 3 --secrets $apiSecrets --env-vars $apiEnv | Out-Null
   Assert-AzureCommandSucceeded "Creating API container app"
 }
 
@@ -155,30 +186,98 @@ Assert-AzureCommandSucceeded "Reading the API hostname"
 if (-not $apiFqdn) {
   throw "API container app '$ApiName' returned an empty hostname."
 }
-if ($HermesImage) {
+if (-not $SkipHermes) {
+  if (-not $HermesImage) {
+    $HermesImage = "$acrServer/investment-hermes:$ImageTag"
+  }
+
+  if (-not (Test-AzureResourceExists { az storage account show --resource-group $ResourceGroup --name $HermesStorageAccountName })) {
+    az storage account create --resource-group $ResourceGroup --name $HermesStorageAccountName --location $Location --sku Standard_LRS --kind StorageV2 | Out-Null
+    Assert-AzureCommandSucceeded "Creating Hermes storage account"
+  }
+  if (-not (Test-AzureResourceExists { az storage share-rm show --resource-group $ResourceGroup --storage-account $HermesStorageAccountName --name $HermesStorageShareName })) {
+    az storage share-rm create --resource-group $ResourceGroup --storage-account $HermesStorageAccountName --name $HermesStorageShareName --quota 5 | Out-Null
+    Assert-AzureCommandSucceeded "Creating Hermes Azure Files share"
+  }
+  $hermesStorageKey = az storage account keys list --resource-group $ResourceGroup --account-name $HermesStorageAccountName --query '[0].value' -o tsv
+  Assert-AzureCommandSucceeded "Reading Hermes storage access key"
+  if (-not $hermesStorageKey) {
+    throw "Hermes storage account returned an empty access key."
+  }
+  az containerapp env storage set --resource-group $ResourceGroup --name $EnvironmentName --storage-name $HermesEnvironmentStorageName --azure-file-account-name $HermesStorageAccountName --azure-file-account-key $hermesStorageKey --azure-file-share-name $HermesStorageShareName --access-mode ReadWrite | Out-Null
+  Assert-AzureCommandSucceeded "Linking Hermes Azure Files share to Container Apps environment"
+
   $hermesSecrets = @(
+    "hermes-api-key=$env:HERMES_API_KEY",
+    "gemini-api-key=$env:GEMINI_API_KEY",
     "internal-api-token=$env:INTERNAL_API_TOKEN",
-    "discord-owner-id=$env:DISCORD_OWNER_USER_ID",
-    "discord-bot-token=$env:DISCORD_BOT_TOKEN"
+    "discord-owner-id=$env:DISCORD_OWNER_USER_ID"
   )
+  if ($EnableHermesDiscord) {
+    $hermesSecrets += "discord-bot-token=$env:DISCORD_BOT_TOKEN"
+  }
   $hermesEnv = @(
+    "HERMES_HOME=/opt/data",
+    "API_SERVER_ENABLED=true",
+    "API_SERVER_HOST=0.0.0.0",
+    "API_SERVER_PORT=8642",
+    "API_SERVER_KEY=secretref:hermes-api-key",
+    "GEMINI_API_KEY=secretref:gemini-api-key",
     "API_BASE_URL=https://$apiFqdn",
     "INTERNAL_API_TOKEN=secretref:internal-api-token",
-    "DISCORD_OWNER_USER_ID=secretref:discord-owner-id",
-    "DISCORD_BOT_TOKEN=secretref:discord-bot-token"
+    "DISCORD_OWNER_USER_ID=secretref:discord-owner-id"
   )
+  if ($EnableHermesDiscord) {
+    $hermesEnv += "DISCORD_BOT_TOKEN=secretref:discord-bot-token"
+  }
   if ($env:DISCORD_GUILD_ID) {
     $hermesEnv += "DISCORD_GUILD_ID=$env:DISCORD_GUILD_ID"
   }
   if (Test-AzureResourceExists { az containerapp show --resource-group $ResourceGroup --name $HermesName }) {
     az containerapp secret set --resource-group $ResourceGroup --name $HermesName --secrets $hermesSecrets | Out-Null
     Assert-AzureCommandSucceeded "Updating Hermes secrets"
-    az containerapp update --resource-group $ResourceGroup --name $HermesName --image $HermesImage --set-env-vars $hermesEnv | Out-Null
+    az containerapp update --resource-group $ResourceGroup --name $HermesName --image $HermesImage --min-replicas 1 --max-replicas 1 --cpu 1.0 --memory 2.0Gi --set-env-vars $hermesEnv | Out-Null
     Assert-AzureCommandSucceeded "Updating Hermes container app"
+    if (-not $EnableHermesDiscord) {
+      az containerapp update --resource-group $ResourceGroup --name $HermesName --remove-env-vars DISCORD_BOT_TOKEN | Out-Null
+      Assert-AzureCommandSucceeded "Keeping cloud Discord disabled until cutover"
+    }
   } else {
-    az containerapp create --resource-group $ResourceGroup --environment $EnvironmentName --name $HermesName --image $HermesImage --registry-server $acrServer --registry-identity system --min-replicas 1 --max-replicas 1 --secrets $hermesSecrets --env-vars $hermesEnv | Out-Null
+    az containerapp create --resource-group $ResourceGroup --environment $EnvironmentName --name $HermesName --image $HermesImage --registry-server $acrServer --registry-identity system --ingress internal --target-port 8642 --min-replicas 1 --max-replicas 1 --cpu 1.0 --memory 2.0Gi --secrets $hermesSecrets --env-vars $hermesEnv | Out-Null
     Assert-AzureCommandSucceeded "Creating Hermes container app"
   }
+
+  az containerapp ingress enable --resource-group $ResourceGroup --name $HermesName --type internal --target-port 8642 --transport auto | Out-Null
+  Assert-AzureCommandSucceeded "Enabling internal-only Hermes ingress"
+
+  $hermesDefinition = az containerapp show --resource-group $ResourceGroup --name $HermesName -o json | ConvertFrom-Json
+  Assert-AzureCommandSucceeded "Reading Hermes container app definition"
+  $hermesDefinition.properties.configuration.PSObject.Properties.Remove("secrets")
+  $hermesContainer = $hermesDefinition.properties.template.containers | Where-Object { $_.name -eq $HermesName } | Select-Object -First 1
+  if (-not $hermesContainer) {
+    throw "Could not find the Hermes container in the Container App definition."
+  }
+  $hermesContainer | Add-Member -NotePropertyName volumeMounts -NotePropertyValue @(
+    [pscustomobject]@{ volumeName = "hermes-data"; mountPath = "/opt/data" }
+  ) -Force
+  $hermesDefinition.properties.template | Add-Member -NotePropertyName volumes -NotePropertyValue @(
+    [pscustomobject]@{ name = "hermes-data"; storageName = $HermesEnvironmentStorageName; storageType = "AzureFile" }
+  ) -Force
+  $temporaryHermesDefinition = Join-Path ([System.IO.Path]::GetTempPath()) ("investment-hermes-" + [guid]::NewGuid().ToString("N") + ".json")
+  try {
+    [System.IO.File]::WriteAllText($temporaryHermesDefinition, ($hermesDefinition | ConvertTo-Json -Depth 100))
+    az containerapp update --resource-group $ResourceGroup --name $HermesName --yaml $temporaryHermesDefinition | Out-Null
+    Assert-AzureCommandSucceeded "Mounting persistent Hermes data volume"
+  } finally {
+    if (Test-Path -LiteralPath $temporaryHermesDefinition) {
+      Remove-Item -LiteralPath $temporaryHermesDefinition -Force
+    }
+  }
+
+  $hermesFqdn = az containerapp show --resource-group $ResourceGroup --name $HermesName --query properties.configuration.ingress.fqdn -o tsv
+  Assert-AzureCommandSucceeded "Reading internal Hermes hostname"
+  Write-Host "Hermes internal endpoint: https://$hermesFqdn"
+  Write-Host "Hermes Discord: $(if ($EnableHermesDiscord) { 'enabled' } else { 'disabled until cutover' })"
 }
 
 Write-Host "API: https://$apiFqdn"

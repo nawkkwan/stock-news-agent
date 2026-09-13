@@ -27,6 +27,4 @@ Notes:
 - Keep real secrets out of git.
 - DigitalOcean deployment is intentionally out of scope for this phase.
 
-Reserved for future web, worker, and bot Dockerfiles.
-
-Docker is not active in v0.1.
+`Dockerfile.hermes` extends the official Hermes Agent image and starts `hermes gateway run`. The browser never calls port 8642 directly; Azure exposes it only through internal Container Apps ingress and FastAPI owns the bearer credential.

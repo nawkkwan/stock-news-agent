@@ -35,3 +35,23 @@ class RoomChatRequest(BaseModel):
 class AgentResponse(BaseModel):
     agent: Literal["lead", "research", "secretary", "discovery"]
     result: dict[str, Any]
+
+
+class GeminiChatResponse(BaseModel):
+    mode: Literal["gemini"] = "gemini"
+    status: Literal["completed"] = "completed"
+    agent: Literal["lead", "research", "secretary", "discovery"]
+    result: dict[str, Any]
+
+
+class HermesRunCreatedResponse(BaseModel):
+    mode: Literal["hermes"] = "hermes"
+    status: Literal["running"] = "running"
+    run_id: str
+
+
+class HermesRunStatusResponse(BaseModel):
+    mode: Literal["hermes"] = "hermes"
+    status: Literal["running", "succeeded", "failed"]
+    result: dict[str, Any] | None = None
+    error: str | None = None

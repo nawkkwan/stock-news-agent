@@ -1,0 +1,27 @@
+model:
+  default: gemini-3.5-flash-lite
+  provider: gemini
+  base_url: https://generativelanguage.googleapis.com/v1beta
+
+gateway:
+  api_server:
+    enabled: true
+    host: 0.0.0.0
+    port: 8642
+    max_concurrent_runs: 2
+
+platform_toolsets:
+  api_server:
+    - web
+    - skills
+    - delegation
+    - todo
+  discord:
+    - hermes-discord
+
+delegation:
+  max_concurrent_children: 3
+  max_spawn_depth: 1
+  orchestrator_enabled: true
+  subagent_auto_approve: true
+  inherit_mcp_toolsets: false

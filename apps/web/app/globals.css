@@ -384,6 +384,7 @@ textarea {
 .agent-chat-avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 7px; background: #163d35; color: #73f4d0; font-weight: 900; }
 .agent-chat-suggestions { display: flex; align-content: flex-start; gap: 7px; flex-wrap: wrap; }
 .agent-chat-suggestions button { padding: 6px 8px; border: 1px solid #305163; border-radius: 999px; background: transparent; color: #9fc4c3; font-size: 11px; cursor: pointer; }
+.agent-run-retry { justify-self: start; padding: 7px 10px; border: 1px solid #46d9b3; border-radius: 999px; background: rgba(43,220,166,0.1); color: #8ff8dc; font-weight: 800; cursor: pointer; }
 .agent-chat-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; grid-column: span 2; }
 .agent-chat-form textarea { width: 100%; resize: vertical; padding: 11px; border: 1px solid #31505f; border-radius: 8px; background: #070d12; color: white; }
 .agent-chat-form button { padding: 10px; border: 0; border-radius: 7px; background: #2bdca6; color: #03120d; font-weight: 900; cursor: pointer; }
