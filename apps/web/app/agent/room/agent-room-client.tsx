@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 
 type AgentId = "scout" | "analyst" | "ranger";
 
@@ -18,31 +18,24 @@ type AgentRoomClientProps = {
   statuses: Record<AgentId, boolean>;
 };
 
-type HermesHistoryItem = {
-  id: string;
-  agent: AgentId;
-  question: string;
-  answer: string;
-  status: "running" | "succeeded" | "failed";
-  error: string;
-  createdAt: string;
-};
-
-const agents: Record<AgentId, { name: string; role: string; greeting: string }> = {
+const agents: Record<AgentId, { name: string; role: string; greeting: string; action: string }> = {
   scout: {
     name: "Scout",
     role: "News filtering",
     greeting: "ผมดูข่าวและสัญญาณที่เข้ามา ถามได้เลยว่าวันนี้มีข่าวอะไรเด่นหรือข่าวไหนควรตรวจแหล่งเพิ่ม",
+    action: "มอบหมายให้คัดข่าว",
   },
   analyst: {
     name: "Analyst",
     role: "Portfolio context",
     greeting: "ผมเชื่อมข่าวกับพอร์ตและความเสี่ยง ถามภาพรวม น้ำหนักพอร์ต หรือผลกระทบที่เป็นไปได้ได้ครับ",
+    action: "มอบหมายให้วิเคราะห์",
   },
   ranger: {
     name: "Ranger",
     role: "Watchlist monitoring",
     greeting: "ผมเฝ้า Watchlist และความพร้อมของ Thesis ถามได้ว่าตัวไหนควรกลับไปทบทวน แต่ผมจะไม่สั่งซื้อขายครับ",
+    action: "มอบหมายให้ตรวจรายการ",
   },
 };
 
@@ -59,19 +52,7 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
   const [loading, setLoading] = useState(false);
   const [runId, setRunId] = useState<string | null>(null);
   const [timedOut, setTimedOut] = useState(false);
-  const [history, setHistory] = useState<HermesHistoryItem[]>([]);
   const [activeQuestion, setActiveQuestion] = useState<string | null>(null);
-
-  async function loadHermesHistory() {
-    if (!isHermesOwner) return;
-    const response = await fetch("/api/agent/history", { cache: "no-store" });
-    const payload = (await response.json().catch(() => null)) as { runs?: HermesHistoryItem[] } | null;
-    if (response.ok && payload?.runs) setHistory(payload.runs);
-  }
-
-  useEffect(() => {
-    void loadHermesHistory();
-  }, [isHermesOwner]);
 
   function selectAgent(agent: AgentId) {
     if (loading) return;
@@ -81,6 +62,7 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
       : agents[agent].greeting);
     setRunId(null);
     setTimedOut(false);
+    setActiveQuestion(null);
   }
 
   async function pollHermesRun(activeRunId: string, maxAttempts = 120) {
@@ -104,16 +86,12 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
         setQuestion("");
         setRunId(null);
         setLoading(false);
-        await loadHermesHistory();
-        setActiveQuestion(null);
         return;
       }
       if (payload?.status === "failed") {
         setAnswer(payload.error || "Hermes ทำงานไม่สำเร็จ กรุณาลองอีกครั้ง");
         setRunId(null);
         setLoading(false);
-        await loadHermesHistory();
-        setActiveQuestion(null);
         return;
       }
     }
@@ -146,7 +124,6 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
       if (response.status === 202 && payload.mode === "hermes" && payload.runId) {
         setRunId(payload.runId);
         setAnswer("Hermes กำลังแบ่งงานให้ sub-agent และรวบรวมคำตอบ...");
-        void loadHermesHistory();
         await pollHermesRun(payload.runId);
         return;
       }
@@ -154,7 +131,6 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
       if (response.ok) setQuestion("");
     } catch {
       setAnswer("เชื่อมต่อ Agent ไม่สำเร็จ กรุณาลองอีกครั้ง");
-      setActiveQuestion(null);
     } finally {
       setLoading(false);
     }
@@ -194,44 +170,38 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
         </div>
       </section>
 
-      <aside className="agent-chat-panel">
-        <div className="agent-chat-head">
-          <div><p className="eyebrow">Now talking</p><h3>{isHermesOwner ? "Hermes Lead" : agents[selected].name}</h3></div>
-          <span>{isHermesOwner ? `Route · ${agents[selected].name}` : agents[selected].role}</span>
+      <aside className="agent-mission-panel">
+        <div className="agent-mission-head">
+          <div><p className="eyebrow">Mission console</p><h3>{agents[selected].name}</h3></div>
+          <span>{isHermesOwner ? "Hermes routed" : agents[selected].role}</span>
         </div>
-        <div className="agent-chat-transcript" aria-live="polite">
-          {isHermesOwner && history.map((item) => (
-            <article className="agent-chat-turn" key={item.id}>
-              <p className="agent-chat-question">คุณ · {agents[item.agent]?.name || "Hermes"}<br />{item.question}</p>
-              <div className="agent-chat-message">
-                <span className="agent-chat-avatar">H</span>
-                <p>{item.status === "running" ? "Hermes กำลังแบ่งงานให้ sub-agent และรวบรวมคำตอบ..." : item.status === "failed" ? (item.error || "Hermes ทำงานไม่สำเร็จ") : item.answer}</p>
-              </div>
-            </article>
-          ))}
-          {activeQuestion ? <p className="agent-chat-question current">คุณ · {agents[selected].name}<br />{activeQuestion}</p> : null}
-          {(!isHermesOwner || !history.length || activeQuestion) ? (
-            <div className="agent-chat-message current">
-              <span className="agent-chat-avatar">{isHermesOwner ? "H" : agents[selected].name.slice(0, 1)}</span>
-              <p>{answer}</p>
-            </div>
-          ) : null}
+        <div className="agent-mission-brief">
+          <span className="agent-mission-number">0{selected === "scout" ? "1" : selected === "analyst" ? "2" : "3"}</span>
+          <div><strong>{agents[selected].role}</strong><p>{agents[selected].greeting}</p></div>
         </div>
-        <div className="agent-chat-suggestions">
+        <div className="agent-mission-suggestions">
           {selected === "scout" ? <button onClick={() => setQuestion("วันนี้ข่าวอะไรสำคัญที่สุด และเพราะอะไร")}>ข่าวสำคัญที่สุด</button> : null}
           {selected === "analyst" ? <button onClick={() => setQuestion("สรุปความเสี่ยงสำคัญของพอร์ตวันนี้")}>ความเสี่ยงพอร์ต</button> : null}
           {selected === "ranger" ? <button onClick={() => setQuestion("Watchlist ตอนนี้มีตัวไหนพร้อมกลับไปทบทวนบ้าง")}>ตรวจ Watchlist</button> : null}
         </div>
+        <form className="agent-mission-form" onSubmit={askAgent}>
+          <label>
+            <span>มอบหมายงาน</span>
+            <textarea value={question} onChange={(event) => setQuestion(event.target.value)} placeholder={`ระบุสิ่งที่ต้องการให้ ${agents[selected].name} ตรวจ...`} rows={4} maxLength={1200} />
+          </label>
+          <button type="submit" disabled={loading || !question.trim()}>{loading ? "กำลังทำ Mission..." : agents[selected].action}</button>
+        </form>
+        <section className={`agent-mission-result ${loading ? "working" : ""}`} aria-live="polite">
+          <div><span>{loading ? "MISSION IN PROGRESS" : activeQuestion ? "LATEST MISSION" : "DESK STATUS"}</span><i /></div>
+          {activeQuestion ? <strong>{activeQuestion}</strong> : null}
+          <p>{answer}</p>
+        </section>
         {timedOut && runId ? (
           <button className="agent-run-retry" type="button" onClick={() => void pollHermesRun(runId)} disabled={loading}>
             ตรวจผลอีกครั้ง
           </button>
         ) : null}
-        <form className="agent-chat-form" onSubmit={askAgent}>
-          <textarea value={question} onChange={(event) => setQuestion(event.target.value)} placeholder={`ถาม ${agents[selected].name}...`} rows={3} maxLength={1200} />
-          <button type="submit" disabled={loading || !question.trim()}>{loading ? (isHermesOwner ? "Hermes working..." : "Researching...") : "Send question"}</button>
-        </form>
-        <p className="agent-chat-boundary">Read-only · ไม่แก้ Overview, Holdings หรือ Thesis โดยอัตโนมัติ</p>
+        <p className="agent-mission-boundary">ผลลัพธ์เป็นหลักฐานประกอบ · Hermes ไม่เขียนทับ Thesis และไม่ส่งคำสั่งซื้อขาย</p>
       </aside>
     </div>
   );

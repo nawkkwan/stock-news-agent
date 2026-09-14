@@ -10,6 +10,7 @@ from apps.api.app.config import get_settings
 from apps.api.app.schemas import AgentResponse, DigestRequest, DiscoveryRequest, GeminiChatResponse, HermesRunCreatedResponse, HermesRunStatusResponse, LeadDispatchRequest, ResearchRequest, RoomChatRequest, StockResearchRequest, WatchlistCreate
 from apps.api.app.security import require_hermes_owner, require_internal_token, require_supabase_user
 from apps.api.app.services import GeminiAgentTeam, HermesAgentClient, ServiceError, SupabasePortfolioStore
+from packages.shared.technical_levels import calculate_review_zones
 
 
 settings = get_settings()
@@ -82,18 +83,22 @@ def normalized_ticker(value: str) -> str:
 
 def decision_with_watch_zone(result: dict[str, Any], market: dict[str, Any]) -> dict[str, Any]:
     decision = dict(result)
-    if not isinstance(decision.get("watch_zone"), dict):
-        supports = market.get("support_zones") if isinstance(market.get("support_zones"), list) else []
-        decision["watch_zone"] = {
-            "lower": min(supports) if supports else None,
-            "upper": max(supports) if supports else None,
-            "rationale": "ช่วงแนวรับจากราคาปิดรายวันล่าสุด ใช้เป็นจุดกลับมาทบทวนเท่านั้น",
-            "conditions": [
-                "ตรวจว่าข่าวหรือสมมติฐานธุรกิจเปลี่ยนจริงหรือไม่",
-                "ตรวจแนวโน้มราคาและปริมาณซื้อขายอีกครั้ง",
-                "ทบทวนน้ำหนักและความเสี่ยงรวมของพอร์ต",
-            ],
-        }
+    zones = market.get("review_zones") if isinstance(market.get("review_zones"), list) else []
+    supports = [zone.get("center") for zone in zones if isinstance(zone, dict) and isinstance(zone.get("center"), (int, float))]
+    existing_zone = decision.get("watch_zone") if isinstance(decision.get("watch_zone"), dict) else {}
+    decision["watch_zone"] = {
+        **existing_zone,
+        "zones": zones[:3],
+        "levels": supports[:3],
+        "lower": min(supports) if supports else None,
+        "upper": max(supports) if supports else None,
+        "rationale": "โซนทบทวนจาก Swing Low ที่ราคาเคยตอบสนองซ้ำ วัดความกว้างด้วย ATR และให้คะแนนจากจำนวนครั้งที่แตะ Volume ความสด และช่วงเวลา ไม่ใช่สัญญาณซื้อ",
+        "conditions": existing_zone.get("conditions") or [
+            "ตรวจว่าข่าวหรือสมมติฐานธุรกิจเปลี่ยนจริงหรือไม่",
+            "ตรวจแนวโน้มราคาและปริมาณซื้อขายอีกครั้ง",
+            "ทบทวนน้ำหนักและความเสี่ยงรวมของพอร์ต",
+        ],
+    }
     return decision
 
 
@@ -109,11 +114,19 @@ def market_from_snapshot(snapshot: dict[str, Any] | None) -> dict[str, Any] | No
         if not isinstance(row, dict) or row.get("close") is None or not row.get("date"):
             continue
         close = float(row["close"])
-        history.append({"date": str(row["date"]), "open": close, "high": close, "low": close, "close": close, "volume": int(row.get("volume") or 0)})
+        history.append({
+            "date": str(row["date"]),
+            "open": float(row.get("open") or close),
+            "high": float(row.get("high") or close),
+            "low": float(row.get("low") or close),
+            "close": close,
+            "volume": int(row.get("volume") or 0),
+        })
     if len(history) < 2:
         return None
     previous = history[-2]["close"]
     current = history[-1]["close"]
+    review_zones = market.get("review_zones") if isinstance(market.get("review_zones"), list) else calculate_review_zones(history)
     return {
         "ticker": snapshot.get("ticker"),
         "available": True,
@@ -126,7 +139,8 @@ def market_from_snapshot(snapshot: dict[str, Any] | None) -> dict[str, Any] | No
         "change_pct": round(((current - previous) / previous * 100) if previous else 0, 4),
         "day_low": current,
         "day_high": current,
-        "support_zones": market.get("support_zones") or [],
+        "support_zones": [zone["center"] for zone in review_zones if isinstance(zone, dict) and isinstance(zone.get("center"), (int, float))],
+        "review_zones": review_zones,
         "resistance_zones": market.get("resistance_zones") or [],
         "history": history,
     }

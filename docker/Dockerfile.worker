@@ -9,6 +9,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY apps/worker apps/worker
+COPY packages packages
 COPY data data
 COPY prompts prompts
 RUN mkdir -p reports apps/web/data/reports

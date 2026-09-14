@@ -5,7 +5,21 @@ import { useState } from "react";
 
 const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-export function StockResearchButton({ ticker, isHermesOwner }: { ticker: string; isHermesOwner: boolean }) {
+type StockResearchButtonProps = {
+  ticker: string;
+  isHermesOwner: boolean;
+  question?: string;
+  label?: string;
+  ownerLabel?: string;
+};
+
+export function StockResearchButton({
+  ticker,
+  isHermesOwner,
+  question = "",
+  label = "วิเคราะห์ด้วย Gemini",
+  ownerLabel = "วิเคราะห์เชิงลึกด้วย Hermes",
+}: StockResearchButtonProps) {
   const router = useRouter();
   const [state, setState] = useState<"idle" | "running" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -37,7 +51,7 @@ export function StockResearchButton({ ticker, isHermesOwner }: { ticker: string;
       const response = await fetch(`/api/stocks/${encodeURIComponent(ticker)}/research`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ question }),
       });
       const payload = await response.json().catch(() => null) as { runId?: string; status?: string; error?: string } | null;
       if (!response.ok) throw new Error(payload?.error || "เริ่มวิเคราะห์ไม่ได้");
@@ -58,7 +72,7 @@ export function StockResearchButton({ ticker, isHermesOwner }: { ticker: string;
   return (
     <div className="stock-research-action">
       <button className="button" disabled={state === "running"} onClick={() => void startResearch()} type="button">
-        {state === "running" ? "กำลังวิเคราะห์..." : isHermesOwner ? "วิเคราะห์เชิงลึกด้วย Hermes" : "วิเคราะห์ด้วย Gemini"}
+        {state === "running" ? "กำลังวิเคราะห์..." : isHermesOwner ? ownerLabel : label}
       </button>
       {runId ? <button className="button secondary" onClick={() => void poll(runId)} type="button">ตรวจผลอีกครั้ง</button> : null}
       {message ? <p className={`research-status ${state}`}>{message}</p> : null}

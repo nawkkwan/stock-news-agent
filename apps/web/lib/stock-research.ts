@@ -10,6 +10,20 @@ export type MarketBar = {
   volume: number;
 };
 
+export type ReviewZone = {
+  lower: number;
+  upper: number;
+  center: number;
+  touches: number;
+  volume_ratio: number;
+  last_touch_date: string;
+  distance_pct: number;
+  score: number;
+  score_breakdown?: { touches: number; volume: number; recency: number; time_span: number };
+  confidence: "low" | "medium" | "high";
+  method: string;
+};
+
 export type MarketOverview = {
   ticker: string;
   available: boolean;
@@ -24,6 +38,7 @@ export type MarketOverview = {
   day_low?: number;
   day_high?: number;
   support_zones?: number[];
+  review_zones?: ReviewZone[];
   resistance_zones?: number[];
   history: MarketBar[];
 };

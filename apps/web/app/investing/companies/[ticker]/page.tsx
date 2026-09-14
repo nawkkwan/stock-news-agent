@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getCompanyData, formatDate, formatNumber } from "../../../../lib/investment-data";
 import { getLatestReport } from "../../../../lib/latest-report";
 import { getCurrentUserOrNull } from "../../../../lib/supabase-server";
-import { getStockApiOverview, type MarketBar, type MarketOverview } from "../../../../lib/stock-research";
+import { getStockApiOverview, type MarketBar, type MarketOverview, type ReviewZone } from "../../../../lib/stock-research";
 import { ConfigNotice, ThesisForm, WatchlistForm, type DailyReportStock } from "../../components";
 import { DeleteWatchlistButton } from "../../delete-watchlist-button";
 import { StockResearchButton } from "../../stock-research-button";
@@ -20,15 +20,19 @@ function strings(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
 }
 
-function number(value: unknown): number | null {
-  if (value === null || value === undefined || value === "") return null;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
 function money(value: number | null | undefined, currency = "USD") {
   if (value === null || value === undefined) return "—";
   return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 2 }).format(value);
+}
+
+function reviewZones(value: unknown): ReviewZone[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is ReviewZone => {
+    if (!item || typeof item !== "object") return false;
+    const zone = item as Partial<ReviewZone>;
+    return [zone.lower, zone.upper, zone.center, zone.touches, zone.volume_ratio, zone.score]
+      .every((field) => typeof field === "number" && Number.isFinite(field));
+  }).slice(0, 3);
 }
 
 function PriceChart({ history }: { history: MarketBar[] }) {
@@ -76,15 +80,17 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
     as_of: reportStock?.technical?.last_date,
     price: reportStock?.technical?.last_close,
     support_zones: reportStock?.technical?.support_zones,
+    review_zones: reportStock?.technical?.review_zones,
     resistance_zones: reportStock?.technical?.resistance_zones,
     history: [],
   };
   const snapshot = data.researchSnapshots[0] || apiOverview?.snapshots?.[0] || null;
+  const latestHermesReview = data.researchSnapshots.find((item) => item.source === "hermes") || null;
   const decision = record(snapshot?.decision_summary);
   const watchZone = record(decision.watch_zone);
-  const supports = (market.support_zones || reportStock?.technical?.support_zones || []).filter(Number.isFinite);
-  const watchLower = number(watchZone.lower) ?? (supports.length ? Math.min(...supports) : null);
-  const watchUpper = number(watchZone.upper) ?? (supports.length ? Math.max(...supports) : null);
+  const marketZones = reviewZones(market.review_zones);
+  const snapshotZones = reviewZones(watchZone.zones);
+  const evidenceZones = marketZones.length ? marketZones : snapshotZones.length ? snapshotZones : reviewZones(reportStock?.technical?.review_zones);
   const facts = strings(decision.facts).length ? strings(decision.facts) : [reportStock?.key_takeaway || reportStock?.key_news || "ยังไม่มีข้อเท็จจริงใหม่จากรอบรายวัน"];
   const inferences = strings(decision.inferences).length ? strings(decision.inferences) : [reportStock?.possible_impact || reportStock?.impact].filter((item): item is string => Boolean(item));
   const risks = strings(decision.risks).length ? strings(decision.risks) : (reportStock?.bearish_points || []);
@@ -94,6 +100,23 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
     "ทบทวนน้ำหนักรวมและความเสี่ยงของพอร์ตก่อนตัดสินใจ",
   ];
   const isHermesOwner = Boolean(user?.id && process.env.OWNER_SUPABASE_USER_ID && user.id === process.env.OWNER_SUPABASE_USER_ID);
+  const thesisReviewed = Boolean(
+    data.thesis && latestHermesReview && new Date(latestHermesReview.as_of).getTime() >= new Date(data.thesis.updated_at).getTime()
+  );
+  const thesisReviewState = !data.thesis
+    ? { label: "ยังไม่มี Thesis", tone: "empty" }
+    : thesisReviewed
+      ? { label: "Hermes ตรวจแล้ว", tone: "reviewed" }
+      : { label: "รอ Hermes ตรวจ", tone: "pending" };
+  const thesisSections: Array<[string, string | null]> = data.thesis ? [
+    ["ภาพรวมธุรกิจ", data.thesis.business_overview],
+    ["เหตุผลที่สนใจ", data.thesis.growth_drivers],
+    ["Bull case", data.thesis.bull_case],
+    ["Bear case", data.thesis.bear_case],
+    ["Moat", data.thesis.moat],
+    ["ความเสี่ยงสำคัญ", data.thesis.key_risks],
+    ["เงื่อนไขที่ทำให้ Thesis ผิด", data.thesis.sell_conditions],
+  ] : [];
   const change = market.change_pct;
 
   return (
@@ -139,9 +162,103 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
           <article><span>01 · FACTS</span><h3>เกิดอะไรขึ้น</h3><ul>{facts.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul></article>
           <article><span>02 · PORTFOLIO IMPACT</span><h3>กระทบพอร์ตอย่างไร</h3>{inferences.length ? <ul>{inferences.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul> : <p>ยังไม่มีหลักฐานพอสำหรับสรุปผลกระทบ</p>}</article>
           <article><span>03 · RISKS</span><h3>สิ่งที่ต้องจับตา</h3>{risks.length ? <ul>{risks.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul> : <p>{reportStock?.what_to_monitor || "ยังไม่มีความเสี่ยงใหม่ที่บันทึกไว้"}</p>}</article>
-          <article className="watch-zone-card"><span>04 · WATCH ZONE</span><h3>{watchLower !== null && watchUpper !== null ? `${money(watchLower)} – ${money(watchUpper)}` : "ยังคำนวณไม่ได้"}</h3><p>{String(watchZone.rationale || "ช่วงแนวรับล่าสุดสำหรับกลับมาทบทวน ไม่ใช่สัญญาณซื้อ")}</p><ul>{conditions.map((item) => <li key={item}>{item}</li>)}</ul></article>
+          <article className="watch-zone-card">
+            <span>04 · REVIEW LEVELS</span>
+            <h3>{evidenceZones.length ? `พบ ${evidenceZones.length} โซนที่มีหลักฐาน` : "หลักฐานยังไม่พอสร้างโซน"}</h3>
+            <div className="review-level-list">
+              {evidenceZones.map((zone, index) => {
+                const confidence = zone.confidence === "high" ? "หลักฐานสูง" : zone.confidence === "medium" ? "หลักฐานกลาง" : "หลักฐานต่ำ";
+                return (
+                  <div key={`${zone.center}-${zone.last_touch_date}`}>
+                    <span>โซน {index + 1} · {confidence} · {formatNumber(zone.score)} คะแนน</span>
+                    <strong>{money(zone.lower, market.currency)} – {money(zone.upper, market.currency)}</strong>
+                    <small>{formatNumber(zone.distance_pct, "%")} จากราคาปัจจุบัน · แตะ {zone.touches} รอบ · Volume {formatNumber(zone.volume_ratio)}x</small>
+                    <small>แตะล่าสุด {formatDate(zone.last_touch_date)}</small>
+                  </div>
+                );
+              })}
+            </div>
+            <p>{String(watchZone.rationale || "แสดงเฉพาะ Swing Low ที่ราคาเคยตอบสนองอย่างน้อย 2 รอบ คะแนนรวม Touch, Volume, Recency และ Time span ไม่ใช่สัญญาณซื้อ")}</p>
+            <ul>{conditions.map((item) => <li key={item}>{item}</li>)}</ul>
+          </article>
         </div>
         <footer className="decision-footer"><span>อัปเดต: {formatDate(snapshot?.as_of || report?.date || market.as_of)}</span><span>Research: {snapshot?.source || (reportStock ? "daily" : "not available")}</span></footer>
+      </section>
+
+      <section className="panel thesis-workspace">
+        <div className="thesis-workspace-head">
+          <div>
+            <p className="eyebrow">Owner thesis · Hermes review</p>
+            <h2>Investment Thesis ของคุณ</h2>
+            <p>ต้นฉบับเป็นความคิดของคุณ ส่วน Hermes มีหน้าที่ตรวจหลักฐานและชี้จุดอ่อนโดยไม่เขียนทับ</p>
+          </div>
+          <span className={`thesis-review-badge ${thesisReviewState.tone}`}>{thesisReviewState.label}</span>
+        </div>
+
+        <div className="thesis-workspace-grid">
+          <div className="thesis-owner-column">
+            {data.thesis ? (
+              <>
+                <div className="thesis-provenance"><span>K</span><div><strong>เขียนโดยคุณ</strong><small>แก้ไขล่าสุด {formatDate(data.thesis.updated_at)}</small></div></div>
+                <div className="thesis-reading-grid">
+                  {thesisSections.map(([label, value]) => (
+                    <article key={label}>
+                      <span>{label}</span>
+                      <p>{value || "ยังไม่ได้บันทึก"}</p>
+                    </article>
+                  ))}
+                  <article>
+                    <span>ความมั่นใจของคุณ</span>
+                    <p>{data.thesis.confidence_score === null ? "ยังไม่ได้ประเมิน" : `${formatNumber(data.thesis.confidence_score)} / 100`}</p>
+                  </article>
+                </div>
+              </>
+            ) : (
+              <div className="thesis-empty-state">
+                <strong>ยังไม่มี Thesis สำหรับ {tickerCode}</strong>
+                <p>เริ่มจากเหตุผลที่สนใจ สมมติฐานหลัก และสิ่งที่จะทำให้มุมมองนี้ผิด</p>
+              </div>
+            )}
+
+            <details className="thesis-editor">
+              <summary>{data.thesis ? "แก้ไข Thesis ต้นฉบับ" : "เริ่มเขียน Thesis"}</summary>
+              <ThesisForm thesis={data.thesis} ticker={ticker} />
+            </details>
+          </div>
+
+          <aside className="thesis-review-column">
+            <div className="thesis-review-card">
+              <p className="eyebrow">Hermes reviewer</p>
+              <h3>{thesisReviewed ? "ตรวจเทียบหลักฐานล่าสุดแล้ว" : data.thesis ? "พร้อมตรวจ Thesis ของคุณ" : "รอ Thesis จากคุณ"}</h3>
+              <p>
+                {thesisReviewed
+                  ? `ผลตรวจล่าสุด ${formatDate(latestHermesReview?.as_of)} ถูกเก็บเป็น Research Snapshot แยกจากต้นฉบับ`
+                  : data.thesis
+                    ? "Hermes จะหาหลักฐานที่สนับสนุนและขัดแย้ง ตรวจช่องว่าง และระบุสิ่งที่ควรติดตามต่อ"
+                    : "Hermes จะเริ่มตรวจเมื่อคุณบันทึก Thesis แล้ว เพื่อให้มีสมมติฐานของคุณเป็นจุดตั้งต้น"}
+              </p>
+              {data.thesis ? (
+                <StockResearchButton
+                  ticker={ticker}
+                  isHermesOwner={isHermesOwner}
+                  ownerLabel="ให้ Hermes ตรวจ Thesis"
+                  label="ให้ Gemini ตรวจ Thesis"
+                  question={`ตรวจสอบ Thesis ที่ฉันบันทึกสำหรับ ${ticker} เทียบกับหลักฐานล่าสุด หาหลักฐานที่สนับสนุนและขัดแย้ง ชี้สมมติฐานที่ยังไม่มีข้อมูลรองรับ ความเสี่ยงที่ตกหล่น และสิ่งที่ควรติดตามต่อ โดยห้ามแก้ไข Thesis ต้นฉบับ`}
+                />
+              ) : null}
+            </div>
+
+            <div className="thesis-watch-card">
+              <div><p className="eyebrow">My watchlist</p><h3>{data.watchlistItem ? data.watchlistItem.ticker : "ยังไม่ได้ติดตาม"}</h3></div>
+              {data.watchlistItem ? <><span>{data.watchlistItem.status.replaceAll("_", " ")}</span><p>{data.watchlistItem.reason || "ยังไม่ได้บันทึกเหตุผล"}</p></> : <p>เพิ่มหุ้นนี้เพื่อให้ Nakin และ Hermes ใช้เหตุผลเดียวกับที่แสดงบนเว็บ</p>}
+              <details className="watchlist-editor">
+                <summary>{data.watchlistItem ? "แก้ไข Watchlist" : "เพิ่มเข้า Watchlist"}</summary>
+                <WatchlistForm item={data.watchlistItem} ticker={ticker} />
+                {data.watchlistItem ? <DeleteWatchlistButton id={data.watchlistItem.id} ticker={ticker} /> : null}
+              </details>
+            </div>
+          </aside>
+        </div>
       </section>
 
       <section className="panel stock-news-section">
@@ -158,13 +275,6 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
         {data.researchSnapshots.length ? <div className="research-history-list">{data.researchSnapshots.slice(0, 8).map((item) => <article key={item.id}><strong>{item.source.toUpperCase()} · {formatDate(item.as_of)}</strong><p>{String(record(item.decision_summary).summary || "บันทึกผลวิเคราะห์แล้ว")}</p></article>)}</div> : <p className="empty-state">ยังไม่มี Research Snapshot — กดวิเคราะห์หรือรอ Daily Worker รอบถัดไป</p>}
       </section>
 
-      <details className="panel stock-notes-panel">
-        <summary><span><strong>บันทึกการลงทุนของฉัน</strong><small>Thesis และ Watchlist ที่แก้ไขเอง</small></span><span>เปิดแก้ไข</span></summary>
-        <div className="stock-notes-grid">
-          <section><h2>Investment thesis</h2><ThesisForm thesis={data.thesis} ticker={ticker} /></section>
-          <section><h2>Watchlist</h2><WatchlistForm item={data.watchlistItem} ticker={ticker} />{data.watchlistItem ? <DeleteWatchlistButton id={data.watchlistItem.id} ticker={ticker} /> : null}</section>
-        </div>
-      </details>
     </main>
   );
 }

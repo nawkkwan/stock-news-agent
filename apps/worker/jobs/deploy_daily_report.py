@@ -139,6 +139,7 @@ class CloudPublisher:
 
             technical = stock.get("technical") if isinstance(stock.get("technical"), dict) else {}
             supports = [float(value) for value in technical.get("support_zones", []) if isinstance(value, (int, float))]
+            review_zones = [zone for zone in technical.get("review_zones", []) if isinstance(zone, dict)]
             decision = {
                 "summary": stock.get("key_takeaway") or stock.get("key_news") or "ยังไม่มีข่าวสำคัญใหม่",
                 "facts": [stock.get("key_news")] if stock.get("key_news") else [],
@@ -147,9 +148,11 @@ class CloudPublisher:
                 "what_to_monitor": stock.get("what_to_monitor"),
                 "sources": [{"title": item.get("title"), "url": item.get("url")} for item in articles[:8] if item.get("url")],
                 "watch_zone": {
+                    "zones": review_zones[:3],
+                    "levels": supports[:3],
                     "lower": min(supports) if supports else None,
                     "upper": max(supports) if supports else None,
-                    "rationale": "ช่วงแนวรับจาก Daily Worker สำหรับกลับมาทบทวน ไม่ใช่สัญญาณซื้อ",
+                    "rationale": "โซน Swing Low ที่ราคาเคยตอบสนองซ้ำ พร้อมคะแนน Touch, Volume, Recency และ Time span สำหรับกลับมาทบทวน ไม่ใช่สัญญาณซื้อ",
                     "conditions": [
                         "ตรวจว่าข่าวเปลี่ยนสมมติฐานธุรกิจหรือไม่",
                         "ตรวจแนวโน้มราคาและ Volume อีกครั้ง",
@@ -181,9 +184,18 @@ class CloudPublisher:
         important: list[dict[str, Any]] = []
         for stock in report.get("stocks", []):
             technical = stock.get("technical") if isinstance(stock.get("technical"), dict) else {}
-            supports = [float(value) for value in technical.get("support_zones", []) if isinstance(value, (int, float))]
+            review_zones = [zone for zone in technical.get("review_zones", []) if isinstance(zone, dict)]
             close = technical.get("last_close")
-            in_watch_zone = bool(supports and isinstance(close, (int, float)) and min(supports) <= float(close) <= max(supports))
+            in_watch_zone = bool(
+                review_zones
+                and isinstance(close, (int, float))
+                and any(
+                    isinstance(zone.get("lower"), (int, float))
+                    and isinstance(zone.get("upper"), (int, float))
+                    and float(zone["lower"]) <= float(close) <= float(zone["upper"])
+                    for zone in review_zones
+                )
+            )
             high_risk = str(stock.get("risk_level") or "").lower() == "high"
             high_impact = str(stock.get("relevance_score") or "").lower() == "high" and bool(stock.get("possible_impact") or stock.get("impact"))
             if high_risk or high_impact or in_watch_zone:

@@ -261,12 +261,12 @@ class AgentWorkerTests(unittest.TestCase):
         ):
             result = technicals.analyze_ticker("MSFT", "Microsoft")
         self.assertEqual(result["provider"], "yahoo-fallback")
-        self.assertEqual(len(result["price_history"]), 90)
+        self.assertEqual(len(result["price_history"]), 180)
 
     def test_discord_alerts_only_include_high_impact_or_watch_zone(self):
         report = {"stocks": [
-            {"ticker": "CALM", "risk_level": "Low", "relevance_score": "Low", "technical": {"last_close": 110, "support_zones": [95, 100]}},
-            {"ticker": "WATCH", "risk_level": "Low", "relevance_score": "Low", "technical": {"last_close": 99, "support_zones": [95, 100]}},
+            {"ticker": "CALM", "risk_level": "Low", "relevance_score": "Low", "technical": {"last_close": 110, "review_zones": [{"lower": 98, "upper": 101}]}},
+            {"ticker": "WATCH", "risk_level": "Low", "relevance_score": "Low", "technical": {"last_close": 99, "review_zones": [{"lower": 98, "upper": 101}]}},
             {"ticker": "RISK", "risk_level": "High", "relevance_score": "Medium", "technical": {}},
         ]}
         alerts = publisher.CloudPublisher.important_alerts(report)

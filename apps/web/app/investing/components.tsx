@@ -728,6 +728,19 @@ export type DailyReportStock = {
     macd_signal?: number;
     trend?: string;
     support_zones?: number[];
+    review_zones?: Array<{
+      lower: number;
+      upper: number;
+      center: number;
+      touches: number;
+      volume_ratio: number;
+      last_touch_date: string;
+      distance_pct: number;
+      score: number;
+      score_breakdown?: { touches: number; volume: number; recency: number; time_span: number };
+      confidence: "low" | "medium" | "high";
+      method: string;
+    }>;
     resistance_zones?: number[];
     technical_note?: string;
   };

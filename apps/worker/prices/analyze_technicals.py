@@ -14,11 +14,13 @@ import requests
 
 WORKER_DIR = Path(__file__).resolve().parents[1]
 ROOT_DIR = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT_DIR))
 for worker_subdir in ("news", "jobs"):
     sys.path.insert(0, str(WORKER_DIR / worker_subdir))
 
 from fetch_news import load_portfolio
 from path_utils import display_path
+from packages.shared.technical_levels import calculate_review_zones
 
 REPORTS_DIR = ROOT_DIR / "reports"
 LOOKBACK_PERIOD = "1y"
@@ -43,13 +45,36 @@ def calculate_rsi(close: pd.Series, period: int = 14) -> pd.Series:
     return 100 - (100 / (1 + rs))
 
 
-def nearest_levels(close: pd.Series, last_close: float) -> tuple[list[float], list[float]]:
-    recent = close.tail(120)
-    rolling_lows = recent.rolling(5, center=True).min()
-    rolling_highs = recent.rolling(5, center=True).max()
-    supports = sorted({round(float(v), 2) for v in rolling_lows.dropna() if float(v) < last_close}, reverse=True)[:3]
-    resistances = sorted({round(float(v), 2) for v in rolling_highs.dropna() if float(v) > last_close})[:3]
-    return supports, resistances
+def nearest_resistances(high: pd.Series, last_close: float) -> list[float]:
+    recent = high.tail(120)
+    prior = recent.iloc[:-1] if len(recent) > 1 else recent
+
+    def add_distinct(levels: list[float], value: float, reference: float) -> None:
+        if reference <= 0 or any(abs(value - existing) / reference < 0.015 for existing in levels):
+            return
+        levels.append(round(value, 2))
+
+    resistance_candidates: list[float] = []
+    for horizon in (20, 60, 120):
+        window = prior.tail(horizon)
+        if window.empty:
+            continue
+        high = float(window.max())
+        if high > last_close * 1.005:
+            add_distinct(resistance_candidates, high, last_close)
+
+    values = [float(value) for value in prior.dropna()]
+    pivot_highs = [
+        values[index]
+        for index in range(2, len(values) - 2)
+        if values[index] == max(values[index - 2:index + 3]) and values[index] > last_close * 1.005
+    ]
+    for value in sorted(pivot_highs):
+        if len(resistance_candidates) >= 3:
+            break
+        add_distinct(resistance_candidates, value, last_close)
+
+    return sorted(resistance_candidates)[:3]
 
 
 def classify_trend(last_close: float, ema20: float | None, ema50: float | None, ema200: float | None) -> str:
@@ -101,9 +126,26 @@ def fetch_price_frame_eodhd(ticker: str, start: int, end: int) -> pd.DataFrame:
     rows = response.json()
     if not isinstance(rows, list) or not rows:
         raise RuntimeError("EODHD returned no price history")
+    frame_rows = []
+    for row in rows:
+        raw_close = row.get("close")
+        adjusted_close = row.get("adjusted_close") or raw_close
+        if not raw_close or not adjusted_close:
+            continue
+        factor = float(adjusted_close) / float(raw_close)
+        frame_rows.append({
+            "date": row.get("date"),
+            "Open": float(row.get("open") or raw_close) * factor,
+            "High": float(row.get("high") or raw_close) * factor,
+            "Low": float(row.get("low") or raw_close) * factor,
+            "Close": float(adjusted_close),
+            "Volume": row.get("volume") or 0,
+        })
+    if not frame_rows:
+        raise RuntimeError("EODHD returned no usable price history")
     return pd.DataFrame(
-        {"Close": [row.get("adjusted_close") or row.get("close") for row in rows], "Volume": [row.get("volume") for row in rows]},
-        index=pd.to_datetime([row.get("date") for row in rows]),
+        [{key: value for key, value in row.items() if key != "date"} for row in frame_rows],
+        index=pd.to_datetime([row["date"] for row in frame_rows]),
     ).dropna(subset=["Close"])
 
 
@@ -129,12 +171,24 @@ def fetch_price_frame_yahoo(ticker: str, start: int, end: int) -> pd.DataFrame:
     timestamps = result.get("timestamp", [])
     quote = result.get("indicators", {}).get("quote", [{}])[0]
     adjclose = result.get("indicators", {}).get("adjclose", [{}])[0].get("adjclose")
-    close_values = adjclose or quote.get("close", [])
-    volume_values = quote.get("volume", [])
+    raw_close_values = quote.get("close", [])
+    close_values = adjclose or raw_close_values
+    factors = [
+        (float(adjusted) / float(raw)) if adjusted is not None and raw else 1.0
+        for adjusted, raw in zip(close_values, raw_close_values)
+    ]
+    def adjusted_column(name: str) -> list[float | None]:
+        return [
+            (float(value) * factor) if value is not None else None
+            for value, factor in zip(quote.get(name, []), factors)
+        ]
     return pd.DataFrame(
         {
+            "Open": adjusted_column("open"),
+            "High": adjusted_column("high"),
+            "Low": adjusted_column("low"),
             "Close": close_values,
-            "Volume": volume_values,
+            "Volume": quote.get("volume", []),
         },
         index=pd.to_datetime(timestamps, unit="s"),
     ).dropna(subset=["Close"])
@@ -154,6 +208,9 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
         return {"ticker": ticker, "company": company, "error": "No price data returned."}
     close = data["Close"]
     volume = data["Volume"]
+    open_prices = data["Open"] if "Open" in data else close
+    high_prices = data["High"] if "High" in data else close
+    low_prices = data["Low"] if "Low" in data else close
 
     ema20 = close.ewm(span=20, adjust=False).mean()
     ema50 = close.ewm(span=50, adjust=False).mean()
@@ -169,15 +226,27 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
     last_rsi = as_float(rsi.iloc[-1])
     last_macd = as_float(macd.iloc[-1])
     last_signal = as_float(signal.iloc[-1])
-    supports, resistances = nearest_levels(close, last_close)
+    price_frame = pd.DataFrame({
+        "Open": open_prices,
+        "High": high_prices,
+        "Low": low_prices,
+        "Close": close,
+        "Volume": volume,
+    })
     price_history = [
         {
             "date": str(index.date()),
+            "open": as_float(row["Open"]),
+            "high": as_float(row["High"]),
+            "low": as_float(row["Low"]),
             "close": as_float(row["Close"]),
             "volume": int(row["Volume"]) if not pd.isna(row["Volume"]) else 0,
         }
-        for index, row in data.tail(90).iterrows()
+        for index, row in price_frame.tail(180).iterrows()
     ]
+    review_zones = calculate_review_zones(price_history)
+    supports = [zone["center"] for zone in review_zones]
+    resistances = nearest_resistances(high_prices, last_close)
 
     return {
         "ticker": ticker,
@@ -193,6 +262,7 @@ def analyze_ticker(ticker: str, company: str) -> dict[str, Any]:
         "macd_signal": last_signal,
         "trend": classify_trend(last_close, last_ema20, last_ema50, last_ema200),
         "support_zones": supports,
+        "review_zones": review_zones,
         "resistance_zones": resistances,
         "volume_latest": int(volume.iloc[-1]) if not pd.isna(volume.iloc[-1]) else None,
         "price_history": price_history,
