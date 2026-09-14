@@ -150,6 +150,17 @@ def create_client() -> HermesDiscord:
     async def research(interaction: discord.Interaction, ticker: str, question: str = "") -> None:
         await client.execute(interaction, "POST", "/v1/research", {"ticker": ticker.upper(), "question": question})
 
+    @client.tree.command(name="save-research", description="บันทึกข้อความจาก Discord เข้า Research บนเว็บ")
+    @app_commands.describe(ticker="Ticker เช่น GOOGL.US", note="ข้อความที่ต้องการเก็บ")
+    async def save_research(interaction: discord.Interaction, ticker: str, note: str) -> None:
+        channel_name = getattr(interaction.channel, "name", "channel")
+        await client.execute(
+            interaction,
+            "POST",
+            "/v1/research-notes",
+            {"ticker": ticker.upper(), "note": note, "source_label": f"Discord #{channel_name}"},
+        )
+
     @client.tree.command(name="discover", description="ให้ Discovery Agent ค้นหุ้นตามเงื่อนไข")
     @app_commands.describe(criteria="Theme, sector หรือเงื่อนไข", limit="จำนวน candidate 1-10")
     async def discover(interaction: discord.Interaction, criteria: str, limit: app_commands.Range[int, 1, 10] = 5) -> None:
@@ -167,6 +178,29 @@ def create_client() -> HermesDiscord:
         await client.execute(interaction, "DELETE", f"/v1/watchlist/{ticker.upper()}")
 
     client.tree.add_command(watch)
+
+    thesis = app_commands.Group(name="thesis", description="เพิ่มข้อมูลเข้า Investment Thesis")
+
+    @thesis.command(name="add", description="เพิ่มข้อความต่อท้าย Thesis โดยไม่เขียนทับของเดิม")
+    @app_commands.describe(ticker="Ticker เช่น GOOGL.US", section="ชื่อช่องภาษาอังกฤษ", note="ข้อความที่ต้องการเพิ่ม")
+    @app_commands.choices(section=[
+        app_commands.Choice(name="ภาพรวมธุรกิจ", value="business_overview"),
+        app_commands.Choice(name="เหตุผลที่สนใจ / Growth drivers", value="growth_drivers"),
+        app_commands.Choice(name="Bull case", value="bull_case"),
+        app_commands.Choice(name="Bear case", value="bear_case"),
+        app_commands.Choice(name="Moat", value="moat"),
+        app_commands.Choice(name="ความเสี่ยงสำคัญ", value="key_risks"),
+        app_commands.Choice(name="เงื่อนไขที่ทำให้ Thesis ผิด", value="sell_conditions"),
+    ])
+    async def thesis_add(interaction: discord.Interaction, ticker: str, section: str, note: str) -> None:
+        await client.execute(
+            interaction,
+            "POST",
+            "/v1/thesis/append",
+            {"ticker": ticker.upper(), "section": section, "note": note},
+        )
+
+    client.tree.add_command(thesis)
 
     @client.tree.command(name="brief", description="อ่านรายงานพอร์ตล่าสุด")
     async def brief(interaction: discord.Interaction) -> None:

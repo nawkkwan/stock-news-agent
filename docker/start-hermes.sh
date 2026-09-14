@@ -44,6 +44,7 @@ else
   sed -i '1i_config_version: 44' "$RUNTIME_DIR/config.yaml"
 fi
 
-if [ ! -d "$RUNTIME_DIR/skills/finance/portfolio-agent" ]; then
-  cp -R /opt/hermes-seed/skills/finance/portfolio-agent "$RUNTIME_DIR/skills/finance/portfolio-agent"
-fi
+# The portfolio integration is application code, not learned memory. Refresh it
+# from every deployed image while leaving all other persisted Hermes state alone.
+mkdir -p "$RUNTIME_DIR/skills/finance/portfolio-agent"
+cp -R /opt/hermes-seed/skills/finance/portfolio-agent/. "$RUNTIME_DIR/skills/finance/portfolio-agent/"

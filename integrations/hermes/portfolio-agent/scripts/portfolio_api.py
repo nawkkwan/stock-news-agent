@@ -81,6 +81,21 @@ def build_parser() -> argparse.ArgumentParser:
 
     watch_remove = subparsers.add_parser("watch-remove")
     watch_remove.add_argument("ticker")
+
+    research_save = subparsers.add_parser("research-save")
+    research_save.add_argument("ticker")
+    research_save.add_argument("--note", required=True)
+    research_save.add_argument("--source-url", default=None)
+    research_save.add_argument("--source-label", default="Discord")
+
+    thesis_add = subparsers.add_parser("thesis-add")
+    thesis_add.add_argument("ticker")
+    thesis_add.add_argument(
+        "--section",
+        required=True,
+        choices=("business_overview", "growth_drivers", "bull_case", "bear_case", "moat", "key_risks", "sell_conditions"),
+    )
+    thesis_add.add_argument("--note", required=True)
     return parser
 
 
@@ -116,6 +131,27 @@ def execute(args: argparse.Namespace) -> Any:
     if args.command == "watch-remove":
         ticker = urllib.parse.quote(normalize_ticker(args.ticker), safe="")
         return api_request("DELETE", f"/v1/watchlist/{ticker}")
+    if args.command == "research-save":
+        return api_request(
+            "POST",
+            "/v1/research-notes",
+            {
+                "ticker": normalize_ticker(args.ticker),
+                "note": args.note,
+                "source_url": args.source_url,
+                "source_label": args.source_label,
+            },
+        )
+    if args.command == "thesis-add":
+        return api_request(
+            "POST",
+            "/v1/thesis/append",
+            {
+                "ticker": normalize_ticker(args.ticker),
+                "section": args.section,
+                "note": args.note,
+            },
+        )
     raise RuntimeError("Unsupported command")
 
 

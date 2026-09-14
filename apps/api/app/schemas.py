@@ -1,6 +1,6 @@
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import AnyHttpUrl, BaseModel, Field
 
 
 class ResearchRequest(BaseModel):
@@ -17,6 +17,27 @@ class WatchlistCreate(BaseModel):
     ticker: str = Field(min_length=1, max_length=20, pattern=r"^[A-Za-z0-9.\-]+$")
     reason: str = Field(default="", max_length=1200)
     status: Literal["not_started", "reading", "thesis_drafted", "ready_to_buy", "rejected"] = "not_started"
+
+
+class ResearchNoteCreate(BaseModel):
+    ticker: str = Field(min_length=1, max_length=20, pattern=r"^[A-Za-z0-9.\-]+$")
+    note: str = Field(min_length=1, max_length=4000)
+    source_url: AnyHttpUrl | None = None
+    source_label: str = Field(default="Discord", min_length=1, max_length=120)
+
+
+class ThesisAppendCreate(BaseModel):
+    ticker: str = Field(min_length=1, max_length=20, pattern=r"^[A-Za-z0-9.\-]+$")
+    section: Literal[
+        "business_overview",
+        "growth_drivers",
+        "bull_case",
+        "bear_case",
+        "moat",
+        "key_risks",
+        "sell_conditions",
+    ]
+    note: str = Field(min_length=1, max_length=4000)
 
 
 class DigestRequest(BaseModel):

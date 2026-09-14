@@ -93,6 +93,36 @@ class AgentWorkerTests(unittest.TestCase):
         store = SupabasePortfolioStore(settings, user_id="verified-user")
         self.assertEqual(store.user_id, "verified-user")
 
+    def test_discord_research_note_is_saved_as_web_evidence(self):
+        store = SupabasePortfolioStore.__new__(SupabasePortfolioStore)
+        store.user_id = "owner-user"
+        store.portfolio = Mock(return_value={"id": "portfolio-1"})
+        store._request = Mock(return_value=[{"id": "note-1", "ticker": "GOOGL.US"}])
+
+        result = store.save_research_note("googl.us", "Cloud backlog โต", source_label="Discord #ทั่วไป")
+
+        self.assertTrue(result["created"])
+        payload = store._request.call_args.kwargs["json"]
+        self.assertEqual(payload["ticker"], "GOOGL.US")
+        self.assertEqual(payload["summary"], "Cloud backlog โต")
+        self.assertEqual(payload["portfolio_id"], "portfolio-1")
+
+    def test_thesis_capture_appends_without_overwriting_other_sections(self):
+        store = SupabasePortfolioStore.__new__(SupabasePortfolioStore)
+        store.user_id = "owner-user"
+        store.portfolio = Mock(return_value={"id": "portfolio-1"})
+        store._request = Mock(side_effect=[
+            [{"ticker": "GOOGL.US", "growth_drivers": "AI demand", "bear_case": "Competition"}],
+            [{"ticker": "GOOGL.US", "growth_drivers": "AI demand\n\nCloud backlog โต", "bear_case": "Competition"}],
+        ])
+
+        result = store.append_thesis_note("googl.us", "growth_drivers", "Cloud backlog โต")
+
+        self.assertTrue(result["appended"])
+        payload = store._request.call_args_list[1].kwargs["json"]
+        self.assertEqual(payload["growth_drivers"], "AI demand\n\nCloud backlog โต")
+        self.assertNotIn("bear_case", payload)
+
     def test_room_chat_maps_visible_agent_to_backend_role(self):
         team = GeminiAgentTeam.__new__(GeminiAgentTeam)
         team.store = FakeStore()

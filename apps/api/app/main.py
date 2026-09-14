@@ -7,7 +7,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 
 from apps.api.app.config import get_settings
-from apps.api.app.schemas import AgentResponse, DigestRequest, DiscoveryRequest, GeminiChatResponse, HermesRunCreatedResponse, HermesRunStatusResponse, LeadDispatchRequest, ResearchRequest, RoomChatRequest, StockResearchRequest, WatchlistCreate
+from apps.api.app.schemas import AgentResponse, DigestRequest, DiscoveryRequest, GeminiChatResponse, HermesRunCreatedResponse, HermesRunStatusResponse, LeadDispatchRequest, ResearchNoteCreate, ResearchRequest, RoomChatRequest, StockResearchRequest, ThesisAppendCreate, WatchlistCreate
 from apps.api.app.security import require_hermes_owner, require_internal_token, require_supabase_user
 from apps.api.app.services import GeminiAgentTeam, HermesAgentClient, ServiceError, SupabasePortfolioStore
 from packages.shared.technical_levels import calculate_review_zones
@@ -388,6 +388,27 @@ def remove_watchlist(ticker: str, _: HermesOwner, portfolio_store: SupabasePortf
     try:
         portfolio_store.remove_watchlist(ticker)
         return {"removed": True}
+    except ServiceError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/v1/research-notes")
+def save_research_note(payload: ResearchNoteCreate, _: HermesOwner, portfolio_store: SupabasePortfolioStore = Depends(store)) -> dict[str, Any]:
+    try:
+        return portfolio_store.save_research_note(
+            normalized_ticker(payload.ticker),
+            payload.note,
+            str(payload.source_url) if payload.source_url else None,
+            payload.source_label,
+        )
+    except ServiceError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/v1/thesis/append")
+def append_thesis_note(payload: ThesisAppendCreate, _: HermesOwner, portfolio_store: SupabasePortfolioStore = Depends(store)) -> dict[str, Any]:
+    try:
+        return portfolio_store.append_thesis_note(normalized_ticker(payload.ticker), payload.section, payload.note)
     except ServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 

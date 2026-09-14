@@ -17,7 +17,7 @@ def _env(name: str, default: str = "") -> str:
 @dataclass(frozen=True)
 class Settings:
     service_name: str = "investment-research-api"
-    service_version: str = "0.3.0"
+    service_version: str = "0.4.0"
     environment: str = _env("APP_ENV", "local")
     api_port: int = int(_env("API_PORT", "8000") or "8000")
     supabase_url: str = _env("NEXT_PUBLIC_SUPABASE_URL")

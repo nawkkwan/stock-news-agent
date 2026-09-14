@@ -1,7 +1,7 @@
 ---
 name: portfolio-agent
-description: "Use the owner's Azure Portfolio API to inspect the live Supabase portfolio, research stocks, discover candidates, manage only the watchlist, read briefings, and inspect alert status."
-version: 1.0.0
+description: "Use the owner's Azure Portfolio API to inspect the live Supabase portfolio, research stocks, capture Discord research notes, append thesis sections, manage the watchlist, read briefings, and inspect alert status."
+version: 1.1.0
 author: Kwan Investment OS
 license: MIT
 platforms: [windows]
@@ -33,6 +33,8 @@ Load this skill when the user asks about:
 
 - their live portfolio, holdings, watchlist, thesis, concentration, or risks;
 - research on a ticker;
+- saving a Discord message or conversation insight as research evidence;
+- adding an explicit note to one section of the owner's thesis;
 - stock discovery by theme, sector, or criteria;
 - adding or removing a ticker from the watchlist;
 - the latest briefing or alert status.
@@ -76,6 +78,40 @@ python "$env:LOCALAPPDATA\hermes\skills\finance\portfolio-agent\scripts\portfoli
 Discovery produces research candidates only. Never add candidates to the
 watchlist unless the user explicitly asks.
 
+### Capture a Discord message as research
+
+When the owner says that a message should be saved, extract the exact ticker and
+save the message text without rewriting its meaning:
+
+```powershell
+python "$env:LOCALAPPDATA\hermes\skills\finance\portfolio-agent\scripts\portfolio_api.py" research-save GOOGL.US --note "ข้อความที่เจ้าของต้องการเก็บ" --source-label "Discord #ทั่วไป"
+```
+
+If a Discord message URL is available, also pass `--source-url "MESSAGE_URL"`.
+The saved note appears in the stock's evidence section on the website and is
+available in future portfolio context. Never save ordinary conversation unless
+the owner explicitly says to save, remember, record, or add it.
+
+### Append to the owner's thesis
+
+Classify only an explicit thesis update into one of these exact fields:
+
+- `business_overview`: what the company does or how it earns money;
+- `growth_drivers`: why growth may occur or why the owner is interested;
+- `bull_case`: favorable scenario or upside assumptions;
+- `bear_case`: unfavorable scenario or counter-thesis;
+- `moat`: durable competitive advantage;
+- `key_risks`: material risks;
+- `sell_conditions`: evidence that would invalidate the thesis.
+
+```powershell
+python "$env:LOCALAPPDATA\hermes\skills\finance\portfolio-agent\scripts\portfolio_api.py" thesis-add GOOGL.US --section growth_drivers --note "Cloud backlog is accelerating"
+```
+
+This operation appends and never overwrites existing thesis text. If the ticker
+or destination section is ambiguous, ask the owner before writing. Confirm the
+ticker, selected Thai section label, and saved text after success.
+
 ### Watchlist
 
 ```powershell
@@ -83,8 +119,9 @@ python "$env:LOCALAPPDATA\hermes\skills\finance\portfolio-agent\scripts\portfoli
 python "$env:LOCALAPPDATA\hermes\skills\finance\portfolio-agent\scripts\portfolio_api.py" watch-remove PLTR.US
 ```
 
-Confirm the exact ticker before mutation. Watchlist is the only writable
-portfolio resource exposed to Hermes.
+Confirm the exact ticker before mutation. Only the watchlist, captured research
+notes, and append-only thesis sections are writable. Holdings and transactions
+remain read-only.
 
 ### Briefing and alerts
 
@@ -112,6 +149,8 @@ Use these role boundaries:
 
 - Never place or simulate a broker order.
 - Never modify holdings or transactions.
+- Never capture a Discord conversation without an explicit owner request.
+- Thesis writes must append to one confirmed section and must not replace existing text.
 - Never expose secrets in messages, logs, or delegated prompts.
 - Reject requests from users not authorized by the API.
 - Treat API errors as errors; do not invent portfolio values.
