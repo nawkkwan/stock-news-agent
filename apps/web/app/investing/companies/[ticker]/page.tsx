@@ -3,7 +3,9 @@ import { getCompanyData, formatDate, formatNumber } from "../../../../lib/invest
 import { getLatestReport } from "../../../../lib/latest-report";
 import { getCurrentUserOrNull } from "../../../../lib/supabase-server";
 import { getStockApiOverview, type MarketBar, type MarketOverview, type ReviewZone } from "../../../../lib/stock-research";
-import { ConfigNotice, ThesisForm, WatchlistForm, type DailyReportStock } from "../../components";
+import type { StockResearchSnapshot } from "../../../../lib/investment-types";
+import { ConfigNotice, WatchlistForm, type DailyReportStock } from "../../components";
+import { ThesisForm } from "../../thesis-form";
 import { DeleteWatchlistButton } from "../../delete-watchlist-button";
 import { StockResearchButton } from "../../stock-research-button";
 
@@ -18,6 +20,56 @@ function record(value: unknown): JsonRecord {
 
 function strings(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
+}
+
+type ResearchSource = { title: string; url: string };
+
+function researchSources(value: unknown): ResearchSource[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    const source = record(item);
+    const url = String(source.url || "").trim();
+    if (!url) return [];
+    try {
+      const parsed = new URL(url);
+      if (!["http:", "https:"].includes(parsed.protocol)) return [];
+    } catch {
+      return [];
+    }
+    return [{ title: String(source.title || source.source || "เปิดแหล่งข้อมูล"), url }];
+  });
+}
+
+function ResearchHistoryCard({ item }: { item: StockResearchSnapshot }) {
+  const decision = record(item.decision_summary);
+  const evidenceGroups = [
+    ["ข้อเท็จจริง", strings(decision.facts)],
+    ["ข้อสรุปของ Agent", strings(decision.inferences)],
+    ["ความเสี่ยง", strings(decision.risks)],
+  ] as const;
+  const sources = researchSources(decision.sources);
+  return (
+    <details className="research-history-item">
+      <summary>
+        <div>
+          <strong>{item.source.toUpperCase()} · {formatDate(item.as_of)}</strong>
+          <p>{String(decision.summary || "บันทึกผลวิเคราะห์แล้ว")}</p>
+        </div>
+        <span>{sources.length || item.news_count} แหล่งข้อมูล</span>
+      </summary>
+      <div className="research-history-body">
+        {evidenceGroups.map(([label, values]) => values.length ? (
+          <section key={label}><strong>{label}</strong><ul>{values.map((value) => <li key={value}>{value}</li>)}</ul></section>
+        ) : null)}
+        {sources.length ? (
+          <section className="research-history-sources">
+            <strong>ข่าวและแหล่งอ้างอิงที่ Agent พบ</strong>
+            <div>{sources.map((source) => <a href={source.url} key={source.url} rel="noreferrer" target="_blank">{source.title} ↗</a>)}</div>
+          </section>
+        ) : <p className="research-history-no-sources">Snapshot นี้ไม่มี URL แหล่งข่าวแนบมา</p>}
+      </div>
+    </details>
+  );
 }
 
 function money(value: number | null | undefined, currency = "USD") {
@@ -85,7 +137,8 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
     history: [],
   };
   const snapshot = data.researchSnapshots[0] || apiOverview?.snapshots?.[0] || null;
-  const latestHermesReview = data.researchSnapshots.find((item) => item.source === "hermes") || null;
+  const hermesEvidence = record(data.hermesThesis?.evidence_summary);
+  const hermesSources = researchSources(hermesEvidence.sources);
   const decision = record(snapshot?.decision_summary);
   const watchZone = record(decision.watch_zone);
   const marketZones = reviewZones(market.review_zones);
@@ -100,14 +153,13 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
     "ทบทวนน้ำหนักรวมและความเสี่ยงของพอร์ตก่อนตัดสินใจ",
   ];
   const isHermesOwner = Boolean(user?.id && process.env.OWNER_SUPABASE_USER_ID && user.id === process.env.OWNER_SUPABASE_USER_ID);
-  const thesisReviewed = Boolean(
-    data.thesis && latestHermesReview && new Date(latestHermesReview.as_of).getTime() >= new Date(data.thesis.updated_at).getTime()
-  );
-  const thesisReviewState = !data.thesis
+  const thesisReviewState = !data.thesis && !data.hermesThesis
     ? { label: "ยังไม่มี Thesis", tone: "empty" }
-    : thesisReviewed
-      ? { label: "Hermes ตรวจแล้ว", tone: "reviewed" }
-      : { label: "รอ Hermes ตรวจ", tone: "pending" };
+    : data.thesis && data.hermesThesis
+      ? { label: "มี Thesis ทั้ง 2 ฝั่ง", tone: "reviewed" }
+      : data.hermesThesis
+        ? { label: "มีมุมมองจาก Hermes", tone: "reviewed" }
+        : { label: "มี Thesis ของคุณ", tone: "pending" };
   const thesisSections: Array<[string, string | null]> = data.thesis ? [
     ["ภาพรวมธุรกิจ", data.thesis.business_overview],
     ["เหตุผลที่สนใจ", data.thesis.growth_drivers],
@@ -116,6 +168,15 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
     ["Moat", data.thesis.moat],
     ["ความเสี่ยงสำคัญ", data.thesis.key_risks],
     ["เงื่อนไขที่ทำให้ Thesis ผิด", data.thesis.sell_conditions],
+  ] : [];
+  const hermesThesisSections: Array<[string, string | null]> = data.hermesThesis ? [
+    ["ภาพรวมธุรกิจ", data.hermesThesis.business_overview],
+    ["Growth drivers", data.hermesThesis.growth_drivers],
+    ["Bull case", data.hermesThesis.bull_case],
+    ["Bear case", data.hermesThesis.bear_case],
+    ["Moat", data.hermesThesis.moat],
+    ["ความเสี่ยงสำคัญ", data.hermesThesis.key_risks],
+    ["เงื่อนไขที่ทำให้ Thesis ผิด", data.hermesThesis.sell_conditions],
   ] : [];
   const change = market.change_pct;
 
@@ -188,9 +249,9 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
       <section className="panel thesis-workspace">
         <div className="thesis-workspace-head">
           <div>
-            <p className="eyebrow">Owner thesis · Hermes review</p>
-            <h2>Investment Thesis ของคุณ</h2>
-            <p>ต้นฉบับเป็นความคิดของคุณ ส่วน Hermes มีหน้าที่ตรวจหลักฐานและชี้จุดอ่อนโดยไม่เขียนทับ</p>
+            <p className="eyebrow">Owner thesis · Hermes thesis</p>
+            <h2>Investment Thesis สองมุมมอง</h2>
+            <p>ฝั่งซ้ายคือสิ่งที่คุณพิมพ์เอง ฝั่งขวาคือ Thesis ที่ Hermes สร้างหรือเพิ่มจาก PixelAgent และงานค้นคว้า โดยไม่เขียนทับกัน</p>
           </div>
           <span className={`thesis-review-badge ${thesisReviewState.tone}`}>{thesisReviewState.label}</span>
         </div>
@@ -199,7 +260,8 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
           <div className="thesis-owner-column">
             {data.thesis ? (
               <>
-                <div className="thesis-provenance"><span>K</span><div><strong>เขียนโดยคุณ</strong><small>แก้ไขล่าสุด {formatDate(data.thesis.updated_at)}</small></div></div>
+                <div className="thesis-provenance"><span>K</span><div><strong>Thesis ของฉัน</strong><small>แก้ไขล่าสุด {formatDate(data.thesis.updated_at)}</small></div></div>
+                <h3 className="thesis-note-title">{data.thesis.title || `${tickerCode} — Thesis ของฉัน`}</h3>
                 <div className="thesis-reading-grid">
                   {thesisSections.map(([label, value]) => (
                     <article key={label}>
@@ -228,22 +290,28 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
 
           <aside className="thesis-review-column">
             <div className="thesis-review-card">
-              <p className="eyebrow">Hermes reviewer</p>
-              <h3>{thesisReviewed ? "ตรวจเทียบหลักฐานล่าสุดแล้ว" : data.thesis ? "พร้อมตรวจ Thesis ของคุณ" : "รอ Thesis จากคุณ"}</h3>
-              <p>
-                {thesisReviewed
-                  ? `ผลตรวจล่าสุด ${formatDate(latestHermesReview?.as_of)} ถูกเก็บเป็น Research Snapshot แยกจากต้นฉบับ`
-                  : data.thesis
-                    ? "Hermes จะหาหลักฐานที่สนับสนุนและขัดแย้ง ตรวจช่องว่าง และระบุสิ่งที่ควรติดตามต่อ"
-                    : "Hermes จะเริ่มตรวจเมื่อคุณบันทึก Thesis แล้ว เพื่อให้มีสมมติฐานของคุณเป็นจุดตั้งต้น"}
-              </p>
+              <p className="eyebrow">Hermes thesis</p>
+              <h3>{data.hermesThesis ? "มุมมองของ Hermes" : data.thesis ? "พร้อมสร้าง Thesis จากหลักฐาน" : "ยังไม่มีมุมมองจาก Hermes"}</h3>
+              {data.hermesThesis ? (
+                <>
+                  <div className="thesis-provenance hermes"><span>H</span><div><strong>เขียนโดย Hermes</strong><small>อัปเดตล่าสุด {formatDate(data.hermesThesis.updated_at)} · {data.hermesThesis.source_kind === "pixel_agent_append" ? "เพิ่มจาก PixelAgent" : "สร้างจากงานวิจัย"}</small></div></div>
+                  <h4 className="thesis-note-title">{data.hermesThesis.title || `${tickerCode} — มุมมอง Hermes`}</h4>
+                  <div className="hermes-thesis-reading">
+                    {hermesThesisSections.map(([label, value]) => value ? <article key={label}><span>{label}</span><p>{value}</p></article> : null)}
+                    <article><span>ความมั่นใจของ Hermes</span><p>{data.hermesThesis.confidence_score === null ? "ยังไม่มีหลักฐานพอประเมิน" : `${formatNumber(data.hermesThesis.confidence_score)} / 100`}</p></article>
+                  </div>
+                  {hermesSources.length ? <div className="hermes-thesis-sources"><strong>หลักฐานล่าสุด</strong>{hermesSources.slice(0, 5).map((source) => <a href={source.url} key={source.url} rel="noreferrer" target="_blank">{source.title} ↗</a>)}</div> : null}
+                </>
+              ) : (
+                <p>{data.thesis ? "Hermes จะหาหลักฐานที่สนับสนุนและขัดแย้ง แล้วบันทึก Thesis ของตัวเองแยกจากต้นฉบับของคุณ" : "คุณเริ่มจาก Thesis ของตัวเองก่อนได้ หรือเพิ่มมุมมอง Hermes ผ่าน PixelAgent"}</p>
+              )}
               {data.thesis ? (
                 <StockResearchButton
                   ticker={ticker}
                   isHermesOwner={isHermesOwner}
-                  ownerLabel="ให้ Hermes ตรวจ Thesis"
+                  ownerLabel={data.hermesThesis ? "อัปเดต Hermes Thesis" : "ให้ Hermes สร้าง Thesis"}
                   label="ให้ Gemini ตรวจ Thesis"
-                  question={`ตรวจสอบ Thesis ที่ฉันบันทึกสำหรับ ${ticker} เทียบกับหลักฐานล่าสุด หาหลักฐานที่สนับสนุนและขัดแย้ง ชี้สมมติฐานที่ยังไม่มีข้อมูลรองรับ ความเสี่ยงที่ตกหล่น และสิ่งที่ควรติดตามต่อ โดยห้ามแก้ไข Thesis ต้นฉบับ`}
+                  question={`ตรวจสอบ Thesis ที่ฉันบันทึกสำหรับ ${ticker} เทียบกับหลักฐานล่าสุด แล้วสร้าง hermes_thesis เป็นมุมมองของ Hermes แยกต่างหาก หาหลักฐานที่สนับสนุนและขัดแย้ง ชี้สมมติฐานที่ยังไม่มีข้อมูลรองรับ ความเสี่ยงที่ตกหล่น และสิ่งที่ควรติดตามต่อ โดยห้ามแก้ไข Thesis ต้นฉบับ`}
                 />
               ) : null}
             </div>
@@ -271,8 +339,8 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
       </section>
 
       <section className="panel research-history">
-        <div className="portfolio-section-head"><div><h2>Research history</h2><p>ผลรายวันและ Deep Dive แยกจากประวัติสนทนา Hermes</p></div><span>{data.researchSnapshots.length} snapshots</span></div>
-        {data.researchSnapshots.length ? <div className="research-history-list">{data.researchSnapshots.slice(0, 8).map((item) => <article key={item.id}><strong>{item.source.toUpperCase()} · {formatDate(item.as_of)}</strong><p>{String(record(item.decision_summary).summary || "บันทึกผลวิเคราะห์แล้ว")}</p></article>)}</div> : <p className="empty-state">ยังไม่มี Research Snapshot — กดวิเคราะห์หรือรอ Daily Worker รอบถัดไป</p>}
+        <div className="portfolio-section-head"><div><h2>Research history</h2><p>ทุก Deep Dive ของ Hermes/PixelAgent เก็บทั้งบทสรุป ข้อเท็จจริง ความเสี่ยง และลิงก์ข่าวที่ค้นพบ</p></div><span>{data.researchSnapshots.length} snapshots</span></div>
+        {data.researchSnapshots.length ? <div className="research-history-list">{data.researchSnapshots.slice(0, 12).map((item) => <ResearchHistoryCard item={item} key={item.id} />)}</div> : <p className="empty-state">ยังไม่มี Research Snapshot — กดวิเคราะห์หรือใช้ /research ผ่าน PixelAgent</p>}
       </section>
 
     </main>

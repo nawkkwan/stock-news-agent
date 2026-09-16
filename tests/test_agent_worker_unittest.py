@@ -107,21 +107,23 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(payload["summary"], "Cloud backlog โต")
         self.assertEqual(payload["portfolio_id"], "portfolio-1")
 
-    def test_thesis_capture_appends_without_overwriting_other_sections(self):
+    def test_hermes_thesis_capture_appends_without_touching_owner_table(self):
         store = SupabasePortfolioStore.__new__(SupabasePortfolioStore)
         store.user_id = "owner-user"
         store.portfolio = Mock(return_value={"id": "portfolio-1"})
         store._request = Mock(side_effect=[
             [{"ticker": "GOOGL.US", "growth_drivers": "AI demand", "bear_case": "Competition"}],
+            [{"ticker": "GOOGL.US", "growth_drivers": "AI demand", "bear_case": "Competition"}],
             [{"ticker": "GOOGL.US", "growth_drivers": "AI demand\n\nCloud backlog โต", "bear_case": "Competition"}],
         ])
 
-        result = store.append_thesis_note("googl.us", "growth_drivers", "Cloud backlog โต")
+        result = store.append_hermes_thesis_note("googl.us", "growth_drivers", "Cloud backlog โต")
 
         self.assertTrue(result["appended"])
-        payload = store._request.call_args_list[1].kwargs["json"]
+        payload = store._request.call_args_list[2].kwargs["json"]
         self.assertEqual(payload["growth_drivers"], "AI demand\n\nCloud backlog โต")
-        self.assertNotIn("bear_case", payload)
+        self.assertEqual(payload["bear_case"], "Competition")
+        self.assertTrue(all(call.args[1] == "hermes_thesis_notes" for call in store._request.call_args_list))
 
     def test_room_chat_maps_visible_agent_to_backend_role(self):
         team = GeminiAgentTeam.__new__(GeminiAgentTeam)
@@ -219,6 +221,32 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(store.updated[0]["response"]["hermes_run_id"], "run-hermes-1")
         gemini.assert_not_called()
 
+    def test_pixel_chat_save_uses_previous_ticker_and_separate_thesis(self):
+        store = FakeRunStore()
+        store.context = Mock(return_value={"portfolio": {"id": "p1"}, "holdings": [{"ticker": "OKLO.US"}], "watchlist": []})
+        owner_settings = Settings(owner_supabase_user_id="owner-user", hermes_base_url="http://investment-hermes", hermes_api_key="secret")
+        with patch.object(api_main, "settings", owner_settings), patch.object(
+            api_main.HermesAgentClient, "start_run", return_value="hermes-1"
+        ) as start:
+            response = api_main.user_room_chat(
+                RoomChatRequest(agent="analyst", question="เซฟ theis ที่คุยกันด้วย", history=[
+                    {"question": "วิเคราะห์ OKLO ให้หน่อย", "answer": "ความเสี่ยงคือ execution"}
+                ]), "owner-user", store,
+            )
+        self.assertEqual(response.status_code, 202)
+        self.assertEqual(store.runs[0]["request"]["kind"], "room_thesis_save")
+        self.assertEqual(store.runs[0]["request"]["ticker"], "OKLO.US")
+        self.assertEqual(start.call_args.kwargs["save_thesis_ticker"], "OKLO.US")
+
+    def test_pixel_chat_save_without_ticker_is_not_silent(self):
+        store = FakeRunStore()
+        owner_settings = Settings(owner_supabase_user_id="owner-user")
+        with patch.object(api_main, "settings", owner_settings):
+            with self.assertRaises(HTTPException) as raised:
+                api_main.user_room_chat(RoomChatRequest(agent="analyst", question="บันทึก thesis นี้"), "owner-user", store)
+        self.assertEqual(raised.exception.status_code, 400)
+        self.assertFalse(store.runs)
+
     def test_friend_chat_keeps_existing_gemini_flow(self):
         store = FakeRunStore()
         owner_settings = Settings(owner_supabase_user_id="owner-user")
@@ -261,6 +289,44 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertEqual(response["status"], "succeeded")
         self.assertEqual(response["result"]["summary"], "done")
         self.assertEqual(store.updated[0]["status"], "succeeded")
+
+    def test_pixel_save_run_persists_only_hermes_thesis(self):
+        store = FakeRunStore()
+        store.get_agent_run = Mock(return_value={"status": "running", "request": {"kind": "room_thesis_save", "ticker": "OKLO.US"}, "response": {"hermes_run_id": "hermes-1"}})
+        store.upsert_hermes_thesis = Mock(return_value={"id": "note-1"})
+        owner_settings = Settings(owner_supabase_user_id="owner-user", hermes_base_url="http://investment-hermes", hermes_api_key="secret")
+        output = json.dumps({"summary": "มุมมอง Hermes", "hermes_thesis": {"title": "OKLO — ความเสี่ยงโครงการ", "key_risks": "Execution risk"}})
+        with patch.object(api_main, "settings", owner_settings), patch.object(
+            api_main.HermesAgentClient, "get_run", return_value={"status": "completed", "output": output}
+        ):
+            result = api_main.user_agent_run_status("7d824bd4-2df4-4a64-b334-5db40e235c69", "owner-user", store)
+        self.assertEqual(result["status"], "succeeded")
+        self.assertEqual(result["result"]["saved_thesis_ticker"], "OKLO.US")
+        self.assertEqual(store.upsert_hermes_thesis.call_args.kwargs["source_kind"], "pixel_agent_append")
+        self.assertEqual(store.upsert_hermes_thesis.call_args.args[1]["title"], "OKLO — ความเสี่ยงโครงการ")
+
+    def test_pixel_save_run_without_structured_thesis_reports_failure(self):
+        store = FakeRunStore()
+        store.get_agent_run = Mock(return_value={"status": "running", "request": {"kind": "room_thesis_save", "ticker": "OKLO.US"}, "response": {"hermes_run_id": "hermes-1"}})
+        owner_settings = Settings(owner_supabase_user_id="owner-user", hermes_base_url="http://investment-hermes", hermes_api_key="secret")
+        with patch.object(api_main, "settings", owner_settings), patch.object(
+            api_main.HermesAgentClient, "get_run", return_value={"status": "completed", "output": "saved!"}
+        ):
+            result = api_main.user_agent_run_status("7d824bd4-2df4-4a64-b334-5db40e235c69", "owner-user", store)
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(store.updated[0]["status"], "failed")
+
+    def test_pixel_save_database_error_reports_failure_instead_of_retrying_forever(self):
+        store = FakeRunStore()
+        store.get_agent_run = Mock(return_value={"status": "running", "request": {"kind": "room_thesis_save", "ticker": "OKLO.US"}, "response": {"hermes_run_id": "hermes-1"}})
+        store.upsert_hermes_thesis = Mock(side_effect=ServiceError("database unavailable"))
+        owner_settings = Settings(owner_supabase_user_id="owner-user", hermes_base_url="http://investment-hermes", hermes_api_key="secret")
+        with patch.object(api_main, "settings", owner_settings), patch.object(
+            api_main.HermesAgentClient, "get_run", return_value={"status": "completed", "output": {"hermes_thesis": {"bull_case": "Evidence"}}}
+        ):
+            result = api_main.user_agent_run_status("7d824bd4-2df4-4a64-b334-5db40e235c69", "owner-user", store)
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(store.updated[0]["status"], "failed")
 
     def test_owner_stock_research_completion_persists_snapshot(self):
         store = FakeRunStore()

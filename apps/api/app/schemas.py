@@ -48,9 +48,15 @@ class LeadDispatchRequest(BaseModel):
     command: str = Field(min_length=1, max_length=1600)
 
 
+class RoomChatTurn(BaseModel):
+    question: str = Field(min_length=1, max_length=1200)
+    answer: str = Field(min_length=1, max_length=4000)
+
+
 class RoomChatRequest(BaseModel):
     agent: Literal["scout", "analyst", "ranger"]
     question: str = Field(min_length=1, max_length=1200)
+    history: list[RoomChatTurn] = Field(default_factory=list, max_length=5)
 
 
 class StockResearchRequest(BaseModel):

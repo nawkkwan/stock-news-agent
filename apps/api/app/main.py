@@ -1,3 +1,4 @@
+import json
 import re
 from typing import Annotated, Any
 from uuid import UUID
@@ -102,6 +103,98 @@ def decision_with_watch_zone(result: dict[str, Any], market: dict[str, Any]) -> 
     return decision
 
 
+def research_source_count(result: dict[str, Any], fallback: int = 0) -> int:
+    sources = result.get("sources")
+    if not isinstance(sources, list):
+        return fallback
+    urls = {
+        str(source.get("url")).strip()
+        for source in sources
+        if isinstance(source, dict) and str(source.get("url") or "").strip()
+    }
+    return len(urls) or fallback
+
+
+def persist_hermes_thesis(
+    portfolio_store: SupabasePortfolioStore,
+    ticker: str,
+    result: dict[str, Any],
+    source_run_id: str | None = None,
+    source_kind: str = "research",
+) -> dict[str, Any] | None:
+    thesis = result.get("hermes_thesis")
+    if not isinstance(thesis, dict) or not any(
+        isinstance(thesis.get(field), str) and thesis[field].strip()
+        for field in SupabasePortfolioStore.HERMES_THESIS_SECTIONS
+    ):
+        return None
+    evidence = {
+        key: result.get(key)
+        for key in ("summary", "facts", "inferences", "risks", "sources", "next_action")
+        if result.get(key) is not None
+    }
+    return portfolio_store.upsert_hermes_thesis(
+        ticker,
+        thesis,
+        evidence_summary=evidence,
+        source_run_id=source_run_id,
+        source_kind=source_kind,
+    )
+
+
+def thesis_save_requested(question: str) -> bool:
+    return bool(
+        re.search(r"(?:thesis|theis|ธีสิส|ธีซิส)", question, re.IGNORECASE)
+        and re.search(r"(?:save|record|เซฟ|บันทึก|เก็บ)", question, re.IGNORECASE)
+    )
+
+
+def thesis_ticker_from_conversation(question: str, history: list[dict[str, str]], context: dict[str, Any]) -> str | None:
+    known = {
+        str(row.get("ticker") or "").upper()
+        for key in ("holdings", "watchlist", "thesis", "hermes_thesis")
+        for row in context.get(key, []) if isinstance(row, dict) and row.get("ticker")
+    }
+    for message in [question, *[turn.get("question", "") for turn in reversed(history)]]:
+        mentioned = {
+            ticker for ticker in known
+            if re.search(rf"(?<![A-Z0-9.]){re.escape(ticker)}(?![A-Z0-9.])", message, re.IGNORECASE)
+            or (ticker.endswith(".US") and re.search(rf"(?<![A-Z0-9.]){re.escape(ticker[:-3])}(?![A-Z0-9.])", message, re.IGNORECASE))
+        }
+        if len(mentioned) == 1:
+            return mentioned.pop()
+        if len(mentioned) > 1:
+            return None
+        # Allow a new stock not yet in the portfolio, but require an explicit market suffix.
+        explicit = set(re.findall(r"(?<![A-Z0-9.])([A-Z]{1,8}\.[A-Z]{2,4})(?![A-Z0-9.])", message.upper()))
+        if len(explicit) == 1:
+            return explicit.pop()
+        if len(explicit) > 1:
+            return None
+        bare = re.findall(r"(?:ticker|หุ้น|สำหรับ)\s*([A-Z]{1,6})(?![A-Z0-9.])", message, re.IGNORECASE)
+        if len(set(bare)) == 1:
+            return bare[0].upper()
+        if len(set(bare)) > 1:
+            return None
+    return None
+
+
+def hermes_output(value: Any) -> dict[str, Any]:
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
+        clean = value.strip()
+        if clean.startswith("```"):
+            clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", clean, flags=re.IGNORECASE)
+        try:
+            parsed = json.loads(clean)
+            if isinstance(parsed, dict):
+                return parsed
+        except (ValueError, TypeError):
+            pass
+    return {"summary": str(value or "Hermes completed without text output.")}
+
+
 def market_from_snapshot(snapshot: dict[str, Any] | None) -> dict[str, Any] | None:
     if not snapshot or not isinstance(snapshot.get("market_snapshot"), dict):
         return None
@@ -157,7 +250,21 @@ def portfolio_context(_: HermesOwner, portfolio_store: SupabasePortfolioStore = 
 @app.post("/v1/research", response_model=AgentResponse)
 def research(payload: ResearchRequest, _: HermesOwner, agents: GeminiAgentTeam = Depends(team)) -> AgentResponse:
     try:
-        return AgentResponse(agent="research", result=agents.research(payload.ticker, payload.question))
+        ticker = normalized_ticker(payload.ticker)
+        result = agents.research(ticker, payload.question)
+        market = agents.market_overview(ticker)
+        decision = decision_with_watch_zone(result, market)
+        context = agents.store.stock_context(ticker)
+        snapshot = agents.store.save_research_snapshot(
+            ticker=ticker,
+            source="hermes",
+            market_snapshot=market,
+            decision_summary=decision,
+            news_count=research_source_count(decision, len(context.get("news", []))),
+            dedupe_key=f"pixel-agent:{ticker}:{uuid4()}",
+        )
+        persist_hermes_thesis(agents.store, ticker, decision)
+        return AgentResponse(agent="research", result={**decision, "snapshot_id": snapshot["id"]})
     except ServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
@@ -188,16 +295,24 @@ def user_room_chat(
     try:
         if user_id == settings.owner_supabase_user_id:
             role = HermesAgentClient.ROLE_MAP[payload.agent]
+            context = portfolio_store.context()
+            history = [turn.model_dump() for turn in payload.history]
+            save_ticker = thesis_ticker_from_conversation(payload.question, history, context) if thesis_save_requested(payload.question) else None
+            if thesis_save_requested(payload.question) and not save_ticker:
+                raise HTTPException(status_code=400, detail="กรุณาระบุ ticker ของ Thesis ที่ต้องการบันทึกให้ชัดเจน")
             run = portfolio_store.create_agent_run(
                 role,
-                {"mode": "hermes", "agent": payload.agent, "question": payload.question},
+                {"mode": "hermes", "agent": payload.agent, "question": payload.question,
+                 "kind": "room_thesis_save" if save_ticker else "room_chat", "ticker": save_ticker},
             )
             try:
                 hermes_run_id = HermesAgentClient(settings).start_run(
                     agent=payload.agent,
                     question=payload.question,
-                    context=portfolio_store.context(),
+                    context=context,
                     idempotency_key=str(run["id"]),
+                    history=history,
+                    save_thesis_ticker=save_ticker,
                 )
             except ServiceError:
                 portfolio_store.update_agent_run(
@@ -284,6 +399,7 @@ def user_stock_research(
                     question=question,
                     context={**portfolio_store.stock_context(normalized), "market": market},
                     idempotency_key=str(run["id"]),
+                    research_ticker=normalized,
                 )
             except ServiceError:
                 portfolio_store.update_agent_run(str(run["id"]), "failed", error="Hermes stock research could not be started.")
@@ -298,7 +414,7 @@ def user_stock_research(
             source="gemini",
             market_snapshot=market,
             decision_summary=decision,
-            news_count=len(portfolio_store.stock_context(normalized).get("news", [])),
+            news_count=research_source_count(decision, len(portfolio_store.stock_context(normalized).get("news", []))),
             dedupe_key=f"gemini:{normalized}:{user_id}:{uuid4()}",
         )
         return JSONResponse(status_code=200, content={"mode": "gemini", "status": "completed", "result": decision, "snapshot_id": snapshot["id"]})
@@ -337,8 +453,7 @@ def user_agent_run_status(
         hermes_run = HermesAgentClient(settings).get_run(hermes_run_id)
         hermes_status = str(hermes_run.get("status") or "running").lower()
         if hermes_status == "completed":
-            output = hermes_run.get("output")
-            result = output if isinstance(output, dict) else {"summary": str(output or "Hermes completed without text output.")}
+            result = hermes_output(hermes_run.get("output"))
             request_data = run.get("request") if isinstance(run.get("request"), dict) else {}
             if request_data.get("kind") == "stock_research" and request_data.get("ticker"):
                 ticker = normalized_ticker(str(request_data["ticker"]))
@@ -349,11 +464,25 @@ def user_agent_run_status(
                     source="hermes",
                     market_snapshot=market,
                     decision_summary=result,
-                    news_count=len(portfolio_store.stock_context(ticker).get("news", [])),
+                    news_count=research_source_count(result, len(portfolio_store.stock_context(ticker).get("news", []))),
                     dedupe_key=f"agent:{local_run_id}",
                     agent_run_id=local_run_id,
                 )
+                persist_hermes_thesis(portfolio_store, ticker, result, local_run_id)
                 result = {**result, "snapshot_id": snapshot["id"]}
+            elif request_data.get("kind") == "room_thesis_save" and request_data.get("ticker"):
+                ticker = normalized_ticker(str(request_data["ticker"]))
+                try:
+                    saved = persist_hermes_thesis(portfolio_store, ticker, result, local_run_id, "pixel_agent_append")
+                except ServiceError:
+                    error = "บันทึก Hermes thesis ไม่สำเร็จ กรุณาตรวจ migration และลองใหม่"
+                    portfolio_store.update_agent_run(local_run_id, "failed", error=error)
+                    return {"mode": "hermes", "status": "failed", "result": None, "error": error}
+                if not saved:
+                    error = "Hermes ยังไม่ได้ส่ง Thesis ที่เป็นโครงสร้าง จึงไม่ได้บันทึก กรุณาระบุหุ้นและลองอีกครั้ง"
+                    portfolio_store.update_agent_run(local_run_id, "failed", error=error)
+                    return {"mode": "hermes", "status": "failed", "result": None, "error": error}
+                result = {**result, "saved_thesis_ticker": ticker}
             portfolio_store.update_agent_run(local_run_id, "succeeded", response_data=result)
             return {"mode": "hermes", "status": "succeeded", "result": result, "error": None}
         if hermes_status in {"failed", "cancelled"}:
@@ -408,7 +537,7 @@ def save_research_note(payload: ResearchNoteCreate, _: HermesOwner, portfolio_st
 @app.post("/v1/thesis/append")
 def append_thesis_note(payload: ThesisAppendCreate, _: HermesOwner, portfolio_store: SupabasePortfolioStore = Depends(store)) -> dict[str, Any]:
     try:
-        return portfolio_store.append_thesis_note(normalized_ticker(payload.ticker), payload.section, payload.note)
+        return portfolio_store.append_hermes_thesis_note(normalized_ticker(payload.ticker), payload.section, payload.note)
     except ServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 

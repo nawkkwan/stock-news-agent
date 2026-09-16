@@ -12,6 +12,9 @@ begin
   if has_table_privilege('authenticated', 'public.agent_runs', 'insert') then
     raise exception 'authenticated clients can write agent runs';
   end if;
+  if has_table_privilege('authenticated', 'public.hermes_thesis_notes', 'insert') then
+    raise exception 'authenticated clients can write Hermes thesis notes';
+  end if;
 end;
 $$;
 

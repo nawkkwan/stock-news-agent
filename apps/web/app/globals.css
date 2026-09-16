@@ -1639,9 +1639,19 @@ body.drawer-open { overflow: hidden; }
 .stock-source-list article p { margin: 0; color: #aebec6; font-size: 13px; }
 .stock-source-list article a { font-size: 12px; white-space: nowrap; }
 .research-history-list { display: grid; gap: 8px; }
-.research-history-list article { padding: 13px 15px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel-soft); }
-.research-history-list article strong { color: var(--accent-strong); font-family: Consolas, monospace; font-size: 11px; }
-.research-history-list article p { margin: 5px 0 0; color: #c0ccd1; font-size: 13px; }
+.research-history-item { overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: var(--panel-soft); }
+.research-history-item > summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 13px 15px; cursor: pointer; list-style-position: inside; }
+.research-history-item > summary > div { display: grid; flex: 1; gap: 5px; }
+.research-history-item > summary strong, .research-history-body > section > strong { color: var(--accent-strong); font-family: Consolas, monospace; font-size: 11px; }
+.research-history-item > summary p { margin: 0; color: #c0ccd1; font-size: 13px; }
+.research-history-item > summary > span { flex: 0 0 auto; color: var(--muted); font-family: Consolas, monospace; font-size: 10px; }
+.research-history-body { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; padding: 15px; border-top: 1px solid var(--line); background: #091117; }
+.research-history-body section { min-width: 0; }
+.research-history-body ul { margin: 7px 0 0; padding-left: 18px; color: #b9c8cd; font-size: 12px; }
+.research-history-sources { grid-column: 1 / -1; padding-top: 12px; border-top: 1px solid var(--line); }
+.research-history-sources div { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px 14px; margin-top: 8px; }
+.research-history-sources a { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.research-history-no-sources { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 12px; }
 .stock-notes-panel > summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; }
 .stock-notes-panel > summary > span:first-child { display: grid; }
 .stock-notes-panel summary small { color: var(--muted); }
@@ -1654,12 +1664,24 @@ body.drawer-open { overflow: hidden; }
 .thesis-review-badge.reviewed { border-color: rgba(52,211,153,.4); background: rgba(52,211,153,.1); color: #78f0c5; }
 .thesis-review-badge.pending { border-color: rgba(250,204,21,.35); background: rgba(250,204,21,.08); color: #f8d66d; }
 .thesis-review-badge.empty { color: var(--muted); }
-.thesis-workspace-grid { display: grid; grid-template-columns: minmax(0,1.55fr) minmax(280px,.65fr); gap: 16px; }
+.thesis-workspace-grid { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(320px,.9fr); gap: 16px; }
 .thesis-owner-column, .thesis-review-column { display: grid; gap: 12px; align-content: start; }
 .thesis-provenance { display: flex; align-items: center; gap: 10px; }
 .thesis-provenance > span { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 9px; background: #183d35; color: #70f1cd; font-weight: 900; }
 .thesis-provenance > div { display: grid; gap: 2px; }
 .thesis-provenance small { color: var(--muted); }
+.thesis-provenance.hermes > span { background: #203341; color: #8fdfff; }
+.thesis-note-title { margin: 2px 0 4px; color: #e5fff7; font-size: clamp(17px, 2vw, 22px); line-height: 1.35; overflow-wrap: anywhere; }
+.thesis-review-card .thesis-note-title { color: #c8edff; font-size: 17px; }
+.thesis-title-field { padding: 12px; border: 1px solid rgba(99,237,198,.24); border-radius: 9px; background: rgba(31,159,126,.07); }
+.thesis-form-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 15px; }
+.thesis-save-message { margin: 0; color: var(--muted); font-size: 12px; }
+.thesis-save-message.success { color: #78f0c5; }
+.thesis-save-message.error { color: #fda4af; }
+.company-error-card { max-width: 680px; margin: 12vh auto; padding: clamp(24px, 5vw, 48px); text-align: center; }
+.company-error-card h1 { margin: 6px 0 12px; }
+.company-error-card > p:not(.eyebrow) { color: var(--muted); line-height: 1.65; }
+.company-error-card > div { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
 .thesis-reading-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: var(--line); }
 .thesis-reading-grid article { min-height: 118px; padding: 16px; background: #0a1218; }
 .thesis-reading-grid article > span { color: #79d8c0; font-family: Consolas, monospace; font-size: 10px; font-weight: 900; text-transform: uppercase; }
@@ -1677,6 +1699,13 @@ body.drawer-open { overflow: hidden; }
 .thesis-review-card > p:not(.eyebrow), .thesis-watch-card > p { color: #aebfc4; font-size: 13px; }
 .thesis-review-card .stock-research-action { justify-items: stretch; max-width: none; margin-top: 14px; }
 .thesis-review-card .research-status { text-align: left; }
+.hermes-thesis-reading { display: grid; gap: 8px; margin-top: 14px; }
+.hermes-thesis-reading article { padding: 11px 12px; border: 1px solid rgba(99,237,198,.14); border-radius: 8px; background: rgba(4,13,18,.55); }
+.hermes-thesis-reading article span { color: #79d8c0; font-family: Consolas, monospace; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+.hermes-thesis-reading article p { margin: 5px 0 0; color: #c2cfd3; font-size: 12px; white-space: pre-wrap; }
+.hermes-thesis-sources { display: grid; gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.hermes-thesis-sources strong { color: var(--accent-strong); font-size: 11px; }
+.hermes-thesis-sources a { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .thesis-watch-card > span { display: inline-flex; padding: 4px 7px; border-radius: 999px; background: rgba(25,201,154,.1); color: var(--accent-strong); font-family: Consolas, monospace; font-size: 10px; text-transform: uppercase; }
 .watchlist-editor { margin-top: 14px; }
 
@@ -1687,6 +1716,8 @@ body.drawer-open { overflow: hidden; }
   .stock-detail-hero, .stock-decision-head, .thesis-workspace-head { align-items: flex-start; flex-direction: column; }
   .stock-quote, .stock-research-action { justify-items: start; text-align: left; }
   .stock-source-list article { grid-template-columns: 1fr; gap: 7px; }
+  .research-history-body, .research-history-sources div { grid-template-columns: 1fr; }
+  .research-history-item > summary { flex-direction: column; }
 }
 .transaction-badge { display: inline-flex; min-width: 44px; justify-content: center; padding: 3px 6px; border-radius: 999px; background: rgba(25, 201, 154, 0.11); color: var(--accent-strong); font-size: 10px; font-weight: 900; }
 .transaction-badge.sell, .transaction-badge.withdrawal, .transaction-badge.fee { background: rgba(251, 113, 133, 0.11); color: #ff9aaa; }

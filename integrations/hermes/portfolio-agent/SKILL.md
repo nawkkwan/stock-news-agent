@@ -34,7 +34,7 @@ Load this skill when the user asks about:
 - their live portfolio, holdings, watchlist, thesis, concentration, or risks;
 - research on a ticker;
 - saving a Discord message or conversation insight as research evidence;
-- adding an explicit note to one section of the owner's thesis;
+- adding an explicit note to one section of Hermes's separate thesis;
 - stock discovery by theme, sector, or criteria;
 - adding or removing a ticker from the watchlist;
 - the latest briefing or alert status.
@@ -92,7 +92,7 @@ The saved note appears in the stock's evidence section on the website and is
 available in future portfolio context. Never save ordinary conversation unless
 the owner explicitly says to save, remember, record, or add it.
 
-### Append to the owner's thesis
+### Append to Hermes's thesis
 
 Classify only an explicit thesis update into one of these exact fields:
 
@@ -108,7 +108,8 @@ Classify only an explicit thesis update into one of these exact fields:
 python "$env:LOCALAPPDATA\hermes\skills\finance\portfolio-agent\scripts\portfolio_api.py" thesis-add GOOGL.US --section growth_drivers --note "Cloud backlog is accelerating"
 ```
 
-This operation appends and never overwrites existing thesis text. If the ticker
+This operation appends only to `hermes_thesis_notes` and never edits the owner's
+`thesis_notes`. If the ticker
 or destination section is ambiguous, ask the owner before writing. Confirm the
 ticker, selected Thai section label, and saved text after success.
 
@@ -150,7 +151,7 @@ Use these role boundaries:
 - Never place or simulate a broker order.
 - Never modify holdings or transactions.
 - Never capture a Discord conversation without an explicit owner request.
-- Thesis writes must append to one confirmed section and must not replace existing text.
+- Thesis writes must append to one confirmed Hermes section and must not replace the owner's text.
 - Never expose secrets in messages, logs, or delegated prompts.
 - Reject requests from users not authorized by the API.
 - Treat API errors as errors; do not invent portfolio values.

@@ -11,7 +11,6 @@ import {
   type NewsItem,
   type Portfolio,
   type PortfolioSummary,
-  type ThesisNote,
   type PortfolioHolding,
   type PortfolioTransaction,
   type WatchlistItem,
@@ -24,7 +23,6 @@ import {
   upsertHolding,
   upsertNewsItem,
   upsertPortfolio,
-  upsertThesis,
   upsertWatchlistItem,
 } from "./actions";
 import { DeleteHoldingButton } from "./delete-holding-button";
@@ -308,26 +306,6 @@ export function WatchlistForm({ item, ticker }: { item?: WatchlistItem | null; t
       <TextArea label="Reason" name="reason" defaultValue={item?.reason} />
       <button className="button" type="submit">
         Save watchlist
-      </button>
-    </form>
-  );
-}
-
-export function ThesisForm({ thesis, ticker }: { thesis?: ThesisNote | null; ticker: string }) {
-  return (
-    <form action={upsertThesis} className="form-grid thesis-form">
-      <input type="hidden" name="id" value={thesis?.id || ""} />
-      <input type="hidden" name="ticker" value={ticker} />
-      <TextArea label="Business Overview" name="business_overview" defaultValue={thesis?.business_overview} />
-      <TextArea label="Why I'm Interested" name="growth_drivers" defaultValue={thesis?.growth_drivers} />
-      <TextArea label="Bull Case" name="bull_case" defaultValue={thesis?.bull_case} />
-      <TextArea label="Bear Case" name="bear_case" defaultValue={thesis?.bear_case} />
-      <TextArea label="Moat" name="moat" defaultValue={thesis?.moat} />
-      <TextArea label="Key Risks" name="key_risks" defaultValue={thesis?.key_risks} />
-      <TextArea label="Sell Conditions" name="sell_conditions" defaultValue={thesis?.sell_conditions} />
-      <Field label="My Confidence" name="confidence_score" type="number" defaultValue={thesis?.confidence_score} />
-      <button className="button" type="submit">
-        Save thesis
       </button>
     </form>
   );

@@ -90,6 +90,7 @@ export type WatchlistItem = {
 
 export type ThesisNote = {
   id: string;
+  title: string | null;
   company_id: string | null;
   portfolio_id: string;
   ticker: string;
@@ -140,6 +141,12 @@ export type NewsItem = {
   user_id: string;
 };
 
+export type HermesThesisNote = Omit<ThesisNote, "company_id"> & {
+  evidence_summary: Record<string, unknown>;
+  source_run_id: string | null;
+  source_kind: "research" | "pixel_agent_append";
+};
+
 export type StockResearchSnapshot = {
   id: string;
   user_id: string;
@@ -171,6 +178,7 @@ export type InvestmentData = {
   hasCashLedger: boolean;
   watchlist: WatchlistItem[];
   thesisNotes: ThesisNote[];
+  hermesThesisNotes: HermesThesisNote[];
   journalEntries: InvestmentJournalEntry[];
   news: NewsItem[];
   researchSnapshots: StockResearchSnapshot[];

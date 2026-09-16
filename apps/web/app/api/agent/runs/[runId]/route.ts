@@ -8,16 +8,17 @@ type AgentResult = {
   risks?: string[];
   candidates?: string[];
   next_action?: string;
+  saved_thesis_ticker?: string;
 };
 
 function formatAgentResult(result: AgentResult) {
   const sections: string[] = [];
-  if (result.summary) sections.push(result.summary);
-  if (result.facts?.length) sections.push(`ข้อเท็จจริง\n${result.facts.map((item) => `• ${item}`).join("\n")}`);
-  if (result.inferences?.length) sections.push(`ข้อสังเกต\n${result.inferences.map((item) => `• ${item}`).join("\n")}`);
-  if (result.risks?.length) sections.push(`ความเสี่ยง\n${result.risks.map((item) => `• ${item}`).join("\n")}`);
-  if (result.candidates?.length) sections.push(`รายการที่ควรศึกษาเพิ่ม\n${result.candidates.map((item) => `• ${item}`).join("\n")}`);
-  if (result.next_action) sections.push(`ขั้นต่อไป: ${result.next_action}`);
+  if (typeof result.summary === "string") sections.push(result.summary);
+  for (const [label, values] of [["ข้อเท็จจริง", result.facts], ["ข้อสังเกต", result.inferences], ["ความเสี่ยง", result.risks], ["รายการที่ควรศึกษาเพิ่ม", result.candidates]] as const) {
+    if (Array.isArray(values) && values.length) sections.push(`${label}\n${values.filter((item): item is string => typeof item === "string").map((item) => `• ${item}`).join("\n")}`);
+  }
+  if (typeof result.next_action === "string") sections.push(`ขั้นต่อไป: ${result.next_action}`);
+  if (result.saved_thesis_ticker) sections.push(`บันทึก Hermes thesis สำหรับ ${result.saved_thesis_ticker} แล้ว (แยกจาก Thesis ของคุณ)`);
   return sections.join("\n\n") || "Hermes ทำงานเสร็จแล้ว แต่ไม่มีข้อความตอบกลับ";
 }
 
@@ -62,7 +63,7 @@ export async function GET(
       );
     }
     if (payload?.status === "succeeded") {
-      return NextResponse.json({ status: "succeeded", answer: formatAgentResult(payload.result || {}) });
+      return NextResponse.json({ status: "succeeded", answer: formatAgentResult(payload.result || {}), savedTicker: payload.result?.saved_thesis_ticker || null });
     }
     if (payload?.status === "failed") {
       return NextResponse.json({ status: "failed", error: payload.error || "Hermes ทำงานไม่สำเร็จ" });

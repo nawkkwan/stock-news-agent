@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 
 type AgentId = "scout" | "analyst" | "ranger";
@@ -53,6 +54,8 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
   const [runId, setRunId] = useState<string | null>(null);
   const [timedOut, setTimedOut] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState<string | null>(null);
+  const [history, setHistory] = useState<{ question: string; answer: string }[]>([]);
+  const [savedTicker, setSavedTicker] = useState<string | null>(null);
 
   function selectAgent(agent: AgentId) {
     if (loading) return;
@@ -63,16 +66,18 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
     setRunId(null);
     setTimedOut(false);
     setActiveQuestion(null);
+    setHistory([]);
+    setSavedTicker(null);
   }
 
-  async function pollHermesRun(activeRunId: string, maxAttempts = 120) {
+  async function pollHermesRun(activeRunId: string, askedQuestion: string, maxAttempts = 120) {
     setLoading(true);
     setTimedOut(false);
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
       if (attempt > 0) await wait(2_000);
       const response = await fetch(`/api/agent/runs/${activeRunId}`, { cache: "no-store" });
       const payload = (await response.json().catch(() => null)) as
-        | { status?: "running" | "succeeded" | "failed"; answer?: string; error?: string }
+        | { status?: "running" | "succeeded" | "failed"; answer?: string; error?: string; savedTicker?: string }
         | null;
       if (!response.ok) {
         if ([401, 403, 404].includes(response.status)) {
@@ -82,7 +87,10 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
         continue;
       }
       if (payload?.status === "succeeded") {
-        setAnswer(payload.answer || "Hermes ทำงานเสร็จแล้ว");
+        const finalAnswer = payload.answer || "Hermes ทำงานเสร็จแล้ว";
+        setAnswer(finalAnswer);
+        setHistory((previous) => [...previous, { question: askedQuestion, answer: finalAnswer.slice(0, 4000) }].slice(-5));
+        setSavedTicker(payload.savedTicker || null);
         setQuestion("");
         setRunId(null);
         setLoading(false);
@@ -108,11 +116,12 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
     setLoading(true);
     setAnswer("กำลังเปิดแฟ้มข้อมูลและตรวจหลักฐาน...");
     setActiveQuestion(trimmed);
+    setSavedTicker(null);
     try {
       const response = await fetch("/api/agent/chat", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ agent: selected, question: trimmed }),
+        body: JSON.stringify({ agent: selected, question: trimmed, history }),
       });
       const payload = (await response.json()) as {
         mode?: "hermes" | "gemini";
@@ -124,11 +133,14 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
       if (response.status === 202 && payload.mode === "hermes" && payload.runId) {
         setRunId(payload.runId);
         setAnswer("Hermes กำลังแบ่งงานให้ sub-agent และรวบรวมคำตอบ...");
-        await pollHermesRun(payload.runId);
+        await pollHermesRun(payload.runId, trimmed);
         return;
       }
       setAnswer(payload.answer || payload.error || "Agent ยังตอบไม่ได้ในตอนนี้");
-      if (response.ok) setQuestion("");
+      if (response.ok) {
+        if (payload.answer) setHistory((previous) => [...previous, { question: trimmed, answer: payload.answer!.slice(0, 4000) }].slice(-5));
+        setQuestion("");
+      }
     } catch {
       setAnswer("เชื่อมต่อ Agent ไม่สำเร็จ กรุณาลองอีกครั้ง");
     } finally {
@@ -195,9 +207,10 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
           <div><span>{loading ? "MISSION IN PROGRESS" : activeQuestion ? "LATEST MISSION" : "DESK STATUS"}</span><i /></div>
           {activeQuestion ? <strong>{activeQuestion}</strong> : null}
           <p>{answer}</p>
+          {savedTicker ? <Link href={`/investing/companies/${encodeURIComponent(savedTicker)}`}>เปิด Hermes thesis ของ {savedTicker} ↗</Link> : null}
         </section>
         {timedOut && runId ? (
-          <button className="agent-run-retry" type="button" onClick={() => void pollHermesRun(runId)} disabled={loading}>
+          <button className="agent-run-retry" type="button" onClick={() => void pollHermesRun(runId, activeQuestion || question)} disabled={loading}>
             ตรวจผลอีกครั้ง
           </button>
         ) : null}

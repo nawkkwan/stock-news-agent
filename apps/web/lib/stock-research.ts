@@ -63,7 +63,12 @@ export async function getStockApiOverview(ticker: string): Promise<StockApiOverv
       signal: AbortSignal.timeout(25_000),
     });
     if (!response.ok) return null;
-    return await response.json() as StockApiOverview;
+    const payload = await response.json() as StockApiOverview;
+    if (!payload?.market || typeof payload.market !== "object") return null;
+    const history = Array.isArray(payload.market.history)
+      ? payload.market.history.filter((bar): bar is MarketBar => Boolean(bar && typeof bar.date === "string" && typeof bar.close === "number" && Number.isFinite(bar.close)))
+      : [];
+    return { ...payload, market: { ...payload.market, history }, snapshots: Array.isArray(payload.snapshots) ? payload.snapshots : [] };
   } catch {
     return null;
   }

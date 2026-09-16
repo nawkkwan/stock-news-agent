@@ -17,6 +17,8 @@ Implemented:
 - Azure API/worker bootstrap and GitLab build/deploy pipeline
 - Daily briefing persistence and duplicate-safe Discord delivery
 - Read-only Pixel Portfolio Agent dashboard MVP with Scout, Analyst, and Watchlist views
+- Separate owner and Hermes thesis records with evidence provenance
+- Automatic Research History snapshots for PixelAgent `/research`, including source URLs
 
 Not Implemented:
 - Automated daily prices table ingestion

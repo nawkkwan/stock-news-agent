@@ -1,5 +1,5 @@
 begin;
-select plan(12);
+select plan(14);
 
 insert into auth.users (id, aud, role, email, created_at, updated_at)
 values
@@ -10,6 +10,7 @@ select tests.rls_enabled('public', 'portfolios');
 select tests.rls_enabled('public', 'holdings');
 select tests.rls_enabled('public', 'watchlist');
 select tests.rls_enabled('public', 'agent_runs');
+select tests.rls_enabled('public', 'hermes_thesis_notes');
 
 select ok(
   exists (select 1 from pg_indexes where schemaname = 'public' and indexname = 'portfolios_one_per_user_uidx'),
@@ -34,6 +35,11 @@ select ok(
 select ok(
   has_table_privilege('authenticated', 'public.agent_runs', 'insert') = false,
   'authenticated clients cannot write agent runs'
+);
+
+select ok(
+  has_table_privilege('authenticated', 'public.hermes_thesis_notes', 'insert') = false,
+  'authenticated clients cannot write Hermes thesis notes'
 );
 
 select is(

@@ -424,43 +424,51 @@ export async function deleteWatchlistItem(formData: FormData) {
   revalidatePath("/agent");
 }
 
-export async function upsertThesis(formData: FormData) {
+export type ThesisSaveState = { status: "idle" | "success" | "error"; message: string };
+
+export async function upsertThesis(_previousState: ThesisSaveState, formData: FormData): Promise<ThesisSaveState> {
   const ticker = normalizeTicker(formData.get("ticker"));
-  if (!ticker) {
-    return;
+  const title = nullableText(formData.get("title"));
+  if (!/^[A-Z0-9.-]{1,20}$/.test(ticker) || !title || title.length > 160) {
+    return { status: "error", message: "กรุณาใส่ชื่อหัวข้อ (ไม่เกิน 160 ตัวอักษร) และตรวจรหัสหุ้นอีกครั้ง" };
+  }
+  const confidence = nullableNumber(formData.get("confidence_score"));
+  if (confidence !== null && (confidence < 0 || confidence > 100)) {
+    return { status: "error", message: "ความมั่นใจต้องอยู่ระหว่าง 0–100" };
   }
 
-  const { supabase, user } = await requireUser();
-  const portfolio = await ensurePortfolio();
-  const company = await ensureCompany(ticker);
-  const id = nullableText(formData.get("id"));
-  const payload = {
-    company_id: company.id,
-    portfolio_id: portfolio.id,
-    ticker,
-    business_overview: nullableText(formData.get("business_overview")),
-    growth_drivers: nullableText(formData.get("growth_drivers")),
-    bull_case: nullableText(formData.get("bull_case")),
-    bear_case: nullableText(formData.get("bear_case")),
-    moat: nullableText(formData.get("moat")),
-    key_risks: nullableText(formData.get("key_risks")),
-    sell_conditions: nullableText(formData.get("sell_conditions")),
-    confidence_score: nullableNumber(formData.get("confidence_score")),
-    user_id: user.id,
-  };
-
-  const existing = id ? null : await findSingleUserRow("thesis_notes", ticker, portfolio.id);
-  const query = id || existing
-    ? supabase.from("thesis_notes").update(payload).eq("id", id || existing?.id)
-    : supabase.from("thesis_notes").insert(payload);
-  const { error } = await query;
-
-  if (error) {
-    throw error;
+  try {
+    const { supabase, user } = await requireUser();
+    const portfolio = await ensurePortfolio();
+    const company = await ensureCompany(ticker);
+    const { error } = await supabase.from("thesis_notes").upsert({
+      company_id: company.id,
+      portfolio_id: portfolio.id,
+      ticker,
+      title,
+      business_overview: nullableText(formData.get("business_overview")),
+      growth_drivers: nullableText(formData.get("growth_drivers")),
+      bull_case: nullableText(formData.get("bull_case")),
+      bear_case: nullableText(formData.get("bear_case")),
+      moat: nullableText(formData.get("moat")),
+      key_risks: nullableText(formData.get("key_risks")),
+      sell_conditions: nullableText(formData.get("sell_conditions")),
+      confidence_score: confidence,
+      user_id: user.id,
+    }, { onConflict: "user_id,ticker" });
+    if (error) {
+      console.error("Thesis save failed", { code: error.code, message: error.message });
+      return { status: "error", message: error.code === "42703" || error.code === "PGRST204"
+        ? "ฐานข้อมูลยังไม่มีช่องชื่อหัวข้อ กรุณาใช้ migration ล่าสุดก่อนบันทึก"
+        : "บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง (ข้อมูลในฟอร์มยังอยู่)" };
+    }
+    revalidatePath("/investing");
+    revalidatePath(`/investing/companies/${ticker}`);
+    return { status: "success", message: "บันทึก Thesis ของคุณแล้ว — แยกจากมุมมอง Hermes" };
+  } catch (error) {
+    console.error("Thesis save failed", error);
+    return { status: "error", message: "บันทึกไม่สำเร็จ กรุณาตรวจการเข้าสู่ระบบและพอร์ตของคุณ แล้วลองอีกครั้ง" };
   }
-
-  revalidatePath("/investing");
-  revalidatePath(`/investing/companies/${ticker}`);
 }
 
 export async function upsertInvestmentJournalEntry(formData: FormData) {

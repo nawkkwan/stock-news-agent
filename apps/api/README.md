@@ -34,7 +34,7 @@ Endpoints:
 - `POST /v1/watchlist`
 - `DELETE /v1/watchlist/{ticker}`
 - `POST /v1/research-notes` — capture an explicit Discord note as stock evidence
-- `POST /v1/thesis/append` — append to one thesis section without overwriting it
+- `POST /v1/thesis/append` — append to Hermes's separate thesis without overwriting the owner's thesis
 - `GET /v1/briefings/latest`
 - `GET /v1/alerts/status`
 - `POST /v1/digest/run`

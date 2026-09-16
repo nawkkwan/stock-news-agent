@@ -3,6 +3,7 @@ import { createSupabaseServerClient, hasSupabaseConfig } from "./supabase-server
 import type {
   Company,
   Holding,
+  HermesThesisNote,
   InvestmentJournalEntry,
   InvestmentData,
   NewsItem,
@@ -38,11 +39,13 @@ export function formatDate(value: string | null | undefined) {
   if (!value) {
     return "-";
   }
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "-";
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
-  }).format(new Date(value));
+  }).format(date);
 }
 
 export function formatNumber(value: number | null | undefined, suffix = "") {
@@ -72,6 +75,7 @@ async function emptyInvestmentData(configured: boolean, error?: string): Promise
     hasCashLedger: false,
     watchlist: [],
     thesisNotes: [],
+    hermesThesisNotes: [],
     journalEntries: [],
     news: [],
     researchSnapshots: [],
@@ -121,7 +125,7 @@ export async function getInvestmentData(options: InvestmentDataOptions = {}): Pr
       return emptyInvestmentData(true, "Sign in to load your investment data.");
     }
 
-    const [portfoliosResult, companiesResult, holdingsResult, transactionsResult, watchlistResult, thesisResult, journalResult, newsResult, snapshotsResult] =
+    const [portfoliosResult, companiesResult, holdingsResult, transactionsResult, watchlistResult, thesisResult, hermesThesisResult, journalResult, newsResult, snapshotsResult] =
       await Promise.all([
         supabase.from("portfolios").select("*").eq("user_id", user.id).order("created_at", { ascending: true }),
         supabase.from("companies").select("*").eq("user_id", user.id).order("ticker", { ascending: true }),
@@ -129,6 +133,7 @@ export async function getInvestmentData(options: InvestmentDataOptions = {}): Pr
         supabase.from("portfolio_transactions").select("*").eq("user_id", user.id).order("transaction_date", { ascending: false }),
         supabase.from("watchlist").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
         supabase.from("thesis_notes").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
+        supabase.from("hermes_thesis_notes").select("*").eq("user_id", user.id).order("updated_at", { ascending: false }),
         supabase.from("investment_journal").select("*").eq("user_id", user.id).order("date", { ascending: false }),
         supabase.from("news_items").select("*").eq("user_id", user.id).order("published_at", { ascending: false }),
         supabase.from("stock_research_snapshots").select("*").eq("user_id", user.id).order("as_of", { ascending: false }).limit(100),
@@ -176,6 +181,8 @@ export async function getInvestmentData(options: InvestmentDataOptions = {}): Pr
       ...portfolio,
       watchlist: (watchlistResult.data || []) as WatchlistItem[],
       thesisNotes: (thesisResult.data || []) as ThesisNote[],
+      // Keep the owner thesis usable while the Hermes thesis migration rolls out.
+      hermesThesisNotes: hermesThesisResult.error ? [] : (hermesThesisResult.data || []) as HermesThesisNote[],
       journalEntries: selectedJournalEntries,
       news: (newsResult.data || []) as NewsItem[],
       // Keep the rest of Portfolio usable while the new migration is being rolled out.
@@ -196,6 +203,7 @@ export async function getCompanyData(ticker: string) {
     portfolioHolding: data.portfolioHoldings.find((holding) => holding.ticker === normalized) || null,
     companyTransactions: data.transactions.filter((transaction) => transaction.ticker === normalized),
     thesis: data.thesisNotes.find((note) => note.ticker === normalized) || null,
+    hermesThesis: data.hermesThesisNotes.find((note) => note.ticker === normalized) || null,
     watchlistItem: data.watchlist.find((item) => item.ticker === normalized) || null,
     companyNews: data.news.filter((item) => item.ticker === normalized),
     researchSnapshots: data.researchSnapshots.filter((item) => item.ticker === normalized),
