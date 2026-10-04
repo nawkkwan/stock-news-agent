@@ -87,10 +87,10 @@ def header(c: canvas.Canvas, number: str, title: str, subtitle: str) -> None:
     c.drawString(42, H - 44, f"HERMES SYSTEM HANDOFF  /  {number}")
     c.setFillColor(INK)
     c.setFont("ThaiBold", 24)
-    c.drawString(42, H - 112, title)
-    text(c, subtitle, 42, H - 138, W - 84, size=9.5, color=MUTED)
+    c.drawString(42, H - 104, title)
+    text(c, subtitle, 42, H - 128, W - 84, size=9.5, color=MUTED)
     c.setStrokeColor(HexColor("#29425E"))
-    c.line(42, H - 158, W - 42, H - 158)
+    c.line(42, H - 148, W - 42, H - 148)
 
 
 def footer(c: canvas.Canvas, page: int) -> None:
@@ -247,7 +247,7 @@ def build(args: argparse.Namespace) -> None:
         ("04", "State ต้องสำรองแบบเลือกไฟล์", "ควรเก็บ memory ที่ใช้ส่งต่อ แต่ไม่คัดลอก .env, auth.json หรือ secret ออกมาโดยไม่จำเป็น"),
         ("05", "เก็บข้อมูลเดิมก่อนเปลี่ยนชื่อ", "ใช้ source_kind แยก Gemini/Hermes ได้ โดยไม่เสี่ยง migration ตารางที่มีข้อมูลจริง"),
     ]
-    y = 650
+    y = 620
     for num, title_, detail in lessons:
         rounded(c, 42, y - 26, 511, 82, fill=PANEL, stroke=HexColor("#29425E"))
         c.setFillColor(TEAL); c.setFont("ThaiBold", 18); c.drawString(58, y + 12, num)
