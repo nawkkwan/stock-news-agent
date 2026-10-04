@@ -86,7 +86,7 @@ def header(c: canvas.Canvas, number: str, title: str, subtitle: str) -> None:
     c.setFont("ThaiBold", 9)
     c.drawString(42, H - 44, f"HERMES SYSTEM HANDOFF  /  {number}")
     c.setFillColor(INK)
-    c.setFont("ThaiBold", 24)
+    c.setFont("ThaiBold", 21)
     c.drawString(42, H - 104, title)
     text(c, subtitle, 42, H - 128, W - 84, size=9.5, color=MUTED)
     c.setStrokeColor(HexColor("#29425E"))
