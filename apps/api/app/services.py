@@ -336,7 +336,7 @@ class SupabasePortfolioStore:
         )
         return rows[0] if rows else None
 
-    def list_hermes_agent_runs(self, limit: int = 30) -> list[dict[str, Any]]:
+    def list_agent_runs(self, limit: int = 30) -> list[dict[str, Any]]:
         rows = self._request(
             "GET",
             "agent_runs",
@@ -347,10 +347,7 @@ class SupabasePortfolioStore:
                 "limit": str(limit),
             },
         )
-        return [
-            row for row in rows
-            if isinstance(row.get("request"), dict) and row["request"].get("mode") == "hermes"
-        ]
+        return rows
 
     def update_agent_run(
         self,
@@ -714,9 +711,11 @@ class GeminiAgentTeam:
         return self._generate(
             "research",
             "Research the requested ticker in Thai and answer the question using only the supplied evidence. "
-            "Mark missing or uncertain facts clearly. Also return hermes_thesis as Hermes's own evidence-backed view, "
+            "Mark missing or uncertain facts clearly. Also return hermes_thesis as the AI agent's own evidence-backed view, "
             "separate from the owner's thesis, using every requested thesis field and a 0-100 confidence score.",
             {
+                "mode": "gemini",
+                "kind": "stock_research",
                 "ticker": normalized,
                 "question": question,
                 "portfolio_context": context,
@@ -763,7 +762,7 @@ class GeminiAgentTeam:
         return role, self._generate(
             role,
             f"{instruction} Answer the user's question in Thai. Never issue buy, sell, hold, trim, or add instructions.",
-            {"question": question, "portfolio_context": self.store.context()},
+            {"mode": "gemini", "kind": "room_chat", "agent": agent, "question": question, "portfolio_context": self.store.context()},
         )
 
     def digest(self, report_date: str | None = None) -> dict[str, Any]:

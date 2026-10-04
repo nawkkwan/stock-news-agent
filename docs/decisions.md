@@ -63,3 +63,17 @@ Deploy FastAPI and the daily worker from this repository to Azure, while keeping
 
 Reason:
 The API can protect Supabase service credentials and enforce an owner-only command boundary. Hermes may research and manage the watchlist, but it cannot modify holdings, transactions, or place trades.
+
+## 2026-10-04
+
+Decision:
+Retire the Azure-hosted API, daily worker, and Hermes runtime after a verified migration of FastAPI to Render Free. Route the web directly to Gemini through FastAPI, and pause Discord automation.
+
+Reason:
+The project is currently for learning and personal research. The always-on Hermes container and supporting Azure resources consumed student credit even when idle. Render Free plus direct Gemini calls is simpler and preserves Azure credit for later projects. Supabase and all existing portfolio/history data remain unchanged.
+
+Operational notes:
+- Keep the legacy Hermes source and historical database rows for reference.
+- Do not schedule keep-alive requests against Render Free.
+- Keep `SUPABASE_SERVICE_ROLE_KEY` on the backend only.
+- Resume the daily worker or Discord integration only as a separate, explicit future decision.

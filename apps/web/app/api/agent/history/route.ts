@@ -11,7 +11,7 @@ type AgentResult = {
 };
 
 function formatAgentResult(result: AgentResult | string | null | undefined) {
-  if (typeof result === "string") return result || "Hermes ทำงานเสร็จแล้ว แต่ไม่มีข้อความตอบกลับ";
+  if (typeof result === "string") return result || "Agent ทำงานเสร็จแล้ว แต่ไม่มีข้อความตอบกลับ";
   if (!result) return "";
   const sections: string[] = [];
   if (result.summary) sections.push(result.summary);
@@ -20,7 +20,7 @@ function formatAgentResult(result: AgentResult | string | null | undefined) {
   if (result.risks?.length) sections.push(`ความเสี่ยง\n${result.risks.map((item) => `• ${item}`).join("\n")}`);
   if (result.candidates?.length) sections.push(`รายการที่ควรศึกษาเพิ่ม\n${result.candidates.map((item) => `• ${item}`).join("\n")}`);
   if (result.next_action) sections.push(`ขั้นต่อไป: ${result.next_action}`);
-  return sections.join("\n\n") || "Hermes ทำงานเสร็จแล้ว แต่ไม่มีข้อความตอบกลับ";
+  return sections.join("\n\n") || "Agent ทำงานเสร็จแล้ว แต่ไม่มีข้อความตอบกลับ";
 }
 
 export async function GET() {
@@ -46,7 +46,7 @@ export async function GET() {
       runs?: Array<{ id: string; request?: { agent?: string; question?: string }; response?: AgentResult | string | null; status?: string; error?: string; created_at?: string }>;
       detail?: string;
     } | null;
-    if (!response.ok) return NextResponse.json({ error: payload?.detail || "อ่านประวัติ Hermes ไม่สำเร็จ" }, { status: response.status });
+    if (!response.ok) return NextResponse.json({ error: payload?.detail || "อ่านประวัติ Agent ไม่สำเร็จ" }, { status: response.status });
     const runs = (payload?.runs || []).map((run) => ({
       id: run.id,
       agent: run.request?.agent || "analyst",
@@ -58,6 +58,6 @@ export async function GET() {
     })).reverse();
     return NextResponse.json({ runs });
   } catch {
-    return NextResponse.json({ error: "เชื่อมต่อ Azure Agent ไม่สำเร็จ กรุณาลองอีกครั้ง" }, { status: 502 });
+    return NextResponse.json({ error: "เชื่อมต่อ Agent API ไม่สำเร็จ กรุณาลองอีกครั้ง" }, { status: 502 });
   }
 }

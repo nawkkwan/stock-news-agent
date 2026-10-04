@@ -7,7 +7,6 @@ import { FormEvent, useState } from "react";
 type AgentId = "scout" | "analyst" | "ranger";
 
 type AgentRoomClientProps = {
-  isHermesOwner: boolean;
   metrics: {
     articles: number;
     signals: number;
@@ -40,19 +39,11 @@ const agents: Record<AgentId, { name: string; role: string; greeting: string; ac
   },
 };
 
-const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-
-export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: AgentRoomClientProps) {
+export default function AgentRoomClient({ metrics, statuses }: AgentRoomClientProps) {
   const [selected, setSelected] = useState<AgentId>("analyst");
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState(
-    isHermesOwner
-      ? "Hermes Lead พร้อมมอบหมายงานผ่านโต๊ะ Analyst ให้ sub-agent ที่เหมาะสมครับ"
-      : agents.analyst.greeting
-  );
+  const [answer, setAnswer] = useState(agents.analyst.greeting);
   const [loading, setLoading] = useState(false);
-  const [runId, setRunId] = useState<string | null>(null);
-  const [timedOut, setTimedOut] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState<string | null>(null);
   const [history, setHistory] = useState<{ question: string; answer: string }[]>([]);
   const [savedTicker, setSavedTicker] = useState<string | null>(null);
@@ -60,52 +51,10 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
   function selectAgent(agent: AgentId) {
     if (loading) return;
     setSelected(agent);
-    setAnswer(isHermesOwner
-      ? `Hermes Lead พร้อมมอบหมายงานผ่านโต๊ะ ${agents[agent].name} ให้ sub-agent ที่เหมาะสมครับ`
-      : agents[agent].greeting);
-    setRunId(null);
-    setTimedOut(false);
+    setAnswer(agents[agent].greeting);
     setActiveQuestion(null);
     setHistory([]);
     setSavedTicker(null);
-  }
-
-  async function pollHermesRun(activeRunId: string, askedQuestion: string, maxAttempts = 120) {
-    setLoading(true);
-    setTimedOut(false);
-    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-      if (attempt > 0) await wait(2_000);
-      const response = await fetch(`/api/agent/runs/${activeRunId}`, { cache: "no-store" });
-      const payload = (await response.json().catch(() => null)) as
-        | { status?: "running" | "succeeded" | "failed"; answer?: string; error?: string; savedTicker?: string }
-        | null;
-      if (!response.ok) {
-        if ([401, 403, 404].includes(response.status)) {
-          throw new Error(payload?.error || "ไม่สามารถอ่านงาน Hermes นี้ได้");
-        }
-        setAnswer("Hermes ยังทำงานอยู่ แต่การตรวจสถานะสะดุดชั่วคราว ระบบจะลองใหม่...");
-        continue;
-      }
-      if (payload?.status === "succeeded") {
-        const finalAnswer = payload.answer || "Hermes ทำงานเสร็จแล้ว";
-        setAnswer(finalAnswer);
-        setHistory((previous) => [...previous, { question: askedQuestion, answer: finalAnswer.slice(0, 4000) }].slice(-5));
-        setSavedTicker(payload.savedTicker || null);
-        setQuestion("");
-        setRunId(null);
-        setLoading(false);
-        return;
-      }
-      if (payload?.status === "failed") {
-        setAnswer(payload.error || "Hermes ทำงานไม่สำเร็จ กรุณาลองอีกครั้ง");
-        setRunId(null);
-        setLoading(false);
-        return;
-      }
-    }
-    setAnswer("Hermes ยังทำงานต่ออยู่ คุณสามารถกด “ตรวจผลอีกครั้ง” ได้โดยไม่สร้างงานซ้ำ");
-    setTimedOut(true);
-    setLoading(false);
   }
 
   async function askAgent(event: FormEvent<HTMLFormElement>) {
@@ -124,21 +73,16 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
         body: JSON.stringify({ agent: selected, question: trimmed, history }),
       });
       const payload = (await response.json()) as {
-        mode?: "hermes" | "gemini";
+        mode?: "gemini";
         status?: string;
-        runId?: string;
         answer?: string;
         error?: string;
+        savedTicker?: string;
       };
-      if (response.status === 202 && payload.mode === "hermes" && payload.runId) {
-        setRunId(payload.runId);
-        setAnswer("Hermes กำลังแบ่งงานให้ sub-agent และรวบรวมคำตอบ...");
-        await pollHermesRun(payload.runId, trimmed);
-        return;
-      }
       setAnswer(payload.answer || payload.error || "Agent ยังตอบไม่ได้ในตอนนี้");
       if (response.ok) {
         if (payload.answer) setHistory((previous) => [...previous, { question: trimmed, answer: payload.answer!.slice(0, 4000) }].slice(-5));
+        setSavedTicker(payload.savedTicker || null);
         setQuestion("");
       }
     } catch {
@@ -185,7 +129,7 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
       <aside className="agent-mission-panel">
         <div className="agent-mission-head">
           <div><p className="eyebrow">Mission console</p><h3>{agents[selected].name}</h3></div>
-          <span>{isHermesOwner ? "Hermes routed" : agents[selected].role}</span>
+          <span>Gemini · {agents[selected].role}</span>
         </div>
         <div className="agent-mission-brief">
           <span className="agent-mission-number">0{selected === "scout" ? "1" : selected === "analyst" ? "2" : "3"}</span>
@@ -207,14 +151,9 @@ export default function AgentRoomClient({ isHermesOwner, metrics, statuses }: Ag
           <div><span>{loading ? "MISSION IN PROGRESS" : activeQuestion ? "LATEST MISSION" : "DESK STATUS"}</span><i /></div>
           {activeQuestion ? <strong>{activeQuestion}</strong> : null}
           <p>{answer}</p>
-          {savedTicker ? <Link href={`/investing/companies/${encodeURIComponent(savedTicker)}`}>เปิด Hermes thesis ของ {savedTicker} ↗</Link> : null}
+          {savedTicker ? <Link href={`/investing/companies/${encodeURIComponent(savedTicker)}`}>เปิด Agent thesis ของ {savedTicker} ↗</Link> : null}
         </section>
-        {timedOut && runId ? (
-          <button className="agent-run-retry" type="button" onClick={() => void pollHermesRun(runId, activeQuestion || question)} disabled={loading}>
-            ตรวจผลอีกครั้ง
-          </button>
-        ) : null}
-        <p className="agent-mission-boundary">ผลลัพธ์เป็นหลักฐานประกอบ · Hermes ไม่เขียนทับ Thesis และไม่ส่งคำสั่งซื้อขาย</p>
+        <p className="agent-mission-boundary">ผลลัพธ์เป็นหลักฐานประกอบ · Gemini ไม่เขียนทับ Thesis และไม่ส่งคำสั่งซื้อขาย</p>
       </aside>
     </div>
   );

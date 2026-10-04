@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getInvestmentData } from "../../../lib/investment-data";
 import { getLatestReport } from "../../../lib/latest-report";
 import AgentRoomClient from "./agent-room-client";
-import { getCurrentUserOrNull } from "../../../lib/supabase-server";
 
 type RoomStock = {
   ticker?: string;
@@ -30,14 +29,10 @@ function formatRunTime(value?: string) {
 }
 
 export default async function AgentRoomPage() {
-  const [report, data, user] = await Promise.all([
+  const [report, data] = await Promise.all([
     getLatestReport<RoomReport>(),
     getInvestmentData(),
-    getCurrentUserOrNull(),
   ]);
-  const isHermesOwner = Boolean(
-    user?.id && process.env.OWNER_SUPABASE_USER_ID && user.id === process.env.OWNER_SUPABASE_USER_ID
-  );
   const stocks = report?.stocks || [];
   const prioritySignals = stocks.filter(
     (stock) => stock.relevance_score === "High" || stock.risk_level === "High"
@@ -61,7 +56,7 @@ export default async function AgentRoomPage() {
         </div>
       </header>
 
-      <AgentRoomClient isHermesOwner={isHermesOwner} metrics={{
+      <AgentRoomClient metrics={{
         articles: report?.summary?.total_articles ?? 0,
         signals: prioritySignals.length,
         holdings: stocks.length,

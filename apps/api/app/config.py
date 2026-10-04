@@ -17,7 +17,7 @@ def _env(name: str, default: str = "") -> str:
 @dataclass(frozen=True)
 class Settings:
     service_name: str = "investment-research-api"
-    service_version: str = "0.4.0"
+    service_version: str = "0.5.0"
     environment: str = _env("APP_ENV", "local")
     api_port: int = int(_env("API_PORT", "8000") or "8000")
     supabase_url: str = _env("NEXT_PUBLIC_SUPABASE_URL")
@@ -28,7 +28,8 @@ class Settings:
     discord_owner_user_id: str = _env("DISCORD_OWNER_USER_ID")
     discord_webhook_url: str = _env("DISCORD_WEBHOOK_URL")
     gemini_api_key: str = _env("GEMINI_API_KEY")
-    gemini_model: str = _env("GEMINI_MODEL", "gemini-3.5-flash")
+    agent_provider: str = _env("AGENT_PROVIDER", "gemini")
+    gemini_model: str = _env("GEMINI_MODEL", "gemini-2.5-flash-lite")
     eodhd_api_key: str = _env("EODHD_API_KEY")
     hermes_base_url: str = _env("HERMES_BASE_URL")
     hermes_api_key: str = _env("HERMES_API_KEY")

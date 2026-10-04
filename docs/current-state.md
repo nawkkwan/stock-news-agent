@@ -1,38 +1,33 @@
 # Current State
 
-Current Version: v0.2
+Current Version: v0.5
 
-Implemented:
-- Supabase Auth-backed Investment OS pages
-- Holdings settings
-- Portfolio transactions and journey
-- Watchlist
-- Thesis notes
-- Investment journal
-- News items and daily report dashboard
-- Python daily portfolio news worker
-- Owner-only FastAPI contract for Hermes, research, discovery, watchlist, and briefings
-- Local Docker foundation for API and worker
-- Single-portfolio-per-account migration with private legacy archive
-- Azure API/worker bootstrap and GitLab build/deploy pipeline
-- Daily briefing persistence and duplicate-safe Discord delivery
-- Read-only Pixel Portfolio Agent dashboard MVP with Scout, Analyst, and Watchlist views
-- Separate owner and Hermes thesis records with evidence provenance
-- Automatic Research History snapshots for PixelAgent `/research`, including source URLs
+## Active
 
-Not Implemented:
-- Automated daily prices table ingestion
-- Hermes runtime source code (kept in its existing external repository)
-- Live Azure resources and production secrets
+- Cloudflare-hosted Next.js Investment OS
+- Supabase Auth, Postgres, RLS, portfolio data, journal, watchlist, owner thesis, and Agent thesis history
+- FastAPI prepared for Render Free through `render.yaml`
+- Direct Gemini chat and stock research for every authenticated account
+- Google News RSS research context and optional EODHD market history
+- Research snapshots and agent-run history stored in Supabase
+- Owner thesis and AI Agent thesis kept separate
+
+## Paused
+
+- Hermes web runtime
+- Hermes Discord gateway
+- Daily worker schedule
+- Discord daily webhook digest
+
+## Retired deployment
+
+The Azure resource group `investment-os-eastasia-rg` was the previous production stack. It contained the API, daily worker, always-on Hermes service, registry, storage, managed environment, and Log Analytics workspaces. The migration record and shutdown checklist are documented in the handoff PDF.
+
+## Not implemented
+
+- Automated daily price ingestion after the worker pause
 - TiDB production ingestion
 - Paper trading
 - Real trading
 
-Active database:
-- Supabase
-
-Planned research warehouse:
-- TiDB
-
-Legacy:
-- MongoDB journal API is archived under `legacy/mongo-journal-api`.
+The system remains research and decision support only.

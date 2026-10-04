@@ -18,7 +18,7 @@ settings = get_settings()
 
 app = FastAPI(
     title="Investment Research API",
-    description="Owner-only portfolio research API for Hermes and the four-agent team.",
+    description="Portfolio research API using Gemini with Supabase-backed user data.",
     version=settings.service_version,
 )
 
@@ -38,6 +38,7 @@ def version() -> dict[str, object]:
         "supabase_backend_configured": settings.supabase_backend_configured,
         "tidb_configured": settings.tidb_configured,
         "hermes_configured": settings.hermes_configured,
+        "agent_provider": settings.agent_provider,
         "gemini_model": settings.gemini_model,
     }
 
@@ -293,46 +294,24 @@ def user_room_chat(
     portfolio_store: SupabasePortfolioStore = Depends(user_store),
 ) -> JSONResponse:
     try:
-        if user_id == settings.owner_supabase_user_id:
-            role = HermesAgentClient.ROLE_MAP[payload.agent]
-            context = portfolio_store.context()
-            history = [turn.model_dump() for turn in payload.history]
-            save_ticker = thesis_ticker_from_conversation(payload.question, history, context) if thesis_save_requested(payload.question) else None
-            if thesis_save_requested(payload.question) and not save_ticker:
-                raise HTTPException(status_code=400, detail="กรุณาระบุ ticker ของ Thesis ที่ต้องการบันทึกให้ชัดเจน")
-            run = portfolio_store.create_agent_run(
-                role,
-                {"mode": "hermes", "agent": payload.agent, "question": payload.question,
-                 "kind": "room_thesis_save" if save_ticker else "room_chat", "ticker": save_ticker},
-            )
-            try:
-                hermes_run_id = HermesAgentClient(settings).start_run(
-                    agent=payload.agent,
-                    question=payload.question,
-                    context=context,
-                    idempotency_key=str(run["id"]),
-                    history=history,
-                    save_thesis_ticker=save_ticker,
-                )
-            except ServiceError:
-                portfolio_store.update_agent_run(
-                    str(run["id"]),
-                    "failed",
-                    error="Hermes run could not be started.",
-                )
-                raise
-            portfolio_store.update_agent_run(
-                str(run["id"]),
-                "running",
-                response_data={"hermes_run_id": hermes_run_id},
-            )
-            return JSONResponse(
-                status_code=202,
-                content={"mode": "hermes", "status": "running", "run_id": str(run["id"])},
-            )
-
         agents = GeminiAgentTeam(settings, portfolio_store)
-        role, result = agents.room_chat(payload.agent, payload.question)
+        context = portfolio_store.context()
+        history = [turn.model_dump() for turn in payload.history]
+        save_ticker = thesis_ticker_from_conversation(payload.question, history, context) if thesis_save_requested(payload.question) else None
+        if thesis_save_requested(payload.question) and not save_ticker:
+            raise HTTPException(status_code=400, detail="กรุณาระบุ ticker ของ Thesis ที่ต้องการบันทึกให้ชัดเจน")
+        if save_ticker:
+            role = "research"
+            result = agents.research(
+                save_ticker,
+                f"{payload.question}\nบันทึกเป็น Agent thesis ที่แยกจาก Thesis ของเจ้าของ และห้ามแก้ไขต้นฉบับของผู้ใช้",
+            )
+            saved = persist_hermes_thesis(portfolio_store, save_ticker, result, source_kind="gemini_agent")
+            if not saved:
+                raise HTTPException(status_code=502, detail="Gemini ยังไม่ได้ส่ง Thesis แบบมีโครงสร้าง จึงไม่ได้บันทึก")
+            result = {**result, "saved_thesis_ticker": save_ticker}
+        else:
+            role, result = agents.room_chat(payload.agent, payload.question)
         return JSONResponse(
             status_code=200,
             content={"mode": "gemini", "status": "completed", "agent": role, "result": result},
@@ -346,10 +325,8 @@ def user_agent_history(
     user_id: SupabaseUser,
     portfolio_store: SupabasePortfolioStore = Depends(user_store),
 ) -> dict[str, object]:
-    if user_id != settings.owner_supabase_user_id:
-        raise HTTPException(status_code=403, detail="Hermes is only available to the owner account.")
     try:
-        return {"runs": portfolio_store.list_hermes_agent_runs()}
+        return {"runs": portfolio_store.list_agent_runs()}
     except ServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
@@ -388,25 +365,6 @@ def user_stock_research(
     )
     try:
         market = GeminiAgentTeam(settings, portfolio_store).market_overview(normalized)
-        if user_id == settings.owner_supabase_user_id:
-            run = portfolio_store.create_agent_run(
-                "research",
-                {"mode": "hermes", "kind": "stock_research", "agent": "analyst", "ticker": normalized, "question": question},
-            )
-            try:
-                hermes_run_id = HermesAgentClient(settings).start_run(
-                    agent="analyst",
-                    question=question,
-                    context={**portfolio_store.stock_context(normalized), "market": market},
-                    idempotency_key=str(run["id"]),
-                    research_ticker=normalized,
-                )
-            except ServiceError:
-                portfolio_store.update_agent_run(str(run["id"]), "failed", error="Hermes stock research could not be started.")
-                raise
-            portfolio_store.update_agent_run(str(run["id"]), "running", response_data={"hermes_run_id": hermes_run_id})
-            return JSONResponse(status_code=202, content={"mode": "hermes", "status": "running", "run_id": str(run["id"])})
-
         result = GeminiAgentTeam(settings, portfolio_store).research(normalized, question)
         decision = decision_with_watch_zone(result, market)
         snapshot = portfolio_store.save_research_snapshot(
@@ -417,6 +375,7 @@ def user_stock_research(
             news_count=research_source_count(decision, len(portfolio_store.stock_context(normalized).get("news", []))),
             dedupe_key=f"gemini:{normalized}:{user_id}:{uuid4()}",
         )
+        persist_hermes_thesis(portfolio_store, normalized, decision, source_kind="gemini_research")
         return JSONResponse(status_code=200, content={"mode": "gemini", "status": "completed", "result": decision, "snapshot_id": snapshot["id"]})
     except ServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc

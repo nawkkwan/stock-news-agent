@@ -199,44 +199,50 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertNotIn("session_id", post.call_args.kwargs["json"])
         self.assertNotIn("hermes-secret", json.dumps(post.call_args.kwargs["json"]))
 
-    def test_owner_chat_starts_hermes_without_using_gemini(self):
+    def test_owner_chat_uses_direct_gemini_flow(self):
         store = FakeRunStore()
-        owner_settings = Settings(
-            owner_supabase_user_id="owner-user",
-            hermes_base_url="http://investment-hermes",
-            hermes_api_key="hermes-secret",
-        )
+        owner_settings = Settings(owner_supabase_user_id="owner-user")
+        fake_team = Mock()
+        fake_team.room_chat.return_value = ("discovery", {"summary": "owner result"})
         with patch.object(api_main, "settings", owner_settings), patch.object(
-            api_main.HermesAgentClient, "start_run", return_value="run-hermes-1"
-        ), patch.object(api_main, "GeminiAgentTeam") as gemini:
+            api_main, "GeminiAgentTeam", return_value=fake_team
+        ):
             response = api_main.user_room_chat(
                 RoomChatRequest(agent="scout", question="หาข่าวสำคัญ"),
                 "owner-user",
                 store,
             )
 
-        self.assertEqual(response.status_code, 202)
-        self.assertEqual(json.loads(response.body)["mode"], "hermes")
-        self.assertEqual(store.runs[0]["role"], "discovery")
-        self.assertEqual(store.updated[0]["response"]["hermes_run_id"], "run-hermes-1")
-        gemini.assert_not_called()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.body)["mode"], "gemini")
+        self.assertEqual(json.loads(response.body)["result"]["summary"], "owner result")
+        fake_team.room_chat.assert_called_once_with("scout", "หาข่าวสำคัญ")
+        self.assertFalse(store.updated)
 
     def test_pixel_chat_save_uses_previous_ticker_and_separate_thesis(self):
         store = FakeRunStore()
         store.context = Mock(return_value={"portfolio": {"id": "p1"}, "holdings": [{"ticker": "OKLO.US"}], "watchlist": []})
-        owner_settings = Settings(owner_supabase_user_id="owner-user", hermes_base_url="http://investment-hermes", hermes_api_key="secret")
+        store.upsert_hermes_thesis = Mock(return_value={"ticker": "OKLO.US"})
+        owner_settings = Settings(owner_supabase_user_id="owner-user")
+        fake_team = Mock()
+        fake_team.research.return_value = {
+            "summary": "saved",
+            "hermes_thesis": {"business_overview": "nuclear technology"},
+        }
         with patch.object(api_main, "settings", owner_settings), patch.object(
-            api_main.HermesAgentClient, "start_run", return_value="hermes-1"
-        ) as start:
+            api_main, "GeminiAgentTeam", return_value=fake_team
+        ):
             response = api_main.user_room_chat(
                 RoomChatRequest(agent="analyst", question="เซฟ theis ที่คุยกันด้วย", history=[
                     {"question": "วิเคราะห์ OKLO ให้หน่อย", "answer": "ความเสี่ยงคือ execution"}
                 ]), "owner-user", store,
             )
-        self.assertEqual(response.status_code, 202)
-        self.assertEqual(store.runs[0]["request"]["kind"], "room_thesis_save")
-        self.assertEqual(store.runs[0]["request"]["ticker"], "OKLO.US")
-        self.assertEqual(start.call_args.kwargs["save_thesis_ticker"], "OKLO.US")
+        body = json.loads(response.body)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(body["mode"], "gemini")
+        self.assertEqual(body["result"]["saved_thesis_ticker"], "OKLO.US")
+        self.assertEqual(fake_team.research.call_args.args[0], "OKLO.US")
+        store.upsert_hermes_thesis.assert_called_once()
 
     def test_pixel_chat_save_without_ticker_is_not_silent(self):
         store = FakeRunStore()

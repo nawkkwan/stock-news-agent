@@ -33,7 +33,7 @@ export async function GET(
 
   const apiBaseUrl = process.env.API_BASE_URL?.replace(/\/$/, "");
   if (!apiBaseUrl) {
-    return NextResponse.json({ error: "ยังไม่ได้ตั้ง API_BASE_URL สำหรับเชื่อม Azure Agent" }, { status: 503 });
+    return NextResponse.json({ error: "ยังไม่ได้ตั้ง API_BASE_URL สำหรับเชื่อม Agent API" }, { status: 503 });
   }
 
   try {
@@ -72,7 +72,7 @@ export async function GET(
   } catch (error) {
     const message = error instanceof Error && error.name === "TimeoutError"
       ? "ตรวจสถานะ Hermes ใช้เวลานานเกินไป"
-      : "เชื่อมต่อ Azure Agent ไม่สำเร็จ กรุณาลองอีกครั้ง";
+      : "เชื่อมต่อ Agent API ไม่สำเร็จ กรุณาลองอีกครั้ง";
     return NextResponse.json({ error: message }, { status: 502 });
   }
 }

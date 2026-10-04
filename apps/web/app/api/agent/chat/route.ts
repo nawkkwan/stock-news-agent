@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
   const apiBaseUrl = process.env.API_BASE_URL?.replace(/\/$/, "");
   if (!apiBaseUrl) {
-    return NextResponse.json({ error: "ยังไม่ได้ตั้ง API_BASE_URL สำหรับเชื่อม Azure Agent" }, { status: 503 });
+    return NextResponse.json({ error: "ยังไม่ได้ตั้ง API_BASE_URL สำหรับเชื่อม Agent API" }, { status: 503 });
   }
 
   try {
@@ -59,35 +59,29 @@ export async function POST(request: Request) {
         "content-type": "application/json",
       },
       body: JSON.stringify({ agent, question, history }),
-      signal: AbortSignal.timeout(75_000),
+      signal: AbortSignal.timeout(150_000),
     });
     const payload = (await response.json().catch(() => null)) as
-      | { mode?: "hermes" | "gemini"; status?: string; run_id?: string; result?: AgentResult; detail?: string }
+      | { mode?: "gemini"; status?: string; result?: AgentResult & { saved_thesis_ticker?: string }; detail?: string }
       | null;
 
     if (!response.ok) {
       const message = response.status === 401
         ? "Session หมดอายุ กรุณาเข้าสู่ระบบใหม่"
-        : payload?.detail || "Azure Agent ตอบกลับผิดพลาด กรุณาลองอีกครั้ง";
+        : payload?.detail || "Agent API ตอบกลับผิดพลาด กรุณาลองอีกครั้ง";
       return NextResponse.json({ error: message }, { status: response.status });
-    }
-
-    if (response.status === 202 && payload?.mode === "hermes" && payload.run_id) {
-      return NextResponse.json(
-        { mode: "hermes", status: "running", runId: payload.run_id },
-        { status: 202 }
-      );
     }
 
     return NextResponse.json({
       mode: "gemini",
       status: "completed",
       answer: formatAgentResult(payload?.result || {}),
+      savedTicker: payload?.result?.saved_thesis_ticker,
     });
   } catch (error) {
     const message = error instanceof Error && error.name === "TimeoutError"
       ? "Agent ใช้เวลานานเกินไป กรุณาลองอีกครั้ง"
-      : "เชื่อมต่อ Azure Agent ไม่สำเร็จ กรุณาลองอีกครั้ง";
+      : "เชื่อมต่อ Agent API ไม่สำเร็จ กรุณาลองอีกครั้ง";
     return NextResponse.json({ error: message }, { status: 502 });
   }
 }

@@ -22,7 +22,7 @@ export async function POST(request: Request, context: { params: Promise<{ ticker
       method: "POST",
       headers: { authorization: `Bearer ${accessToken}`, "content-type": "application/json" },
       body: JSON.stringify({ question: String(body.question || "").slice(0, 1200) }),
-      signal: AbortSignal.timeout(75_000),
+      signal: AbortSignal.timeout(150_000),
     });
     const payload = await response.json().catch(() => null) as { run_id?: string; detail?: string } | null;
     if (!response.ok) return NextResponse.json({ error: payload?.detail || "Agent ตอบกลับผิดพลาด" }, { status: response.status });
@@ -31,6 +31,6 @@ export async function POST(request: Request, context: { params: Promise<{ ticker
     }
     return NextResponse.json({ status: "completed" });
   } catch {
-    return NextResponse.json({ error: "เชื่อมต่อ Azure Agent ไม่สำเร็จ" }, { status: 502 });
+    return NextResponse.json({ error: "เชื่อมต่อ Agent API ไม่สำเร็จ" }, { status: 502 });
   }
 }

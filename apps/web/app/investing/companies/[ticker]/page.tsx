@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getCompanyData, formatDate, formatNumber } from "../../../../lib/investment-data";
 import { getLatestReport } from "../../../../lib/latest-report";
-import { getCurrentUserOrNull } from "../../../../lib/supabase-server";
 import { getStockApiOverview, type MarketBar, type MarketOverview, type ReviewZone } from "../../../../lib/stock-research";
 import type { StockResearchSnapshot } from "../../../../lib/investment-types";
 import { ConfigNotice, WatchlistForm, type DailyReportStock } from "../../components";
@@ -114,11 +113,10 @@ function PriceChart({ history }: { history: MarketBar[] }) {
 export default async function CompanyPage({ params }: { params: Promise<{ ticker: string }> }) {
   const { ticker: rawTicker } = await params;
   const ticker = rawTicker.toUpperCase();
-  const [data, report, apiOverview, user] = await Promise.all([
+  const [data, report, apiOverview] = await Promise.all([
     getCompanyData(ticker),
     getLatestReport<DailyReport>(),
     getStockApiOverview(ticker),
-    getCurrentUserOrNull(),
   ]);
   const tickerCode = ticker.split(".")[0];
   const reportStock = (report?.stocks || []).find((stock) => {
@@ -152,7 +150,6 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
     "ตรวจราคาและ Volume อีกครั้งเมื่อเข้าช่วงนี้",
     "ทบทวนน้ำหนักรวมและความเสี่ยงของพอร์ตก่อนตัดสินใจ",
   ];
-  const isHermesOwner = Boolean(user?.id && process.env.OWNER_SUPABASE_USER_ID && user.id === process.env.OWNER_SUPABASE_USER_ID);
   const thesisReviewState = !data.thesis && !data.hermesThesis
     ? { label: "ยังไม่มี Thesis", tone: "empty" }
     : data.thesis && data.hermesThesis
@@ -217,7 +214,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
       <section className="panel stock-decision-card">
         <div className="stock-decision-head">
           <div><p className="eyebrow">วันนี้ต้องรู้</p><h2>Decision Card</h2><p>ข้อเท็จจริง ผลกระทบ และจุดที่ควรกลับมาทบทวน</p></div>
-          <StockResearchButton ticker={ticker} isHermesOwner={isHermesOwner} />
+          <StockResearchButton ticker={ticker} />
         </div>
         <div className="decision-grid">
           <article><span>01 · FACTS</span><h3>เกิดอะไรขึ้น</h3><ul>{facts.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul></article>
@@ -249,9 +246,9 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
       <section className="panel thesis-workspace">
         <div className="thesis-workspace-head">
           <div>
-            <p className="eyebrow">Owner thesis · Hermes thesis</p>
+            <p className="eyebrow">Owner thesis · Agent thesis</p>
             <h2>Investment Thesis สองมุมมอง</h2>
-            <p>ฝั่งซ้ายคือสิ่งที่คุณพิมพ์เอง ฝั่งขวาคือ Thesis ที่ Hermes สร้างหรือเพิ่มจาก PixelAgent และงานค้นคว้า โดยไม่เขียนทับกัน</p>
+            <p>ฝั่งซ้ายคือสิ่งที่คุณพิมพ์เอง ฝั่งขวาคือ Thesis จาก AI Agent และงานค้นคว้า โดยไม่เขียนทับกัน</p>
           </div>
           <span className={`thesis-review-badge ${thesisReviewState.tone}`}>{thesisReviewState.label}</span>
         </div>
@@ -290,28 +287,26 @@ export default async function CompanyPage({ params }: { params: Promise<{ ticker
 
           <aside className="thesis-review-column">
             <div className="thesis-review-card">
-              <p className="eyebrow">Hermes thesis</p>
-              <h3>{data.hermesThesis ? "มุมมองของ Hermes" : data.thesis ? "พร้อมสร้าง Thesis จากหลักฐาน" : "ยังไม่มีมุมมองจาก Hermes"}</h3>
+              <p className="eyebrow">Agent thesis</p>
+              <h3>{data.hermesThesis ? "มุมมองของ AI Agent" : data.thesis ? "พร้อมสร้าง Thesis จากหลักฐาน" : "ยังไม่มีมุมมองจาก Agent"}</h3>
               {data.hermesThesis ? (
                 <>
-                  <div className="thesis-provenance hermes"><span>H</span><div><strong>เขียนโดย Hermes</strong><small>อัปเดตล่าสุด {formatDate(data.hermesThesis.updated_at)} · {data.hermesThesis.source_kind === "pixel_agent_append" ? "เพิ่มจาก PixelAgent" : "สร้างจากงานวิจัย"}</small></div></div>
-                  <h4 className="thesis-note-title">{data.hermesThesis.title || `${tickerCode} — มุมมอง Hermes`}</h4>
+                  <div className="thesis-provenance hermes"><span>AI</span><div><strong>เขียนโดย AI Agent</strong><small>อัปเดตล่าสุด {formatDate(data.hermesThesis.updated_at)} · {data.hermesThesis.source_kind?.startsWith("gemini") ? "สร้างด้วย Gemini" : "ข้อมูลเดิมจาก Hermes"}</small></div></div>
+                  <h4 className="thesis-note-title">{data.hermesThesis.title || `${tickerCode} — มุมมอง Agent`}</h4>
                   <div className="hermes-thesis-reading">
                     {hermesThesisSections.map(([label, value]) => value ? <article key={label}><span>{label}</span><p>{value}</p></article> : null)}
-                    <article><span>ความมั่นใจของ Hermes</span><p>{data.hermesThesis.confidence_score === null ? "ยังไม่มีหลักฐานพอประเมิน" : `${formatNumber(data.hermesThesis.confidence_score)} / 100`}</p></article>
+                    <article><span>ความมั่นใจของ Agent</span><p>{data.hermesThesis.confidence_score === null ? "ยังไม่มีหลักฐานพอประเมิน" : `${formatNumber(data.hermesThesis.confidence_score)} / 100`}</p></article>
                   </div>
                   {hermesSources.length ? <div className="hermes-thesis-sources"><strong>หลักฐานล่าสุด</strong>{hermesSources.slice(0, 5).map((source) => <a href={source.url} key={source.url} rel="noreferrer" target="_blank">{source.title} ↗</a>)}</div> : null}
                 </>
               ) : (
-                <p>{data.thesis ? "Hermes จะหาหลักฐานที่สนับสนุนและขัดแย้ง แล้วบันทึก Thesis ของตัวเองแยกจากต้นฉบับของคุณ" : "คุณเริ่มจาก Thesis ของตัวเองก่อนได้ หรือเพิ่มมุมมอง Hermes ผ่าน PixelAgent"}</p>
+                <p>{data.thesis ? "Gemini จะหาหลักฐานที่สนับสนุนและขัดแย้ง แล้วบันทึก Agent thesis แยกจากต้นฉบับของคุณ" : "คุณเริ่มจาก Thesis ของตัวเองก่อน แล้วค่อยให้ Gemini ตรวจหลักฐานได้"}</p>
               )}
               {data.thesis ? (
                 <StockResearchButton
                   ticker={ticker}
-                  isHermesOwner={isHermesOwner}
-                  ownerLabel={data.hermesThesis ? "อัปเดต Hermes Thesis" : "ให้ Hermes สร้าง Thesis"}
-                  label="ให้ Gemini ตรวจ Thesis"
-                  question={`ตรวจสอบ Thesis ที่ฉันบันทึกสำหรับ ${ticker} เทียบกับหลักฐานล่าสุด แล้วสร้าง hermes_thesis เป็นมุมมองของ Hermes แยกต่างหาก หาหลักฐานที่สนับสนุนและขัดแย้ง ชี้สมมติฐานที่ยังไม่มีข้อมูลรองรับ ความเสี่ยงที่ตกหล่น และสิ่งที่ควรติดตามต่อ โดยห้ามแก้ไข Thesis ต้นฉบับ`}
+                  label={data.hermesThesis ? "อัปเดต Agent Thesis ด้วย Gemini" : "ให้ Gemini ตรวจ Thesis"}
+                  question={`ตรวจสอบ Thesis ที่ฉันบันทึกสำหรับ ${ticker} เทียบกับหลักฐานล่าสุด แล้วสร้าง hermes_thesis เป็นมุมมองของ AI Agent แยกต่างหาก หาหลักฐานที่สนับสนุนและขัดแย้ง ชี้สมมติฐานที่ยังไม่มีข้อมูลรองรับ ความเสี่ยงที่ตกหล่น และสิ่งที่ควรติดตามต่อ โดยห้ามแก้ไข Thesis ต้นฉบับ`}
                 />
               ) : null}
             </div>
