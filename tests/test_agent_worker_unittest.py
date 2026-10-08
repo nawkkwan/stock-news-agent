@@ -93,6 +93,17 @@ class AgentWorkerTests(unittest.TestCase):
         store = SupabasePortfolioStore(settings, user_id="verified-user")
         self.assertEqual(store.user_id, "verified-user")
 
+    def test_portfolio_store_can_use_user_token_with_publishable_key(self):
+        settings = Settings(
+            supabase_url="https://project.supabase.co",
+            supabase_publishable_key="publishable-key",
+        )
+        store = SupabasePortfolioStore(settings, user_id="verified-user", access_token="access-token")
+
+        self.assertEqual(store.user_id, "verified-user")
+        self.assertEqual(store.session.headers["apikey"], "publishable-key")
+        self.assertEqual(store.session.headers["authorization"], "Bearer access-token")
+
     def test_discord_research_note_is_saved_as_web_evidence(self):
         store = SupabasePortfolioStore.__new__(SupabasePortfolioStore)
         store.user_id = "owner-user"

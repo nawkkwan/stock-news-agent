@@ -27,9 +27,17 @@ class SupabasePortfolioStore:
         "sell_conditions",
     }
 
-    def __init__(self, settings: Settings, user_id: str | None = None):
-        if not settings.supabase_backend_configured:
-            raise ServiceError("Supabase backend must be configured.")
+    def __init__(self, settings: Settings, user_id: str | None = None, access_token: str | None = None):
+        if access_token:
+            if not settings.supabase_configured:
+                raise ServiceError("Supabase Auth must be configured.")
+            api_key = settings.supabase_publishable_key
+            bearer_token = access_token
+        else:
+            if not settings.supabase_backend_configured:
+                raise ServiceError("Supabase backend must be configured.")
+            api_key = settings.supabase_service_role_key
+            bearer_token = settings.supabase_service_role_key
         resolved_user_id = user_id or settings.owner_supabase_user_id
         if not resolved_user_id:
             raise ServiceError("A Supabase user id is required.")
@@ -37,8 +45,8 @@ class SupabasePortfolioStore:
         self.user_id = resolved_user_id
         self.session = requests.Session()
         self.session.headers.update({
-            "apikey": settings.supabase_service_role_key,
-            "authorization": f"Bearer {settings.supabase_service_role_key}",
+            "apikey": api_key,
+            "authorization": f"Bearer {bearer_token}",
             "content-type": "application/json",
         })
 

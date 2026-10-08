@@ -4,7 +4,7 @@ from typing import Annotated, Any
 from uuid import UUID
 from uuid import uuid4
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
 
 from apps.api.app.config import get_settings
@@ -62,9 +62,13 @@ InternalCaller = Annotated[None, Depends(require_internal_token)]
 SupabaseUser = Annotated[str, Depends(require_supabase_user)]
 
 
-def user_store(user_id: SupabaseUser) -> SupabasePortfolioStore:
+def user_store(
+    user_id: SupabaseUser,
+    authorization: Annotated[str | None, Header()] = None,
+) -> SupabasePortfolioStore:
     try:
-        return SupabasePortfolioStore(settings, user_id=user_id)
+        access_token = (authorization or "").removeprefix("Bearer ").strip()
+        return SupabasePortfolioStore(settings, user_id=user_id, access_token=access_token)
     except ServiceError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
