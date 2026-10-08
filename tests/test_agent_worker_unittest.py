@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 import json
 
 import pandas as pd
+import requests
 from fastapi import HTTPException
 
 from apps.api.app.config import Settings
@@ -161,6 +162,26 @@ class AgentWorkerTests(unittest.TestCase):
         self.assertNotIn("secret-value", str(raised.exception))
         self.assertEqual(store.runs[0]["role"], "research")
         self.assertIn("TimeoutError", store.runs[0]["error"])
+
+    def test_provider_http_error_keeps_safe_message_and_redacts_api_key(self):
+        store = FakeStore()
+        team = GeminiAgentTeam.__new__(GeminiAgentTeam)
+        team.gemini_api_key = "test-key"
+        team.model = "gemini-2.5-flash"
+        team.store = store
+        response = Mock(status_code=400)
+        response.json.return_value = {
+            "error": {"message": "Invalid key AQ.this-should-never-be-recorded-1234567890 for request"}
+        }
+        error = requests.HTTPError("provider details", response=response)
+
+        with patch("apps.api.app.services.requests.post", return_value=response):
+            response.raise_for_status.side_effect = error
+            with self.assertRaisesRegex(ServiceError, r"Invalid key \[redacted-api-key\]") as raised:
+                team._generate("research", "task", {"ticker": "MSFT"})
+
+        self.assertNotIn("this-should-never", str(raised.exception))
+        self.assertIn("HTTP 400", store.runs[0]["error"])
 
     def test_research_passes_market_and_news_evidence(self):
         team = GeminiAgentTeam.__new__(GeminiAgentTeam)

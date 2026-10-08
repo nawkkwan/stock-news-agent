@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 from urllib.parse import quote_plus
@@ -709,8 +710,26 @@ class GeminiAgentTeam:
         except Exception as exc:
             status_code = exc.response.status_code if isinstance(exc, requests.HTTPError) and exc.response is not None else None
             status_suffix = f" (HTTP {status_code})" if status_code else ""
-            safe_error = f"{type(exc).__name__}: agent provider request failed{status_suffix}"
-            self.store.save_agent_run(role, payload, None, safe_error)
+            provider_detail = ""
+            if isinstance(exc, requests.HTTPError) and exc.response is not None:
+                try:
+                    error_payload = exc.response.json()
+                    message = error_payload.get("error", {}).get("message") if isinstance(error_payload, dict) else None
+                    if isinstance(message, str) and message.strip():
+                        clean_message = re.sub(
+                            r"(?:AIza[A-Za-z0-9_-]{20,}|AQ\.[A-Za-z0-9_-]{10,})",
+                            "[redacted-api-key]",
+                            " ".join(message.split()),
+                        )
+                        provider_detail = f": {clean_message[:240]}"
+                except (TypeError, ValueError):
+                    pass
+            safe_error = f"{type(exc).__name__}: agent provider request failed{status_suffix}{provider_detail}"
+            try:
+                self.store.save_agent_run(role, payload, None, safe_error)
+            except Exception:
+                # Preserve the provider failure even if diagnostics cannot be persisted.
+                pass
             raise ServiceError(safe_error) from exc
 
     def research(self, ticker: str, question: str) -> dict[str, Any]:
